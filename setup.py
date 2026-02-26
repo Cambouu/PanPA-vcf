@@ -1,13 +1,15 @@
+import os
 import sys
 import pathlib
 import re
 from setuptools import setup, find_packages, Extension
 
-try:
-    from Cython.Build import cythonize
-    CYTHON_AVAILABLE = True
-except Exception:
-    CYTHON_AVAILABLE = False
+USE_CYTHON = os.environ.get("PANPA_USE_CYTHON") == "1"
+if USE_CYTHON:
+    try:
+        from Cython.Build import cythonize
+    except Exception as exc:
+        raise RuntimeError("PANPA_USE_CYTHON=1 but Cython is not available") from exc
 
 '''
 I can also check for cython's version using
@@ -27,14 +29,14 @@ The idea is that I use extensions and have a check whether I am requiring cython
 
 CURRENT_PYTHON = sys.version_info[:2]
 REQUIRED_PYTHON_LOWER = (3, 6)
-REQUIRED_PYTHON_UPPER = (3, 11)
+REQUIRED_PYTHON_UPPER = (3, 13)
 
 if CURRENT_PYTHON < REQUIRED_PYTHON_LOWER or CURRENT_PYTHON > REQUIRED_PYTHON_UPPER:
-    sys.stderr.write("PanPA requires Python between 3.6 and 3.11 "
+    sys.stderr.write("PanPA requires Python between 3.6 and 3.13 "
                      "your current version is {}".format(CURRENT_PYTHON))
     sys.exit(1)
 
-ROOT = pathlib.Path(__file__).parent
+ROOT = pathlib.Path(__file__).resolve().parent
 
 with open(ROOT / "README.md", "r") as readme:
     long_description = readme.read()
@@ -54,23 +56,27 @@ def read_version():
         raise RuntimeError("Unable to find __version__ in PanPA/version.py")
     return match.group(1)
 
+def _relpath(path):
+    rel = os.path.relpath(path, ROOT)
+    return rel.replace(os.sep, "/")
+
 def build_extensions():
     pyx_files = sorted((ROOT / "PanPA").glob("*.pyx"))
     extensions = []
     for pyx in pyx_files:
         module = f"PanPA.{pyx.stem}"
-        if CYTHON_AVAILABLE:
-            src = str(pyx.relative_to(ROOT))
+        if USE_CYTHON:
+            src = _relpath(pyx)
         else:
             cpp = pyx.with_suffix(".cpp")
             if not cpp.exists():
                 raise RuntimeError(
-                    f"Missing generated source {cpp}. Install Cython to build from .pyx."
+                    f"Missing generated source {cpp}. Run scripts/regen_cython.sh to generate it."
                 )
-            src = str(cpp.relative_to(ROOT))
+            src = _relpath(cpp)
         extensions.append(Extension(module, [src], language="c++"))
 
-    if CYTHON_AVAILABLE:
+    if USE_CYTHON:
         return cythonize(
             extensions,
             compiler_directives={
@@ -104,9 +110,8 @@ setup(
         "Topic :: Scientific/Engineering :: Bioinformatics",
     ],
     setup_requires=[],
-    tests_require=['pytest'],
     include_package_data=True,
-    python_requires=">=3.6,<=3.11",
+    python_requires=">=3.6,<3.14",
     packages=find_packages(),
     install_requires=reqs,
     ext_modules=build_extensions(),

@@ -82,3 +82,17 @@
 ## 2026-02-26 11:57:19 +0100
 - Removed legacy `PanPA/reverse_complement_fast.c` to avoid confusion (we ship C++ now).
 - Updated `.gitignore` to ignore `PanPA/reverse_complement_fast.c` going forward.
+
+## 2026-02-26 12:16:29 +0100
+- Updated Python upper bound to <3.14:
+  - `setup.py`: version guard + `python_requires`.
+  - `README.md`: support statement updated to 3.6–3.13.
+  - `environment.yml`: python constraint to `<3.14`.
+
+## 2026-02-26 12:19:27 +0100
+- `setup.py`: default to pre-generated `.cpp` sources; only use Cython when `PANPA_USE_CYTHON=1`.
+- This avoids Cython-generated absolute source paths breaking wheel builds.
+
+## 2026-02-26 12:23:10 +0100
+- `setup.py`: resolve ROOT, use `os.path.relpath` for extension sources to guarantee relative paths in wheel builds.
+- Removed legacy `tests_require` to avoid setuptools warning.

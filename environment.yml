@@ -1,7 +1,7 @@
 name: panpa
 
 dependencies:
-  - python>=3.6,<=3.11
+  - python>=3.6,<3.14
   - pip
   - setuptools>=64
   - wheel

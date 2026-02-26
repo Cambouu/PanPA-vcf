@@ -23,7 +23,7 @@ PanPA takes as input any number of MSAs in FASTA format, where each MSA represen
 In the following sections, installation will be explained and how to use each subcommand
 
 ## Installation
-PanPA supports Python 3.6–3.11. End users do **not** need Cython to install from source because the generated C++ sources
+PanPA supports Python 3.6–3.13. End users do **not** need Cython to install from source because the generated C++ sources
 (`.cpp`) are shipped in the repo and sdists. Cython is only required if you want to regenerate those `.cpp` files for
 development.
 
