@@ -60,6 +60,7 @@ def align_to_graph(seqs_dict, graphs, graph_files, sub_matrix, gap_score, fs_sco
     cdef vector[string] alignments
     cdef int gap_s = gap_score
     cdef string a
+    cdef bytes a_py
     cdef int fs_s = fs_score
     # this maps a codon to an amino acid with ord(A)-65
     # ACTG are mapped with neucleotide_to_int to integers 01234
@@ -142,8 +143,9 @@ def align_to_graph(seqs_dict, graphs, graph_files, sub_matrix, gap_score, fs_sco
                                 # queue.put(a + b"\tst:Z:forward")
                             else:
                                 # todo hacky and needs fixing later
-                                a = a.replace(b"\t+\t", b"\t-\t")
-                                queue.put(a)
+                                a_py = a
+                                a_py = a_py.replace(b"\t+\t", b"\t-\t")
+                                queue.put(a_py)
                                 # queue.put(a + b"\tst:Z:reverse")
                     # if not reading_frame:
                     #     queue.put(a)
@@ -275,6 +277,7 @@ def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_sco
     cdef Graph graph
     cdef bint print_dp = False
     cdef vector[string] alignments
+    cdef bytes a_py
     cdef int gap_s = gap_score
     cdef string a
     cdef int fs_s = fs_score
@@ -326,8 +329,9 @@ def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_sco
                         # print(f"added {a} to the queue")
                     else:
                         # print(f"trying to add {a} to the queue")
-                        a = a.replace(b"\t+\t", b"\t-\t")
-                        queue.put(a)
+                        a_py = a
+                        a_py = a_py.replace(b"\t+\t", b"\t-\t")
+                        queue.put(a_py)
                         # queue.put(a + b"\tRF:Z:reverse")
                         # print(f"added {a} to the queue")
 

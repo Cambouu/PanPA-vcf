@@ -4,6 +4,7 @@ import sys
 import argparse
 import logging
 from PanPA._main import _main
+from PanPA.version import __version__
 
 """
 1: Build Graph and Index
@@ -38,6 +39,8 @@ def main():
     parser._positionals.title = 'Subcommands'
     parser._optionals.title = 'Global Arguments'
 
+
+    parser.add_argument("--version", action="version", version=f"PanPA {__version__}")
 
     parser.add_argument("--log_file", dest="log_file", type=str, default="log.log",
                         help="The name/path of the log file. Default: log.log")

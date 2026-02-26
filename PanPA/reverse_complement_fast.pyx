@@ -25,7 +25,7 @@ cpdef str reverse_complement(str seq):
 
     cdef Py_ssize_t i, seq_len
     cdef const char *seq_cstr = PyUnicode_AsUTF8AndSize(seq, &seq_len)
-    cdef char *seq_pointer = &seq_cstr[0]
+    cdef const char *seq_pointer = seq_cstr
     cdef char *rev_comp = <char *> malloc(seq_len + 1)
     cdef str result
 

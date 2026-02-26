@@ -325,7 +325,7 @@ cdef vector[string] align_to_graph_sw(Graph graph, str read,str read_name, bint 
         alignment = Alignment(read_name, read_len, global_max)
 
         traceback_max = dp_table[coord]
-        i = coord / (graph_seq_len + 1)
+        i = coord // (graph_seq_len + 1)
         j = coord % (graph_seq_len + 1)
 
         # while not first row or column, and not a 0 score (maybe alignment just ended in the middle)

@@ -23,11 +23,30 @@ PanPA takes as input any number of MSAs in FASTA format, where each MSA represen
 In the following sections, installation will be explained and how to use each subcommand
 
 ## Installation
-PanPA is written in Cython and requires Python between 3.6 and 3.8 (will be fixed later to include higher Python, but some bugs came up with newer versions when converting pyx files), and requires `Cython==0.29.21` and `setuptools~=75.1.0`.
+PanPA supports Python 3.6–3.11. End users do **not** need Cython to install from source because the generated C++ sources
+(`.cpp`) are shipped in the repo and sdists. Cython is only required if you want to regenerate those `.cpp` files for
+development.
 
-You can install Cython through pip with and has been tested with this version of Cython `pip install Cython==0.29.21`
+Basic install (editable):
+```
+pip install -e .
+```
 
-Once the requirements are there, then PanPA can be simply installed in the system with `python3 setup.py install --user`
+If your environment cannot access PyPI (for example, strict firewalls), pip’s build isolation may fail to download
+build tools. In that case, run:
+```
+pip install -e . --no-build-isolation
+```
+
+To regenerate C++ sources (developer only):
+```
+scripts/regen_cython.sh
+```
+
+Check the installed version:
+```
+PanPA --version
+```
 
 ## Subcommands
 Both `build_index` and `build_gfa` take any number of MSAs as input, where the MSAs can be given in a directory, a text

@@ -1,7 +1,13 @@
 import sys
-from setuptools import setup, find_packages
-from Cython.Build import cythonize
-from PanPA.version import __version__
+import pathlib
+import re
+from setuptools import setup, find_packages, Extension
+
+try:
+    from Cython.Build import cythonize
+    CYTHON_AVAILABLE = True
+except Exception:
+    CYTHON_AVAILABLE = False
 
 '''
 I can also check for cython's version using
@@ -21,25 +27,66 @@ The idea is that I use extensions and have a check whether I am requiring cython
 
 CURRENT_PYTHON = sys.version_info[:2]
 REQUIRED_PYTHON_LOWER = (3, 6)
-REQUIRED_PYTHON_UPPER = (3, 8)
+REQUIRED_PYTHON_UPPER = (3, 11)
 
 if CURRENT_PYTHON < REQUIRED_PYTHON_LOWER or CURRENT_PYTHON > REQUIRED_PYTHON_UPPER:
-    sys.stderr.write("PanPA requires Python betwee 3.6 and 3.8 "
-                     "you current verions is {}".format(CURRENT_PYTHON))
+    sys.stderr.write("PanPA requires Python between 3.6 and 3.11 "
+                     "your current version is {}".format(CURRENT_PYTHON))
     sys.exit(1)
 
-with open("README.md", "r") as readme:
+ROOT = pathlib.Path(__file__).parent
+
+with open(ROOT / "README.md", "r") as readme:
     long_description = readme.read()
 
 reqs = []
-with open("requirements.txt", "r") as infile:
-    for l in infile:
+with open(ROOT / "requirements.txt", "r") as infile:
+    for line in infile:
+        l = line.strip()
         if not l.startswith("#"):
-            reqs.append(l.strip())
+            reqs.append(l)
+
+def read_version():
+    version_file = ROOT / "PanPA" / "version.py"
+    content = version_file.read_text()
+    match = re.search(r"^\s*__version__\s*=\s*[\"']([^\"']+)[\"']\s*$", content, re.M)
+    if not match:
+        raise RuntimeError("Unable to find __version__ in PanPA/version.py")
+    return match.group(1)
+
+def build_extensions():
+    pyx_files = sorted((ROOT / "PanPA").glob("*.pyx"))
+    extensions = []
+    for pyx in pyx_files:
+        module = f"PanPA.{pyx.stem}"
+        if CYTHON_AVAILABLE:
+            src = str(pyx.relative_to(ROOT))
+        else:
+            cpp = pyx.with_suffix(".cpp")
+            if not cpp.exists():
+                raise RuntimeError(
+                    f"Missing generated source {cpp}. Install Cython to build from .pyx."
+                )
+            src = str(cpp.relative_to(ROOT))
+        extensions.append(Extension(module, [src], language="c++"))
+
+    if CYTHON_AVAILABLE:
+        return cythonize(
+            extensions,
+            compiler_directives={
+                "boundscheck": False,
+                "cdivision": True,
+                "nonecheck": False,
+                "initializedcheck": False,
+                "language_level": "3",
+            },
+        )
+    return extensions
+
 
 setup(
     name="PanPA",
-    version=__version__,
+    version=read_version(),
     license="MIT",
     author="Fawaz Dabbaghie",
     url='https://fawaz-dabbaghieh.github.io/',
@@ -59,12 +106,10 @@ setup(
     setup_requires=[],
     tests_require=['pytest'],
     include_package_data=True,
-    python_requires=">=3.6",
+    python_requires=">=3.6,<=3.11",
     packages=find_packages(),
-    install_requires=[],
-    ext_modules=cythonize("PanPA/*pyx", compiler_directives={"boundscheck": False, "cdivision": True,
-                                               "nonecheck": False, "initializedcheck": False,
-                                               "language_level": "3"}),
+    install_requires=reqs,
+    ext_modules=build_extensions(),
     entry_points={
         "console_scripts": ["PanPA = PanPA.main:main"],
     },

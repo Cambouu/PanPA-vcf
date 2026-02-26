@@ -302,14 +302,14 @@ cpdef void align_to_graph_ed(Graph graph, str read, bint print_dp) except *:
         alignment = Alignment("seq1", read_len)
 
         # traceback_max = dp_table[coord]
-        i = coord / (graph_seq_len + 1)
+        i = coord // (graph_seq_len + 1)
         j = coord % (graph_seq_len + 1)
         # i and j can be used as is to access the corresponding letter in
 
         while ((i != 0) and (j != 0)):
             # print("current: coord, i, j", coord, i, j)
             back_coord = traceback_table[coord]
-            back_i = back_coord / (graph_seq_len + 1)
+            back_i = back_coord // (graph_seq_len + 1)
             back_j = back_coord % (graph_seq_len + 1)
             # print("coming from: ", back_coord, back_i, back_j)
 
