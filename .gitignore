@@ -11,6 +11,7 @@ graph_update/
 
 dna_alignment_test/
 # compiled scripts
+PanPA/reverse_complement_fast.c
 
 
 # C extensions

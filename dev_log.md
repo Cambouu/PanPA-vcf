@@ -78,3 +78,7 @@
 
 ## 2026-02-26 11:53:46 +0100
 - Updated `.gitignore` to stop ignoring generated `PanPA/*.cpp` so they can be committed.
+
+## 2026-02-26 11:57:19 +0100
+- Removed legacy `PanPA/reverse_complement_fast.c` to avoid confusion (we ship C++ now).
+- Updated `.gitignore` to ignore `PanPA/reverse_complement_fast.c` going forward.
