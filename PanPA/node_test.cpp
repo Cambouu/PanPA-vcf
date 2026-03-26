@@ -1547,6 +1547,7 @@ struct __pyx_obj_5PanPA_4Node_Node {
   std::vector<int>  out_nodes;
   std::vector<int>  in_nodes;
   PyObject *colors;
+  int seq_pos;
 };
 
 

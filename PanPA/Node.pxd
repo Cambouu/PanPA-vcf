@@ -18,6 +18,7 @@ cdef class Node:
     cdef vector[int] out_nodes
     cdef vector[int] in_nodes
     cdef set colors
+    cdef int seq_pos
 
     cdef void add_child(self, Node child) except *
     cdef void remove_child(self, Node child) except *

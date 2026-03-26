@@ -212,7 +212,7 @@ cdef class Graph:
 
         out_file = open(output_file, "w")
         for n in self.nodes.values():
-            nodes_info[n.identifier] = {"id": n.identifier, "colors": list(n.colors), "seq": n.seq}
+            nodes_info[n.identifier] = {"id": n.identifier, "colors": list(n.colors), "seq": n.seq, "msa_pos": n.msa_pos}
         out_file.write(json.dumps(nodes_info))
         out_file.close()
 
@@ -388,7 +388,17 @@ cdef class Graph:
 
                     # 1 would be the identifier and 2 is the sequence
                     ident = int(line[1])
-                    self.nodes[ident] = Node(ident, line[2])
+
+                    seq_pos = -1
+                    if len(line) > 3:  # optional fields start after col 3
+                        for field in line[3:]:
+                            if field.startswith("SP:i:"):
+                                try:
+                                    seq_pos = int(field[5:])
+                                except ValueError:
+                                    logging.warning("Invalid SP tag value in segment %d: %s", ident, field)
+
+                    self.nodes[ident] = Node(ident, line[2], seq_pos=seq_pos)
 
                 elif (line[0] == "P") and paths:
                     # path lines look like this
@@ -439,6 +449,10 @@ cdef class Graph:
         #    an edge count between two nodes is just how many shared colors between then
         for k, node in self.nodes.items():
             line = str("\t".join(("S", str(node.identifier), node.seq, f"LN:i:{len(node.seq)}" )))
+
+            if node.seq_pos >= 0:
+                line += f"\tSP:i:{node.seq_pos}"
+
             f.write(line + "\n")
 
             for child in node.out_nodes:

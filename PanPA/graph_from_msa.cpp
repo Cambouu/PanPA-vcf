@@ -1562,6 +1562,7 @@ struct __pyx_obj_5PanPA_4Node_Node {
   std::vector<int>  out_nodes;
   std::vector<int>  in_nodes;
   PyObject *colors;
+  int seq_pos;
 };
 
 
@@ -2564,7 +2565,7 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
   PyObject *__pyx_codeobj_tab[2];
-  PyObject *__pyx_string_tab[49];
+  PyObject *__pyx_string_tab[50];
   PyObject *__pyx_number_tab[2];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
@@ -2646,15 +2647,16 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_pyx_vtable __pyx_string_tab[37]
 #define __pyx_n_u_qualname __pyx_string_tab[38]
 #define __pyx_n_u_seq_names_keys __pyx_string_tab[39]
-#define __pyx_n_u_sequences __pyx_string_tab[40]
-#define __pyx_n_u_set_name __pyx_string_tab[41]
-#define __pyx_n_u_setdefault __pyx_string_tab[42]
-#define __pyx_n_u_sync_lists __pyx_string_tab[43]
-#define __pyx_n_u_test __pyx_string_tab[44]
-#define __pyx_n_u_values __pyx_string_tab[45]
-#define __pyx_n_u_x __pyx_string_tab[46]
-#define __pyx_kp_b_iso88591_4_1_U_3aq_G1Cs_U_3c_1E_Qc_CuHAS __pyx_string_tab[47]
-#define __pyx_kp_b_iso88591_Qc_3aq_AS_Qa_a_S_4q_c_T_5_U_1_7 __pyx_string_tab[48]
+#define __pyx_n_u_seq_pos __pyx_string_tab[40]
+#define __pyx_n_u_sequences __pyx_string_tab[41]
+#define __pyx_n_u_set_name __pyx_string_tab[42]
+#define __pyx_n_u_setdefault __pyx_string_tab[43]
+#define __pyx_n_u_sync_lists __pyx_string_tab[44]
+#define __pyx_n_u_test __pyx_string_tab[45]
+#define __pyx_n_u_values __pyx_string_tab[46]
+#define __pyx_n_u_x __pyx_string_tab[47]
+#define __pyx_kp_b_iso88591_4_1_U_3aq_G1Cs_U_3c_1E_Qc_CuHAS __pyx_string_tab[48]
+#define __pyx_kp_b_iso88591_Qc_3aq_AS_Qa_a_S_4q_c_T_5_U_1_7 __pyx_string_tab[49]
 #define __pyx_int_0 __pyx_number_tab[0]
 #define __pyx_int_1 __pyx_number_tab[1]
 /* #### Code section: module_state_clear ### */
@@ -2674,7 +2676,7 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_5PanPA_4Node_Node);
   Py_CLEAR(clear_module_state->__pyx_ptype_5PanPA_5Graph_Graph);
   for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<49; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<50; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
@@ -2701,7 +2703,7 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_ptype_5PanPA_4Node_Node);
   Py_VISIT(traverse_module_state->__pyx_ptype_5PanPA_5Graph_Graph);
   for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<49; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<50; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
@@ -3210,6 +3212,8 @@ static PyObject *__pyx_pf_5PanPA_14graph_from_msa_2msa_graph(CYTHON_UNUSED PyObj
   int __pyx_t_12;
   PyObject *__pyx_t_13 = NULL;
   int __pyx_t_14;
+  PyObject *__pyx_t_15 = NULL;
+  PyObject *__pyx_t_16 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3581,17 +3585,24 @@ static PyObject *__pyx_pf_5PanPA_14graph_from_msa_2msa_graph(CYTHON_UNUSED PyObj
         /* "PanPA/graph_from_msa.pyx":136
  *                 else:
  *                     # make a new node
- *                     node = Node(node_id, aa)             # <<<<<<<<<<<<<<
+ *                     node = Node(node_id, aa, seq_pos=j)             # <<<<<<<<<<<<<<
  *                     color = seq_names_keys[i]
  *                     node.colors.add(color)
 */
         /*else*/ {
           __pyx_t_3 = NULL;
+          __pyx_t_15 = PyLong_FromSsize_t(__pyx_v_j); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 136, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_15);
           __pyx_t_4 = 1;
           {
-            PyObject *__pyx_callargs[3] = {__pyx_t_3, __pyx_v_node_id, __pyx_v_aa};
-            __pyx_t_13 = __Pyx_PyObject_FastCall((PyObject*)__pyx_mstate_global->__pyx_ptype_5PanPA_4Node_Node, __pyx_callargs+__pyx_t_4, (3-__pyx_t_4) | (__pyx_t_4*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+            PyObject *__pyx_callargs[3 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_3, __pyx_v_node_id, __pyx_v_aa};
+            __pyx_t_16 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 136, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_16);
+            if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_seq_pos, __pyx_t_15, __pyx_t_16, __pyx_callargs+3, 0) < (0)) __PYX_ERR(0, 136, __pyx_L1_error)
+            __pyx_t_13 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_ptype_5PanPA_4Node_Node, __pyx_callargs+__pyx_t_4, (3-__pyx_t_4) | (__pyx_t_4*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_16);
             __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+            __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
             if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 136, __pyx_L1_error)
             __Pyx_GOTREF((PyObject *)__pyx_t_13);
           }
@@ -3600,7 +3611,7 @@ static PyObject *__pyx_pf_5PanPA_14graph_from_msa_2msa_graph(CYTHON_UNUSED PyObj
 
           /* "PanPA/graph_from_msa.pyx":137
  *                     # make a new node
- *                     node = Node(node_id, aa)
+ *                     node = Node(node_id, aa, seq_pos=j)
  *                     color = seq_names_keys[i]             # <<<<<<<<<<<<<<
  *                     node.colors.add(color)
  *                     nodes[node_id] = node
@@ -3611,7 +3622,7 @@ static PyObject *__pyx_pf_5PanPA_14graph_from_msa_2msa_graph(CYTHON_UNUSED PyObj
           __pyx_t_13 = 0;
 
           /* "PanPA/graph_from_msa.pyx":138
- *                     node = Node(node_id, aa)
+ *                     node = Node(node_id, aa, seq_pos=j)
  *                     color = seq_names_keys[i]
  *                     node.colors.add(color)             # <<<<<<<<<<<<<<
  *                     nodes[node_id] = node
@@ -3773,6 +3784,8 @@ static PyObject *__pyx_pf_5PanPA_14graph_from_msa_2msa_graph(CYTHON_UNUSED PyObj
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_15);
+  __Pyx_XDECREF(__pyx_t_16);
   __Pyx_AddTraceback("PanPA.graph_from_msa.msa_graph", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -4294,31 +4307,31 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 9; } index[] = {{1},{24},{1},{20},{20},{2},{17},{12},{18},{17},{18},{5},{6},{7},{12},{13},{9},{8},{5},{1},{13},{5},{1},{4},{7},{8},{10},{9},{6},{8},{4},{7},{5},{3},{8},{13},{14},{14},{12},{14},{9},{12},{10},{10},{8},{6},{1},{164},{338}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (714 bytes) */
-const char* const cstring = "BZh91AY&SY\313\266?\177\000\000W\377\373\377\367\377\356\353k\256\300\276\301~\260\277\377\377\340@@@@@@@@\000@@\000@\000@\002\\rsf\341\303T\364R\032\032\003\323\017T\310\201\352\006\214\201\223\321\007\250\000\001\247\224z\217PfS\332\240\322\004\312l\211\017\032D\0324\000\003\020\3104\000\000\000\000\032\003T\366\211\244P\310\320h4\000\000\000\003@\000\000\000\0002\tS\020F\246\236\225?I=M\352i\250\365\000\000\001\220\000\000\000\000z\236\206QT\256\346\255\202<O\t\237\373\240\334m\321G\356\010\332\203S\212\006\222\277\360HGF.7\344$\252\350\020\307l\022\"\210\327\325\024sF\204\311\205\213A\355c\357\312\244\300\311l\347k\236\361\262\301n\246bh\266\246\373\206<\205Td$\017\203\307\326\353\244,\244\024\024#G\326\237B4\370\310b*\314\0241\254!V\211\001\332\0258\204\255\tB\010\314\300\325ETF\272a\3607i\260q\007\231H?\246f`\204A\202\227\0178\311A\014\037m\355\013\367\375+\321\021\021+\221s~\306T\234O\343\353\204\304+\335E\200\2534\261\034\211\206\016\317d\267\263\320\263Ltj\302\031J\303K-\233\027\336d\031V\226T\"\t\254i\231\307E5\312f8\232\320\234A\001\210,\316\024RiJF\306/N\210'\366BR\035:XK9\212\202\321A\007\014\\\003\001\205\3530h\230\234k\245\365\275#\364\n\265|\322\363>\360C5BR\225_d\365\034\336\321+Z\366$A\014\250 \2622&\202\311\006\024\254\021\247 \204p\nR{T\223\004$\343eA\360s\243]\r\2215\331H\271\346kB\354)\202\275\2121\2113\031\022y\231\204\277 F\313\213]\205\334A\346\273\243\307B\275lM\003\033\2612\017A\257|1\263I*N\034\270\264\234\272b\241\216\305B#\210(\354\225\263\211\351H\025}\024h}\022y\010DQ\221\244\0210\265\014\267\262B\002Ct\n\273[b\333\340[\336\026\271\212C\277\322>\373\272\023(\355a?\260\300C\010\221\306\267 \360\210\323bL\000\225M\200\277\313(\023D6\033#$\3363\027\352G\034Ht\256\326\025R\035\037\007;\223F\035\037R\002\255\225/\347|\001.\347\341\255\234\034\003]\261\203\234\301Y\226\0135lTV\324\242\027\332j\365\306HB&h\303d\245.\2752\205\366n\327\325\023\334\017\r)\363\024\365\020\341\260\202\242\023=\210qB\021\203\263\272)b\206&*\244\300\177\213\271""\"\234(He\333\037\277\200";
-    PyObject *data = __Pyx_DecompressString(cstring, 714, 2);
+    const struct { const unsigned int length: 9; } index[] = {{1},{24},{1},{20},{20},{2},{17},{12},{18},{17},{18},{5},{6},{7},{12},{13},{9},{8},{5},{1},{13},{5},{1},{4},{7},{8},{10},{9},{6},{8},{4},{7},{5},{3},{8},{13},{14},{14},{12},{14},{7},{9},{12},{10},{10},{8},{6},{1},{164},{342}};
+    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (727 bytes) */
+const char* const cstring = "BZh91AY&SY\371\267\362\354\000\000W\377\373\377\367\377\356\353k\256\300\276\301~\360\277\377\377\340@@@@@@@@\000@@\000@\000@\002\\\334\314\331\270p\324\324\324\201\223&\217M3Q\241\032d\032a\003OD6\204\000di\345\036\243\322a\224\331A\251\243I\223D\310\217\320\2044h\000\000\000\000\000\000\000\000\003T\366\204SH\3044h4\000\000\000\003@\000\000\000\000\032\006\232!\005O\364Jy&mL\241\3520\214&\001\014\206\2000#\000#G\246\214SK%|\345\210.\007\350.\366^\035\255\334\024;\264\026\302\006\024\024\201\200M\377\002@R\020A\342\017\221U\036\037\213Y\346\001Aj\245\201F\205\"q8\021Z\\\321u^5\023\200+\312\347\tPf\025n\264\324\222\3448\223)S\272\006\026\331\024A\200\032\314\034(\250\300\2260((F\177\245Nti\361\220\304\177J\0241\232B\255\"\004\031\352\360\t\214\363\002\010\312\300\377\"\252#\\0\367\033u\030@<%Y\312\027\360\315v\010D\0303,D'\231+\221\036\233\367\227\253\255\\I$\315 \260\337\320\312g\200\377:g\316\010\233\270\253\302\263NbP\232 \227c-\373\264\210\340\205\3544\001\344\023\001\201\2266\252\250c\206U\2462\202A\304\037\216H\346\254\307\223cDQ\003\274\020\022\003\n1)\223\321k\024\202\272U\005\036\2123\021\320mC\022@B\305B\244\206\262\001p\324y\314\"\023\"2\246\316\231\314~\201f\317\211\316S\332\007MbGw\241F\025`n\351\025\254\205\201\016\206b\007Y\031\0239dv\024\353\221\247 x\337\024\247\013%<\017\221\005\265\001\317D\204\324\213`\331e\013\004p\271X\n\361\241c.;\331,\033\202\321\236\34305Z\002\021\256+%\t\347\016\026R\031DM\211a\2361R\303\027\022CT\345\314\247\033J\025\335\276\366\255&V\026\t-[\204\262\005\245\257\212\201EW\205\333R\221S\312\207\2408G\220bLGP\321$\322\220\022\007\013D*\212\361\213,\001g\230s\337'Q\233\270~\371\366\235\341\344\241\362\264\311\r\"J\341\256\217V\320z\316\347\005\014\245\002\177\222\322\017\2668\226$\021\361!\0034\307\034m%\312\334\3618\341q\366\210&\276\340\\ct\024\375\207\262z2\016\276\336\231\250\t\240p\2543\366 \025w\231\257:\264\310l<\032aUq)h\315\007\325@X\240\2014\345\0214\304\273u7\306\213B\220\335\321\263\0144\365\205\275\265\"\222\205""\240\304@Qh\271WtR\305\014LUIq\376.\344\212p\241!\363o\345\330";
+    PyObject *data = __Pyx_DecompressString(cstring, 727, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (661 bytes) */
-const char* const cstring = "x\332mPMo\323@\020\215!\201\024\2454n\235\222\212\240bU \020\242\225\325VpC\241\255\312\251\252[*\004\227\325v\263MM\375\021{\327ir\343\350\343\036\367\270\307=\346\330\237\342c~B~\002\263)\345C\302\222wwf\336\233y\363\336\036\343\370\270\273\325\317\360\340\022]dI\204\"\2067\007\343\321\207ya\363\337\002B\307\343\021\374\373\001\341\350\210\216\370\t\275\300\030\207\031\305\2751\"I\034S\302i\357.\301(\2151\033\307$H6I\222%9\017b\312\020\"!f\014\365)\0178\215L\010i\024\304\210g\230\320sL\256H\022&\031\034y\024\223<\313h\314\177](Nz\364\3577\243q\036\321\014s\212\320E\036\023\204\346\212\003\0240\364{\244\031\303\276_\3211\013\223~?\210\373\010E\030\346\301\027%\275<\004\256Yn\316\214Au\n\032c\034A\332\2140?\nz\363i\203d0\310\3500Hrvw\3171\377\004\300\006\003\321\220\343s\323\032\2414\307\341m?\350=\357\314\220Q\003QNcb\010\214rt\007\341=p5\017\271q\016\205\001\343P\347\224q\204\2068\314)\033\375\260f;\225ZGz\323j\275\250\025g\302\025\333\002\213\264\2547\212C\341\211=\301\344\206<S\257\264\253\2675\231\330\263G\225E\007\n\007\262\255l\345\316\036T\226V\205/\210\\\221{2W\237tW\237N\356O<\203k\211C\351\311}U\327\226v m\225\315\347\252\246|u\251\261N\313\346:\020\272\352\013P\374i\363\231\374\246R\r\020W9\352D]\003\204O\336\337x7]\320\270\\\251\331\302*\253\255\371\250e\271-\261L\313\252#\272\342T\336\003\205\276\304e\365q\001\307bq*,\261&]\271#S\265\240[F\365\3045\334\317\322\226\257\325\256\266\376,\353\301\002\013+\360x'\267\264]\326\327$\034mi\301:\037%1\033\226u[\330\006\t^p\271\013\035\237\300\"\365\247`\031x\264W\014\305W#f\332X*\230\330\020~\331\\\001\013\211\354\2503\355\316\352\225V\007H\226\352h_\343\322\351\310#p\322+\235\266|(\271\362T\267t\\\030\363Bq\355\335\242oe\333\377\307\202>\371F\371w\244\024\344\267\\h\277\252\322\322Y\227&\256-\025\270\270\026\211\362\247\325Fq\000\342_J\330x\241h\013\033&\324\032\205\367\023l\216of";
-    PyObject *data = __Pyx_DecompressString(cstring, 661, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (667 bytes) */
+const char* const cstring = "x\332mPMo\3230\030n\240\205\016u\254\335\322\321\211\242\021M \020bS\264MpCe\233\306iZ6&>.\226\227z]X\3424\261\323\2657\2169\372\350\243\217>\366\270\237\222c\177B\177\002\257;\nL\"Rl\277\037\317\373<\317\373\366\030\323\343\316V/\305\375Kt\221\306\021\212\030\336\354\217\206\037f\205\315\273\005\204\216GC\370\367\003\237\243#2\344'\344\002c\034\246\004wG\310\217)%>'\335y\202\021B1\033Q?\2107\3758\2153\036P\302\020\362C\314\030\352\021\036p\022\231\020\322(\240\210\247\330'\347\330\277\362\3430N\341\310\"\352giJ(\377}!\032w\311\277oFh\026\221\024s\202\320EF}\204f\212\003\0240\364\207\322\320\260\037Wd\304\302\270\327\013h\017\241\010\003\037|Q\334\315B\300\032s3$\005\325\th\2448\202\264\2410?\n\2723\266~\334\357\247d\020\304\031\233\337\263\236;\001\240a\201h\300\361\271\031\215P\222\341\360v\036\314\236Mf\310\2501Q?6WF\250op\214p4\357\344]Xn\026r\263@\024\006\214C\235\023\306\021\032\3400#l\370\323\232\356\224*m\351N\312\325\274\222\237\tGl\013,\222\242Z\313\017\205+\366\004\223\033\362L\275\322\216\336\326\376\2701}TZ\264\241p [\252\241\234\351\203\322\322\252\360\204/W\344\236\314\324'\335\321\247\343\373c\327\3645\305\241t\345\276\252jK\333\220\266\212\372sUQ\236\272\324X'E}\035\000\035\365\005 \336\244\376L~W\211\206\026G\331\352D]C\013\037\277\277qo:\240q\271Ti\010\253(7gT\313r[b\231\024e[t\304\251\274\007\n=\211\213\362\343\034\216\305\374TXbM:rG&jA7\215\352\261c\260\237eC\276V\273\332\372k\326\005\003\013+\360x'\267t\243\250\256I8Z\322\002;\037\245o\034\026\325\206h\230N\330\005\227\2730\361\t\030\251>\205\225\301\216\366\362\201\370f\304LjK9\023\033\302+\352+\260B_\266\325\231v\246\325R\263\r K\265\265\247qa\267\345\021l\322-\354\226|(\271rU\247\260\035\240y\241\270vo\273oe\333\372\353\330\373\177?h\224o\2247\007&`\241\351\000\305\252J\n{]\232\270\262\224\343\374Z\304\312\233\224k\371\001\030x)\301\365B\336\022\r`\251\324r\367\0278Ctd";
+    PyObject *data = __Pyx_DecompressString(cstring, 667, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (939 bytes) */
-const char* const bytes = "-PanPA/graph_from_msa.pyx?PanPA.graph_from_msa__Pyx_PyDict_NextRefaaalready_connectedalready_seenasyncio.coroutines__class_getitem__cline_in_tracebackcolorcolumncurrentcurrent_nodecurrent_nodesenumerate__func__graphi_is_coroutineitemsjkeyslogging__main____module__msa_graphn_seqs__name__nodenode_idnodespoppreviousprevious_nodeprevious_nodes__pyx_vtable____qualname__seq_names_keyssequences__set_name__setdefaultsync_lists__test__valuesx\200\001\3604\000\005\034\2301\340\004\010\210\005\210U\220!\2203\220a\220q\330\010\014\210G\2201\220C\220s\230#\230U\240(\250!\2503\250c\260\021\360\n\000\r\024\2201\220E\230\030\240\021\240!\360\006\000\017\026\220Q\220c\230\023\230C\230u\240H\250A\250S\260\003\2601\360\n\000\r\025\220G\2301\230D\240\010\250\001\250\024\250S\260\001\330\020 \240\005\240Q\240h\250a\250q\330\020\037\230u\240A\240W\250A\250Q\340\020\035\230Z\240q\250\001\330\020!\240\024\240R\240w\250a\250t\2608\2701\270A\200\001\360\022\000\005\021\220\001\330\004\025\220Q\220c\230\022\2303\230a\230q\330\004\024\220A\220S\230\002\230#\230Q\230a\330\004\016\210a\330\004\r\210S\220\001\220\031\230!\2304\230q\240\t\250\025\250c\260\021\260!\330\004\025\220T\230\021\230)\2405\250\001\340\004\010\210\005\210U\220!\2201\360\006\000\t\023\220!\2207\230/\250\021\330\010\031\230\021\330\010\030\230\001\230\023\230B\230c\240\021\240!\330\010\021\220\021\220!\2201\220C\220t\2305\240\t\250\027\260\001\330\010\033\2301\340\010\014\210C\210v\220Y\230a\230q\340\014\017\210s\220#\220Q\330\020\023\2203\220c\230\034\240U\250!\360\010\000\025\034\2305\240\001\240\034\250Q\250a\330\024\034\230N\250!\2501\330\024\030\230\007\230t\2401\240A\330\024!\240\021\240%\240t\2501\360\010\000\025\034\2304\230q\240\t\250\021\330\024\034\230N\250!\2501\330\024\030\230\007\230t\2401\240A\330\024\031\230\021\230+\240Q\330\024!\240\021\240%\240q\360\006\000\025!\240\001\240\026\240q\330\024\037\230q\360\006\000\005\017\210a\210w\220o\240Q\340\004\014\210E\220\021\220&\230\001\340\004\t\210\030\220\021\360""\010\000\005\014\2101";
+    #else /* compression: none (950 bytes) */
+const char* const bytes = "-PanPA/graph_from_msa.pyx?PanPA.graph_from_msa__Pyx_PyDict_NextRefaaalready_connectedalready_seenasyncio.coroutines__class_getitem__cline_in_tracebackcolorcolumncurrentcurrent_nodecurrent_nodesenumerate__func__graphi_is_coroutineitemsjkeyslogging__main____module__msa_graphn_seqs__name__nodenode_idnodespoppreviousprevious_nodeprevious_nodes__pyx_vtable____qualname__seq_names_keysseq_possequences__set_name__setdefaultsync_lists__test__valuesx\200\001\3604\000\005\034\2301\340\004\010\210\005\210U\220!\2203\220a\220q\330\010\014\210G\2201\220C\220s\230#\230U\240(\250!\2503\250c\260\021\360\n\000\r\024\2201\220E\230\030\240\021\240!\360\006\000\017\026\220Q\220c\230\023\230C\230u\240H\250A\250S\260\003\2601\360\n\000\r\025\220G\2301\230D\240\010\250\001\250\024\250S\260\001\330\020 \240\005\240Q\240h\250a\250q\330\020\037\230u\240A\240W\250A\250Q\340\020\035\230Z\240q\250\001\330\020!\240\024\240R\240w\250a\250t\2608\2701\270A\200\001\360\022\000\005\021\220\001\330\004\025\220Q\220c\230\022\2303\230a\230q\330\004\024\220A\220S\230\002\230#\230Q\230a\330\004\016\210a\330\004\r\210S\220\001\220\031\230!\2304\230q\240\t\250\025\250c\260\021\260!\330\004\025\220T\230\021\230)\2405\250\001\340\004\010\210\005\210U\220!\2201\360\006\000\t\023\220!\2207\230/\250\021\330\010\031\230\021\330\010\030\230\001\230\023\230B\230c\240\021\240!\330\010\021\220\021\220!\2201\220C\220t\2305\240\t\250\027\260\001\330\010\033\2301\340\010\014\210C\210v\220Y\230a\230q\340\014\017\210s\220#\220Q\330\020\023\2203\220c\230\034\240U\250!\360\010\000\025\034\2305\240\001\240\034\250Q\250a\330\024\034\230N\250!\2501\330\024\030\230\007\230t\2401\240A\330\024!\240\021\240%\240t\2501\360\010\000\025\034\2304\230q\240\t\250\024\250X\260Q\330\024\034\230N\250!\2501\330\024\030\230\007\230t\2401\240A\330\024\031\230\021\230+\240Q\330\024!\240\021\240%\240q\360\006\000\025!\240\001\240\026\240q\330\024\037\230q\360\006\000\005\017\210a\210w\220o\240Q\340\004\014\210E\220\021\220&\230\001\340\004\t""\210\030\220\021\360\010\000\005\014\2101";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 47; i++) {
+    for (int i = 0; i < 48; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
       if (likely(string) && i >= 3) PyUnicode_InternInPlace(&string);
@@ -4329,7 +4342,7 @@ const char* const bytes = "-PanPA/graph_from_msa.pyx?PanPA.graph_from_msa__Pyx_P
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 47; i < 49; i++) {
+    for (int i = 48; i < 50; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -4340,14 +4353,14 @@ const char* const bytes = "-PanPA/graph_from_msa.pyx?PanPA.graph_from_msa__Pyx_P
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 49; i++) {
+    for (Py_ssize_t i = 0; i < 50; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 47;
+      PyObject **table = stringtab + 48;
       for (Py_ssize_t i=0; i<2; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         #if PY_VERSION_HEX < 0x030E0000

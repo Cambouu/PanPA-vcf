@@ -133,7 +133,7 @@ def msa_graph(sequences):
 
                 else:
                     # make a new node
-                    node = Node(node_id, aa)
+                    node = Node(node_id, aa, seq_pos=j)
                     color = seq_names_keys[i]
                     node.colors.add(color)
                     nodes[node_id] = node

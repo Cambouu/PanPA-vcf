@@ -11,13 +11,14 @@ cdef class Node:
     A node object to store the a Node's information
     """
 
-    def __init__(self, ident, seq=""):
+    def __init__(self, ident, seq="", seq_pos=-1):
         self.identifier = ident
         self.coverage = 1
         self.seq = seq
         self.out_nodes = set()
         self.in_nodes = set()
         self.colors = set()
+        self.seq_pos = seq_pos
 
     def __key(self):
         return self.identifier
@@ -39,6 +40,7 @@ cdef class Node:
         total_size += sys.getsizeof(self.out_nodes)
         total_size += sys.getsizeof(self.in_nodes)
         total_size += sys.getsizeof(self.colors)
+        total_size += sys.getsizeof(self.seq_pos)
         return total_size
 
     """
