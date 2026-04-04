@@ -1579,6 +1579,7 @@ struct __pyx_vtabstruct_5PanPA_5Graph_Graph {
   void (*read_gfa)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, struct __pyx_opt_args_5PanPA_5Graph_5Graph_read_gfa *__pyx_optional_args);
   void (*write_gfa)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *);
   PyObject *(*path_seq)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *);
+  PyObject *(*compute_reference_path)(struct __pyx_obj_5PanPA_5Graph_Graph *, int __pyx_skip_dispatch);
 };
 static struct __pyx_vtabstruct_5PanPA_5Graph_Graph *__pyx_vtabptr_5PanPA_5Graph_Graph;
 /* #### Code section: utility_code_proto ### */

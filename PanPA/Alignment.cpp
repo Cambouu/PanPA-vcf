@@ -1635,6 +1635,7 @@ struct __pyx_vtabstruct_5PanPA_5Graph_Graph {
   void (*read_gfa)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, struct __pyx_opt_args_5PanPA_5Graph_5Graph_read_gfa *__pyx_optional_args);
   void (*write_gfa)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *);
   PyObject *(*path_seq)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *);
+  PyObject *(*compute_reference_path)(struct __pyx_obj_5PanPA_5Graph_Graph *, int __pyx_skip_dispatch);
 };
 static struct __pyx_vtabstruct_5PanPA_5Graph_Graph *__pyx_vtabptr_5PanPA_5Graph_Graph;
 
@@ -1669,6 +1670,7 @@ static struct __pyx_vtabstruct_5PanPA_4Node_Node *__pyx_vtabptr_5PanPA_4Node_Nod
 struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment {
   void (*prepare_aa_gaf)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *);
   void (*prepare_dna_gaf)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *);
+  PyObject *(*generate_vcf_records)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch);
 };
 static struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment *__pyx_vtabptr_5PanPA_9Alignment_Alignment;
 /* #### Code section: utility_code_proto ### */
@@ -2210,11 +2212,44 @@ static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject *k
 /* PyUnicode_Unicode.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyUnicode_Unicode(PyObject *obj);
 
-/* RejectKeywords.export */
-static void __Pyx_RejectKeywords(const char* function_name, PyObject *kwds);
+/* PyObjectCallNoArg.proto (used by pyfrozenset_new) */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
 
-/* GetAttr3.proto */
-static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *);
+/* pyfrozenset_new.proto (used by PySetContains) */
+static CYTHON_INLINE PyObject* __Pyx_PyFrozenSet_New(PyObject* it);
+
+/* PySetContains.proto */
+static CYTHON_INLINE int __Pyx_PySet_ContainsTF(PyObject* key, PyObject* set, int eq);
+
+/* PyLongCompare.proto */
+static CYTHON_INLINE int __Pyx_PyLong_BoolEqObjC(PyObject *op1, PyObject *op2, long intval, long inplace);
+
+/* JoinPyUnicode.export */
+static PyObject* __Pyx_PyUnicode_Join(PyObject** values, Py_ssize_t value_count, Py_ssize_t result_ulength,
+                                      Py_UCS4 max_char);
+
+/* SetStringIndexingError.proto (used by GetItemIntUnicode) */
+static void __Pyx_SetStringIndexingError(const char* message, int has_gil);
+
+/* GetItemIntUnicode.proto */
+#define __Pyx_GetItemInt_Unicode(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck, has_gil, unsafe_shared)\
+    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
+    __Pyx_GetItemInt_Unicode_Fast(o, (Py_ssize_t)i, wraparound, boundscheck, has_gil) :\
+    (__Pyx_SetStringIndexingError("string index out of range", has_gil), (Py_UCS4)-1))
+static CYTHON_INLINE Py_UCS4 __Pyx_GetItemInt_Unicode_Fast(PyObject* ustring, Py_ssize_t i,
+                                                           int wraparound, int boundscheck, int has_gil);
+
+/* RaiseTooManyValuesToUnpack.proto */
+static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected);
+
+/* RaiseNeedMoreValuesToUnpack.proto */
+static CYTHON_INLINE void __Pyx_RaiseNeedMoreValuesError(Py_ssize_t index);
+
+/* IterFinish.proto */
+static CYTHON_INLINE int __Pyx_IterFinish(void);
+
+/* UnpackItemEndCheck.proto */
+static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected);
 
 /* ArgTypeTestFunc.export */
 static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
@@ -2223,6 +2258,49 @@ static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *nam
 #define __Pyx_ArgTypeTest(obj, type, none_allowed, name, exact)\
     ((likely(__Pyx_IS_TYPE(obj, type) | (none_allowed && (obj == Py_None)))) ? 1 :\
         __Pyx__ArgTypeTest(obj, type, name, exact))
+
+/* PyDictContains.proto */
+static CYTHON_INLINE int __Pyx_PyDict_ContainsTF(PyObject* item, PyObject* dict, int eq) {
+    int result = PyDict_Contains(dict, item);
+    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
+}
+
+/* pop_index.proto */
+static PyObject* __Pyx__PyObject_PopNewIndex(PyObject* L, PyObject* py_ix);
+static PyObject* __Pyx__PyObject_PopIndex(PyObject* L, PyObject* py_ix);
+#if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS && CYTHON_ASSUME_SAFE_SIZE
+static PyObject* __Pyx__PyList_PopIndex(PyObject* L, PyObject* py_ix, Py_ssize_t ix);
+#define __Pyx_PyObject_PopIndex(L, py_ix, ix, is_signed, type, to_py_func) (\
+    (likely(PyList_CheckExact(L) && __Pyx_fits_Py_ssize_t(ix, type, is_signed))) ?\
+        __Pyx__PyList_PopIndex(L, py_ix, ix) : (\
+        (unlikely((py_ix) == Py_None)) ? __Pyx__PyObject_PopNewIndex(L, to_py_func(ix)) :\
+            __Pyx__PyObject_PopIndex(L, py_ix)))
+#define __Pyx_PyList_PopIndex(L, py_ix, ix, is_signed, type, to_py_func) (\
+    __Pyx_fits_Py_ssize_t(ix, type, is_signed) ?\
+        __Pyx__PyList_PopIndex(L, py_ix, ix) : (\
+        (unlikely((py_ix) == Py_None)) ? __Pyx__PyObject_PopNewIndex(L, to_py_func(ix)) :\
+            __Pyx__PyObject_PopIndex(L, py_ix)))
+#else
+#define __Pyx_PyList_PopIndex(L, py_ix, ix, is_signed, type, to_py_func)\
+    __Pyx_PyObject_PopIndex(L, py_ix, ix, is_signed, type, to_py_func)
+#define __Pyx_PyObject_PopIndex(L, py_ix, ix, is_signed, type, to_py_func) (\
+    (unlikely((py_ix) == Py_None)) ? __Pyx__PyObject_PopNewIndex(L, to_py_func(ix)) :\
+        __Pyx__PyObject_PopIndex(L, py_ix))
+#endif
+
+/* PyLongBinop.proto */
+#if !CYTHON_COMPILING_IN_PYPY
+static CYTHON_INLINE PyObject* __Pyx_PyLong_SubtractObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check);
+#else
+#define __Pyx_PyLong_SubtractObjC(op1, op2, intval, inplace, zerodivision_check)\
+    (inplace ? PyNumber_InPlaceSubtract(op1, op2) : PyNumber_Subtract(op1, op2))
+#endif
+
+/* RejectKeywords.export */
+static void __Pyx_RejectKeywords(const char* function_name, PyObject *kwds);
+
+/* GetAttr3.proto */
+static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *);
 
 /* AllocateExtensionType.proto */
 static PyObject *__Pyx_AllocateExtensionType(PyTypeObject *t, int is_final);
@@ -2245,9 +2323,6 @@ static int __Pyx__SetItemOnTypeDict(PyTypeObject *tp, PyObject *k, PyObject *v);
 
 /* FixUpExtensionType.proto */
 static CYTHON_INLINE int __Pyx_fix_up_extension_type_from_spec(PyType_Spec *spec, PyTypeObject *type);
-
-/* PyObjectCallNoArg.proto (used by PyObjectCallMethod0) */
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
 
 /* PyObjectCallMethod0.proto (used by PyType_Ready) */
 static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name);
@@ -2608,6 +2683,7 @@ static int __Pyx_State_RemoveModule(void*);
 
 static void __pyx_f_5PanPA_9Alignment_9Alignment_prepare_aa_gaf(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph); /* proto*/
 static void __pyx_f_5PanPA_9Alignment_9Alignment_prepare_dna_gaf(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph); /* proto*/
+static PyObject *__pyx_f_5PanPA_9Alignment_9Alignment_generate_vcf_records(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph, PyObject *__pyx_v_ref_seq, PyObject *__pyx_v_node_to_ref_start, PyObject *__pyx_v_ref_node_set, CYTHON_UNUSED PyObject *__pyx_v_graph_name, int __pyx_skip_dispatch); /* proto*/
 
 /* Module declarations from "libcpp.vector" */
 
@@ -2632,8 +2708,10 @@ static PyObject *__pyx_builtin_round;
 static const char __pyx_k_alignment_score_gaf_id_score_inf[] = "alignment_score, gaf, id_score, info, n_indels, n_matches, n_mismatches, path, read_len, read_name";
 /* #### Code section: decls ### */
 static int __pyx_pf_5PanPA_9Alignment_9Alignment___init__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, PyObject *__pyx_v_read_name, PyObject *__pyx_v_read_len, PyObject *__pyx_v_alignment_score); /* proto */
-static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_2__reduce_cython__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_4__setstate_cython__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_2generate_vcf_records(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph, PyObject *__pyx_v_ref_seq, PyObject *__pyx_v_node_to_ref_start, PyObject *__pyx_v_ref_node_set, PyObject *__pyx_v_graph_name); /* proto */
+static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_4_find_fork_ancestor(CYTHON_UNUSED struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, int __pyx_v_nid, struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph, PyObject *__pyx_v_ref_node_set, PyObject *__pyx_v_node_to_ref_start, PyObject *__pyx_v_fork_cache); /* proto */
+static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_6__reduce_cython__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_8__setstate_cython__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_5PanPA_9Alignment___pyx_unpickle_Alignment(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_5PanPA_9Alignment_Alignment(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 /* #### Code section: late_includes ### */
@@ -2663,9 +2741,9 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_items;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
-  PyObject *__pyx_codeobj_tab[3];
-  PyObject *__pyx_string_tab[79];
-  PyObject *__pyx_number_tab[5];
+  PyObject *__pyx_codeobj_tab[5];
+  PyObject *__pyx_string_tab[109];
+  PyObject *__pyx_number_tab[8];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
 PyTypeObject *__pyx_CommonTypesMetaclassType;
@@ -2713,83 +2791,116 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_kp_u_No_GAF_for_this_alignment_the_in __pyx_string_tab[4]
 #define __pyx_kp_u_None __pyx_string_tab[5]
 #define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[6]
-#define __pyx_kp_u__2 __pyx_string_tab[7]
-#define __pyx_kp_u__3 __pyx_string_tab[8]
-#define __pyx_kp_u__4 __pyx_string_tab[9]
-#define __pyx_kp_u__5 __pyx_string_tab[10]
-#define __pyx_kp_u__6 __pyx_string_tab[11]
-#define __pyx_kp_u_add_note __pyx_string_tab[12]
-#define __pyx_kp_u_cg_Z __pyx_string_tab[13]
-#define __pyx_kp_u_disable __pyx_string_tab[14]
-#define __pyx_kp_u_dv_f __pyx_string_tab[15]
-#define __pyx_kp_u_enable __pyx_string_tab[16]
-#define __pyx_kp_u_gc __pyx_string_tab[17]
-#define __pyx_kp_u_id_f __pyx_string_tab[18]
-#define __pyx_kp_u_isenabled __pyx_string_tab[19]
-#define __pyx_kp_u_stringsource __pyx_string_tab[20]
-#define __pyx_n_u_Alignment __pyx_string_tab[21]
-#define __pyx_n_u_Alignment___reduce_cython __pyx_string_tab[22]
-#define __pyx_n_u_Alignment___setstate_cython __pyx_string_tab[23]
-#define __pyx_n_u_D __pyx_string_tab[24]
-#define __pyx_n_u_I __pyx_string_tab[25]
-#define __pyx_n_u_PanPA_Alignment __pyx_string_tab[26]
-#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[27]
-#define __pyx_n_u_X __pyx_string_tab[28]
-#define __pyx_n_u_alignment_score __pyx_string_tab[29]
-#define __pyx_n_u_append __pyx_string_tab[30]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[31]
-#define __pyx_n_u_class_getitem __pyx_string_tab[32]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[33]
-#define __pyx_n_u_dict __pyx_string_tab[34]
-#define __pyx_n_u_dict_2 __pyx_string_tab[35]
-#define __pyx_n_u_error __pyx_string_tab[36]
-#define __pyx_n_u_exit __pyx_string_tab[37]
-#define __pyx_n_u_format __pyx_string_tab[38]
-#define __pyx_n_u_func __pyx_string_tab[39]
-#define __pyx_n_u_getstate __pyx_string_tab[40]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[41]
-#define __pyx_n_u_items __pyx_string_tab[42]
-#define __pyx_n_u_logging __pyx_string_tab[43]
-#define __pyx_n_u_main __pyx_string_tab[44]
-#define __pyx_n_u_module __pyx_string_tab[45]
-#define __pyx_n_u_name __pyx_string_tab[46]
-#define __pyx_n_u_new __pyx_string_tab[47]
-#define __pyx_n_u_node_pos __pyx_string_tab[48]
-#define __pyx_n_u_pop __pyx_string_tab[49]
-#define __pyx_n_u_pyx_checksum __pyx_string_tab[50]
-#define __pyx_n_u_pyx_result __pyx_string_tab[51]
-#define __pyx_n_u_pyx_state __pyx_string_tab[52]
-#define __pyx_n_u_pyx_type __pyx_string_tab[53]
-#define __pyx_n_u_pyx_unpickle_Alignment __pyx_string_tab[54]
-#define __pyx_n_u_pyx_vtable __pyx_string_tab[55]
-#define __pyx_n_u_qualname __pyx_string_tab[56]
-#define __pyx_n_u_read_len __pyx_string_tab[57]
-#define __pyx_n_u_read_name __pyx_string_tab[58]
-#define __pyx_n_u_read_pos __pyx_string_tab[59]
-#define __pyx_n_u_reduce __pyx_string_tab[60]
-#define __pyx_n_u_reduce_cython __pyx_string_tab[61]
-#define __pyx_n_u_reduce_ex __pyx_string_tab[62]
-#define __pyx_n_u_round __pyx_string_tab[63]
-#define __pyx_n_u_self __pyx_string_tab[64]
-#define __pyx_n_u_set_name __pyx_string_tab[65]
-#define __pyx_n_u_setdefault __pyx_string_tab[66]
-#define __pyx_n_u_setstate __pyx_string_tab[67]
-#define __pyx_n_u_setstate_cython __pyx_string_tab[68]
-#define __pyx_n_u_state __pyx_string_tab[69]
-#define __pyx_n_u_sys __pyx_string_tab[70]
-#define __pyx_n_u_test __pyx_string_tab[71]
-#define __pyx_n_u_type __pyx_string_tab[72]
-#define __pyx_n_u_update __pyx_string_tab[73]
-#define __pyx_n_u_use_setstate __pyx_string_tab[74]
-#define __pyx_n_u_values __pyx_string_tab[75]
-#define __pyx_kp_b_iso88591_T_4vT_D_t_VZZffjjyy_E_E_I_I_T_T __pyx_string_tab[76]
-#define __pyx_kp_b_iso88591_q_0_kQR_9HAQ_7_1L_a_1 __pyx_string_tab[77]
-#define __pyx_kp_b_iso88591_q_a __pyx_string_tab[78]
+#define __pyx_kp_u_PanPA_Alignment_pyx __pyx_string_tab[7]
+#define __pyx_kp_u__2 __pyx_string_tab[8]
+#define __pyx_kp_u__3 __pyx_string_tab[9]
+#define __pyx_kp_u__4 __pyx_string_tab[10]
+#define __pyx_kp_u__5 __pyx_string_tab[11]
+#define __pyx_kp_u__6 __pyx_string_tab[12]
+#define __pyx_kp_u__7 __pyx_string_tab[13]
+#define __pyx_kp_u_add_note __pyx_string_tab[14]
+#define __pyx_kp_u_cg_Z __pyx_string_tab[15]
+#define __pyx_kp_u_disable __pyx_string_tab[16]
+#define __pyx_kp_u_dv_f __pyx_string_tab[17]
+#define __pyx_kp_u_enable __pyx_string_tab[18]
+#define __pyx_kp_u_gc __pyx_string_tab[19]
+#define __pyx_kp_u_id_f __pyx_string_tab[20]
+#define __pyx_kp_u_isenabled __pyx_string_tab[21]
+#define __pyx_kp_u_stringsource __pyx_string_tab[22]
+#define __pyx_n_u_Alignment __pyx_string_tab[23]
+#define __pyx_n_u_Alignment___reduce_cython __pyx_string_tab[24]
+#define __pyx_n_u_Alignment___setstate_cython __pyx_string_tab[25]
+#define __pyx_n_u_Alignment__find_fork_ancestor __pyx_string_tab[26]
+#define __pyx_n_u_Alignment_generate_vcf_records __pyx_string_tab[27]
+#define __pyx_n_u_D __pyx_string_tab[28]
+#define __pyx_n_u_DEL __pyx_string_tab[29]
+#define __pyx_n_u_I __pyx_string_tab[30]
+#define __pyx_n_u_INS __pyx_string_tab[31]
+#define __pyx_n_u_PanPA_Alignment __pyx_string_tab[32]
+#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[33]
+#define __pyx_n_u_SNV __pyx_string_tab[34]
+#define __pyx_n_u_X __pyx_string_tab[35]
+#define __pyx_n_u_alignment_score __pyx_string_tab[36]
+#define __pyx_n_u_ancestor_node __pyx_string_tab[37]
+#define __pyx_n_u_append __pyx_string_tab[38]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[39]
+#define __pyx_n_u_bfs_queue __pyx_string_tab[40]
+#define __pyx_n_u_class_getitem __pyx_string_tab[41]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[42]
+#define __pyx_n_u_cur __pyx_string_tab[43]
+#define __pyx_n_u_cur_node __pyx_string_tab[44]
+#define __pyx_n_u_dict __pyx_string_tab[45]
+#define __pyx_n_u_dict_2 __pyx_string_tab[46]
+#define __pyx_n_u_error __pyx_string_tab[47]
+#define __pyx_n_u_exit __pyx_string_tab[48]
+#define __pyx_n_u_find_fork_ancestor __pyx_string_tab[49]
+#define __pyx_n_u_fork_cache __pyx_string_tab[50]
+#define __pyx_n_u_format __pyx_string_tab[51]
+#define __pyx_n_u_func __pyx_string_tab[52]
+#define __pyx_n_u_generate_vcf_records __pyx_string_tab[53]
+#define __pyx_n_u_getstate __pyx_string_tab[54]
+#define __pyx_n_u_graph __pyx_string_tab[55]
+#define __pyx_n_u_graph_name __pyx_string_tab[56]
+#define __pyx_n_u_in_nodes __pyx_string_tab[57]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[58]
+#define __pyx_n_u_items __pyx_string_tab[59]
+#define __pyx_n_u_last_pos __pyx_string_tab[60]
+#define __pyx_n_u_logging __pyx_string_tab[61]
+#define __pyx_n_u_main __pyx_string_tab[62]
+#define __pyx_n_u_module __pyx_string_tab[63]
+#define __pyx_n_u_name __pyx_string_tab[64]
+#define __pyx_n_u_new __pyx_string_tab[65]
+#define __pyx_n_u_nid __pyx_string_tab[66]
+#define __pyx_n_u_node_id __pyx_string_tab[67]
+#define __pyx_n_u_node_pos __pyx_string_tab[68]
+#define __pyx_n_u_node_str __pyx_string_tab[69]
+#define __pyx_n_u_node_to_ref_start __pyx_string_tab[70]
+#define __pyx_n_u_parent_id __pyx_string_tab[71]
+#define __pyx_n_u_pop __pyx_string_tab[72]
+#define __pyx_n_u_pyx_checksum __pyx_string_tab[73]
+#define __pyx_n_u_pyx_result __pyx_string_tab[74]
+#define __pyx_n_u_pyx_state __pyx_string_tab[75]
+#define __pyx_n_u_pyx_type __pyx_string_tab[76]
+#define __pyx_n_u_pyx_unpickle_Alignment __pyx_string_tab[77]
+#define __pyx_n_u_pyx_vtable __pyx_string_tab[78]
+#define __pyx_n_u_qualname __pyx_string_tab[79]
+#define __pyx_n_u_read_len __pyx_string_tab[80]
+#define __pyx_n_u_read_name __pyx_string_tab[81]
+#define __pyx_n_u_read_pos __pyx_string_tab[82]
+#define __pyx_n_u_read_str __pyx_string_tab[83]
+#define __pyx_n_u_reduce __pyx_string_tab[84]
+#define __pyx_n_u_reduce_cython __pyx_string_tab[85]
+#define __pyx_n_u_reduce_ex __pyx_string_tab[86]
+#define __pyx_n_u_ref_node_set __pyx_string_tab[87]
+#define __pyx_n_u_ref_seq __pyx_string_tab[88]
+#define __pyx_n_u_round __pyx_string_tab[89]
+#define __pyx_n_u_self __pyx_string_tab[90]
+#define __pyx_n_u_seq __pyx_string_tab[91]
+#define __pyx_n_u_set_name __pyx_string_tab[92]
+#define __pyx_n_u_setdefault __pyx_string_tab[93]
+#define __pyx_n_u_setstate __pyx_string_tab[94]
+#define __pyx_n_u_setstate_cython __pyx_string_tab[95]
+#define __pyx_n_u_state __pyx_string_tab[96]
+#define __pyx_n_u_sys __pyx_string_tab[97]
+#define __pyx_n_u_test __pyx_string_tab[98]
+#define __pyx_n_u_type __pyx_string_tab[99]
+#define __pyx_n_u_update __pyx_string_tab[100]
+#define __pyx_n_u_use_setstate __pyx_string_tab[101]
+#define __pyx_n_u_values __pyx_string_tab[102]
+#define __pyx_n_u_visited __pyx_string_tab[103]
+#define __pyx_kp_b_iso88591_A_4s_Qa_Q_AQ_a_4q_t3a_4q_t3d_d_Q __pyx_string_tab[104]
+#define __pyx_kp_b_iso88591_A_A_4t1_1_q_q_1_A_A_HD_d_1_t1A_d __pyx_string_tab[105]
+#define __pyx_kp_b_iso88591_T_4vT_D_t_VZZffjjyy_E_E_I_I_T_T __pyx_string_tab[106]
+#define __pyx_kp_b_iso88591_q_0_kQR_9HAQ_7_1L_a_1 __pyx_string_tab[107]
+#define __pyx_kp_b_iso88591_q_a __pyx_string_tab[108]
 #define __pyx_int_0 __pyx_number_tab[0]
-#define __pyx_int_1 __pyx_number_tab[1]
-#define __pyx_int_4 __pyx_number_tab[2]
-#define __pyx_int_255 __pyx_number_tab[3]
-#define __pyx_int_164170917 __pyx_number_tab[4]
+#define __pyx_int_neg_1 __pyx_number_tab[1]
+#define __pyx_int_1 __pyx_number_tab[2]
+#define __pyx_int_2 __pyx_number_tab[3]
+#define __pyx_int_3 __pyx_number_tab[4]
+#define __pyx_int_4 __pyx_number_tab[5]
+#define __pyx_int_255 __pyx_number_tab[6]
+#define __pyx_int_164170917 __pyx_number_tab[7]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2808,9 +2919,9 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_5PanPA_4Node_Node);
   Py_CLEAR(clear_module_state->__pyx_ptype_5PanPA_9Alignment_Alignment);
   Py_CLEAR(clear_module_state->__pyx_type_5PanPA_9Alignment_Alignment);
-  for (int i=0; i<3; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<79; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<5; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<5; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<109; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<8; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
 Py_CLEAR(clear_module_state->__pyx_CommonTypesMetaclassType);
@@ -2837,9 +2948,9 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_ptype_5PanPA_4Node_Node);
   Py_VISIT(traverse_module_state->__pyx_ptype_5PanPA_9Alignment_Alignment);
   Py_VISIT(traverse_module_state->__pyx_type_5PanPA_9Alignment_Alignment);
-  for (int i=0; i<3; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<79; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<5; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<5; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<109; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<8; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
 Py_VISIT(traverse_module_state->__pyx_CommonTypesMetaclassType);
@@ -5259,6 +5370,8 @@ static void __pyx_f_5PanPA_9Alignment_9Alignment_prepare_dna_gaf(struct __pyx_ob
  *         gaf_string.append(f"GR:Z:{graph.name}")
  * 
  *         self.gaf = "\t".join([str(x) for x in gaf_string])             # <<<<<<<<<<<<<<
+ * 
+ * 
 */
   { /* enter inner scope */
     __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 211, __pyx_L24_error)
@@ -5334,6 +5447,3187 @@ static void __pyx_f_5PanPA_9Alignment_9Alignment_prepare_dna_gaf(struct __pyx_ob
   __Pyx_RefNannyFinishContext();
 }
 
+/* "PanPA/Alignment.pyx":214
+ * 
+ * 
+ *     cpdef list generate_vcf_records(self, Graph graph, str ref_seq,             # <<<<<<<<<<<<<<
+ *                                     dict node_to_ref_start, set ref_node_set,
+ *                                     str graph_name):
+*/
+
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_3generate_vcf_records(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyObject *__pyx_f_5PanPA_9Alignment_9Alignment_generate_vcf_records(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph, PyObject *__pyx_v_ref_seq, PyObject *__pyx_v_node_to_ref_start, PyObject *__pyx_v_ref_node_set, CYTHON_UNUSED PyObject *__pyx_v_graph_name, int __pyx_skip_dispatch) {
+  int __pyx_v_node_id;
+  int __pyx_v_ref_pos_0;
+  PyObject *__pyx_v_records = 0;
+  int __pyx_v_vcf_pos;
+  PyObject *__pyx_v_ref_field = 0;
+  PyObject *__pyx_v_alt_field = 0;
+  PyObject *__pyx_v_rec = 0;
+  PyObject *__pyx_v_vartype = 0;
+  CYTHON_UNUSED int __pyx_v_ancestor_id;
+  int __pyx_v_ancestor_last_pos;
+  int __pyx_v_anchor_pos;
+  PyObject *__pyx_v_anchor_char = 0;
+  PyObject *__pyx_v_ref_char = 0;
+  PyObject *__pyx_v_fork_cache = NULL;
+  PyObject *__pyx_v_last_ref_anchor_pos = NULL;
+  PyObject *__pyx_v_last_ref_anchor_char = NULL;
+  long __pyx_v_pending_type;
+  PyObject *__pyx_v_pending_ref_pos = NULL;
+  PyObject *__pyx_v_pending_ref_chars = NULL;
+  PyObject *__pyx_v_pending_alt_chars = NULL;
+  PyObject *__pyx_v_item = NULL;
+  PyObject *__pyx_v_node_pos = NULL;
+  PyObject *__pyx_v_op_type = NULL;
+  PyObject *__pyx_v_node_str = NULL;
+  PyObject *__pyx_v_read_str = NULL;
+  PyObject *__pyx_v_on_ref = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  size_t __pyx_t_5;
+  int __pyx_t_6;
+  int __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  int __pyx_t_9;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11[9];
+  PyObject *__pyx_t_12 = NULL;
+  int __pyx_t_13;
+  Py_UCS4 __pyx_t_14;
+  PyObject *(*__pyx_t_15)(PyObject *);
+  int __pyx_t_16;
+  Py_ssize_t __pyx_t_17;
+  long __pyx_t_18;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("generate_vcf_records", 0);
+  /* Check if called by wrapper */
+  if (unlikely(__pyx_skip_dispatch)) ;
+  /* Check if overridden in Python */
+  else if (
+  #if !CYTHON_USE_TYPE_SLOTS
+  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_5PanPA_9Alignment_Alignment &&
+  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
+  #else
+  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
+  #endif
+  ) {
+    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
+    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
+    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
+      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
+      #endif
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_generate_vcf_records); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_5PanPA_9Alignment_9Alignment_3generate_vcf_records)) {
+        __Pyx_XDECREF(__pyx_r);
+        __pyx_t_3 = NULL;
+        __Pyx_INCREF(__pyx_t_1);
+        __pyx_t_4 = __pyx_t_1; 
+        __pyx_t_5 = 1;
+        #if CYTHON_UNPACK_METHODS
+        if (unlikely(PyMethod_Check(__pyx_t_4))) {
+          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
+          assert(__pyx_t_3);
+          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+          __Pyx_INCREF(__pyx_t_3);
+          __Pyx_INCREF(__pyx__function);
+          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+          __pyx_t_5 = 0;
+        }
+        #endif
+        {
+          PyObject *__pyx_callargs[6] = {__pyx_t_3, ((PyObject *)__pyx_v_graph), __pyx_v_ref_seq, __pyx_v_node_to_ref_start, __pyx_v_ref_node_set, __pyx_v_graph_name};
+          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (6-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 214, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+        }
+        if (!(likely(PyList_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_t_2))) __PYX_ERR(0, 214, __pyx_L1_error)
+        __pyx_r = ((PyObject*)__pyx_t_2);
+        __pyx_t_2 = 0;
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+        goto __pyx_L0;
+      }
+      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
+      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
+      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
+      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
+        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
+      }
+      #endif
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
+    }
+    #endif
+  }
+
+  /* "PanPA/Alignment.pyx":232
+ *         cdef Node node
+ *         cdef int node_id, ref_pos_0
+ *         cdef list records = []             # <<<<<<<<<<<<<<
+ *         cdef int vcf_pos
+ *         cdef str ref_field, alt_field, rec, vartype
+*/
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 232, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_records = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "PanPA/Alignment.pyx":238
+ *         cdef str anchor_char, ref_char
+ * 
+ *         if not self.info:             # <<<<<<<<<<<<<<
+ *             return records
+ * 
+*/
+  if (__pyx_v_self->info == Py_None) __pyx_t_6 = 0;
+  else
+  {
+    Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_v_self->info);
+    if (unlikely(((!CYTHON_ASSUME_SAFE_SIZE) && __pyx_temp < 0))) __PYX_ERR(0, 238, __pyx_L1_error)
+    __pyx_t_6 = (__pyx_temp != 0);
+  }
+
+  __pyx_t_7 = (!__pyx_t_6);
+  if (__pyx_t_7) {
+
+    /* "PanPA/Alignment.pyx":239
+ * 
+ *         if not self.info:
+ *             return records             # <<<<<<<<<<<<<<
+ * 
+ *         # Cache for fork ancestor lookups
+*/
+    __Pyx_XDECREF(__pyx_r);
+    __Pyx_INCREF(__pyx_v_records);
+    __pyx_r = __pyx_v_records;
+    goto __pyx_L0;
+
+    /* "PanPA/Alignment.pyx":238
+ *         cdef str anchor_char, ref_char
+ * 
+ *         if not self.info:             # <<<<<<<<<<<<<<
+ *             return records
+ * 
+*/
+  }
+
+  /* "PanPA/Alignment.pyx":242
+ * 
+ *         # Cache for fork ancestor lookups
+ *         fork_cache = dict()             # <<<<<<<<<<<<<<
+ * 
+ *         last_ref_anchor_pos = -1
+*/
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_fork_cache = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "PanPA/Alignment.pyx":244
+ *         fork_cache = dict()
+ * 
+ *         last_ref_anchor_pos = -1             # <<<<<<<<<<<<<<
+ *         last_ref_anchor_char = ""
+ * 
+*/
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_int_neg_1);
+  __pyx_v_last_ref_anchor_pos = __pyx_mstate_global->__pyx_int_neg_1;
+
+  /* "PanPA/Alignment.pyx":245
+ * 
+ *         last_ref_anchor_pos = -1
+ *         last_ref_anchor_char = ""             # <<<<<<<<<<<<<<
+ * 
+ *         pending_type = -1  # -1=none, 0=ins, 1=del, 3=mismatch
+*/
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+  __pyx_v_last_ref_anchor_char = __pyx_mstate_global->__pyx_kp_u_;
+
+  /* "PanPA/Alignment.pyx":247
+ *         last_ref_anchor_char = ""
+ * 
+ *         pending_type = -1  # -1=none, 0=ins, 1=del, 3=mismatch             # <<<<<<<<<<<<<<
+ *         pending_ref_pos = -1
+ *         pending_ref_chars = ""
+*/
+  __pyx_v_pending_type = -1L;
+
+  /* "PanPA/Alignment.pyx":248
+ * 
+ *         pending_type = -1  # -1=none, 0=ins, 1=del, 3=mismatch
+ *         pending_ref_pos = -1             # <<<<<<<<<<<<<<
+ *         pending_ref_chars = ""
+ *         pending_alt_chars = ""
+*/
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_int_neg_1);
+  __pyx_v_pending_ref_pos = __pyx_mstate_global->__pyx_int_neg_1;
+
+  /* "PanPA/Alignment.pyx":249
+ *         pending_type = -1  # -1=none, 0=ins, 1=del, 3=mismatch
+ *         pending_ref_pos = -1
+ *         pending_ref_chars = ""             # <<<<<<<<<<<<<<
+ *         pending_alt_chars = ""
+ * 
+*/
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+  __pyx_v_pending_ref_chars = __pyx_mstate_global->__pyx_kp_u_;
+
+  /* "PanPA/Alignment.pyx":250
+ *         pending_ref_pos = -1
+ *         pending_ref_chars = ""
+ *         pending_alt_chars = ""             # <<<<<<<<<<<<<<
+ * 
+ *         for item in self.info:
+*/
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+  __pyx_v_pending_alt_chars = __pyx_mstate_global->__pyx_kp_u_;
+
+  /* "PanPA/Alignment.pyx":252
+ *         pending_alt_chars = ""
+ * 
+ *         for item in self.info:             # <<<<<<<<<<<<<<
+ *             node_id = item["node_id"]
+ *             node_pos = item["node_pos"]
+*/
+  if (unlikely(__pyx_v_self->info == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+    __PYX_ERR(0, 252, __pyx_L1_error)
+  }
+  __pyx_t_1 = __pyx_v_self->info; __Pyx_INCREF(__pyx_t_1);
+  __pyx_t_8 = 0;
+  for (;;) {
+    {
+      Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
+      #if !CYTHON_ASSUME_SAFE_SIZE
+      if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 252, __pyx_L1_error)
+      #endif
+      if (__pyx_t_8 >= __pyx_temp) break;
+    }
+    __pyx_t_2 = __Pyx_PyList_GetItemRefFast(__pyx_t_1, __pyx_t_8, __Pyx_ReferenceSharing_OwnStrongReference);
+    ++__pyx_t_8;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 252, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_XDECREF_SET(__pyx_v_item, __pyx_t_2);
+    __pyx_t_2 = 0;
+
+    /* "PanPA/Alignment.pyx":253
+ * 
+ *         for item in self.info:
+ *             node_id = item["node_id"]             # <<<<<<<<<<<<<<
+ *             node_pos = item["node_pos"]
+ *             op_type = item["type"]
+*/
+    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_item, __pyx_mstate_global->__pyx_n_u_node_id); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 253, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 253, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_v_node_id = __pyx_t_9;
+
+    /* "PanPA/Alignment.pyx":254
+ *         for item in self.info:
+ *             node_id = item["node_id"]
+ *             node_pos = item["node_pos"]             # <<<<<<<<<<<<<<
+ *             op_type = item["type"]
+ *             node_str = item["node_str"]
+*/
+    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_item, __pyx_mstate_global->__pyx_n_u_node_pos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 254, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_XDECREF_SET(__pyx_v_node_pos, __pyx_t_2);
+    __pyx_t_2 = 0;
+
+    /* "PanPA/Alignment.pyx":255
+ *             node_id = item["node_id"]
+ *             node_pos = item["node_pos"]
+ *             op_type = item["type"]             # <<<<<<<<<<<<<<
+ *             node_str = item["node_str"]
+ *             read_str = item["read_str"]
+*/
+    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_item, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 255, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_XDECREF_SET(__pyx_v_op_type, __pyx_t_2);
+    __pyx_t_2 = 0;
+
+    /* "PanPA/Alignment.pyx":256
+ *             node_pos = item["node_pos"]
+ *             op_type = item["type"]
+ *             node_str = item["node_str"]             # <<<<<<<<<<<<<<
+ *             read_str = item["read_str"]
+ * 
+*/
+    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_item, __pyx_mstate_global->__pyx_n_u_node_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_XDECREF_SET(__pyx_v_node_str, __pyx_t_2);
+    __pyx_t_2 = 0;
+
+    /* "PanPA/Alignment.pyx":257
+ *             op_type = item["type"]
+ *             node_str = item["node_str"]
+ *             read_str = item["read_str"]             # <<<<<<<<<<<<<<
+ * 
+ *             on_ref = node_id in ref_node_set
+*/
+    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_item, __pyx_mstate_global->__pyx_n_u_read_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_XDECREF_SET(__pyx_v_read_str, __pyx_t_2);
+    __pyx_t_2 = 0;
+
+    /* "PanPA/Alignment.pyx":259
+ *             read_str = item["read_str"]
+ * 
+ *             on_ref = node_id in ref_node_set             # <<<<<<<<<<<<<<
+ * 
+ *             if op_type == 2:  # match  flush pending, update anchor
+*/
+    __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_node_id); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    if (unlikely(__pyx_v_ref_node_set == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+      __PYX_ERR(0, 259, __pyx_L1_error)
+    }
+    __pyx_t_7 = (__Pyx_PySet_ContainsTF(__pyx_t_2, __pyx_v_ref_node_set, Py_EQ)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 259, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_XDECREF_SET(__pyx_v_on_ref, __pyx_t_2);
+    __pyx_t_2 = 0;
+
+    /* "PanPA/Alignment.pyx":261
+ *             on_ref = node_id in ref_node_set
+ * 
+ *             if op_type == 2:  # match  flush pending, update anchor             # <<<<<<<<<<<<<<
+ *                 if pending_type != -1:
+ *                     vcf_pos = pending_ref_pos + 1
+*/
+    __pyx_t_7 = (__Pyx_PyLong_BoolEqObjC(__pyx_v_op_type, __pyx_mstate_global->__pyx_int_2, 2, 0)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 261, __pyx_L1_error)
+    if (__pyx_t_7) {
+
+      /* "PanPA/Alignment.pyx":262
+ * 
+ *             if op_type == 2:  # match  flush pending, update anchor
+ *                 if pending_type != -1:             # <<<<<<<<<<<<<<
+ *                     vcf_pos = pending_ref_pos + 1
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+      __pyx_t_7 = (__pyx_v_pending_type != -1L);
+      if (__pyx_t_7) {
+
+        /* "PanPA/Alignment.pyx":263
+ *             if op_type == 2:  # match  flush pending, update anchor
+ *                 if pending_type != -1:
+ *                     vcf_pos = pending_ref_pos + 1             # <<<<<<<<<<<<<<
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+*/
+        __pyx_t_2 = __Pyx_PyLong_AddObjC(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 263, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 263, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_v_vcf_pos = __pyx_t_9;
+
+        /* "PanPA/Alignment.pyx":264
+ *                 if pending_type != -1:
+ *                     vcf_pos = pending_ref_pos + 1
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."             # <<<<<<<<<<<<<<
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                     if pending_type == 0:
+*/
+        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_ref_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 264, __pyx_L1_error)
+        if (__pyx_t_7) {
+          __pyx_t_4 = __pyx_v_pending_ref_chars;
+          __Pyx_INCREF(__pyx_t_4);
+          if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_4))) __PYX_ERR(0, 264, __pyx_L1_error)
+          __pyx_t_2 = __pyx_t_4;
+          __pyx_t_4 = 0;
+        } else {
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+          __pyx_t_2 = __pyx_mstate_global->__pyx_kp_u__6;
+        }
+        __Pyx_XDECREF_SET(__pyx_v_ref_field, ((PyObject*)__pyx_t_2));
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":265
+ *                     vcf_pos = pending_ref_pos + 1
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."             # <<<<<<<<<<<<<<
+ *                     if pending_type == 0:
+ *                         vartype = "INS"
+*/
+        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_alt_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 265, __pyx_L1_error)
+        if (__pyx_t_7) {
+          __pyx_t_4 = __pyx_v_pending_alt_chars;
+          __Pyx_INCREF(__pyx_t_4);
+          if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_4))) __PYX_ERR(0, 265, __pyx_L1_error)
+          __pyx_t_2 = __pyx_t_4;
+          __pyx_t_4 = 0;
+        } else {
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+          __pyx_t_2 = __pyx_mstate_global->__pyx_kp_u__6;
+        }
+        __Pyx_XDECREF_SET(__pyx_v_alt_field, ((PyObject*)__pyx_t_2));
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":266
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                     if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                         vartype = "INS"
+ *                     elif pending_type == 1:
+*/
+        switch (__pyx_v_pending_type) {
+          case 0:
+
+          /* "PanPA/Alignment.pyx":267
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                     if pending_type == 0:
+ *                         vartype = "INS"             # <<<<<<<<<<<<<<
+ *                     elif pending_type == 1:
+ *                         vartype = "DEL"
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_INS);
+          __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_INS);
+
+          /* "PanPA/Alignment.pyx":266
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                     if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                         vartype = "INS"
+ *                     elif pending_type == 1:
+*/
+          break;
+          case 1:
+
+          /* "PanPA/Alignment.pyx":269
+ *                         vartype = "INS"
+ *                     elif pending_type == 1:
+ *                         vartype = "DEL"             # <<<<<<<<<<<<<<
+ *                     else:
+ *                         vartype = "SNV"
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_DEL);
+          __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_DEL);
+
+          /* "PanPA/Alignment.pyx":268
+ *                     if pending_type == 0:
+ *                         vartype = "INS"
+ *                     elif pending_type == 1:             # <<<<<<<<<<<<<<
+ *                         vartype = "DEL"
+ *                     else:
+*/
+          break;
+          default:
+
+          /* "PanPA/Alignment.pyx":271
+ *                         vartype = "DEL"
+ *                     else:
+ *                         vartype = "SNV"             # <<<<<<<<<<<<<<
+ *                     rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                     records.append(rec)
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_SNV);
+          __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_SNV);
+          break;
+        }
+
+        /* "PanPA/Alignment.pyx":272
+ *                     else:
+ *                         vartype = "SNV"
+ *                     rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"             # <<<<<<<<<<<<<<
+ *                     records.append(rec)
+ *                     pending_type = -1
+*/
+        __pyx_t_2 = __Pyx_PyUnicode_From_int(__pyx_v_vcf_pos, 0, ' ', 'd'); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_4 = __Pyx_PyUnicode_Unicode(__pyx_v_ref_field); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_3 = __Pyx_PyUnicode_Unicode(__pyx_v_alt_field); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_10 = __Pyx_PyUnicode_Unicode(__pyx_v_self->read_name); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_11[0] = __pyx_t_2;
+        __pyx_t_11[1] = __pyx_mstate_global->__pyx_kp_u__5;
+        __pyx_t_11[2] = __pyx_t_4;
+        __pyx_t_11[3] = __pyx_mstate_global->__pyx_kp_u__5;
+        __pyx_t_11[4] = __pyx_t_3;
+        __pyx_t_11[5] = __pyx_mstate_global->__pyx_kp_u__5;
+        __pyx_t_11[6] = __pyx_t_10;
+        __pyx_t_11[7] = __pyx_mstate_global->__pyx_kp_u__5;
+        __pyx_t_11[8] = __pyx_v_vartype;
+        __pyx_t_12 = __Pyx_PyUnicode_Join(__pyx_t_11, 9, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_2) + 1 * 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_4) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_10) + __Pyx_PyUnicode_GET_LENGTH(__pyx_v_vartype), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_10) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_v_vartype));
+        if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __Pyx_XDECREF_SET(__pyx_v_rec, ((PyObject*)__pyx_t_12));
+        __pyx_t_12 = 0;
+
+        /* "PanPA/Alignment.pyx":273
+ *                         vartype = "SNV"
+ *                     rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                     records.append(rec)             # <<<<<<<<<<<<<<
+ *                     pending_type = -1
+ *                     pending_ref_pos = -1
+*/
+        __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_records, __pyx_v_rec); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 273, __pyx_L1_error)
+
+        /* "PanPA/Alignment.pyx":274
+ *                     rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                     records.append(rec)
+ *                     pending_type = -1             # <<<<<<<<<<<<<<
+ *                     pending_ref_pos = -1
+ *                     pending_ref_chars = ""
+*/
+        __pyx_v_pending_type = -1L;
+
+        /* "PanPA/Alignment.pyx":275
+ *                     records.append(rec)
+ *                     pending_type = -1
+ *                     pending_ref_pos = -1             # <<<<<<<<<<<<<<
+ *                     pending_ref_chars = ""
+ *                     pending_alt_chars = ""
+*/
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_int_neg_1);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_neg_1);
+
+        /* "PanPA/Alignment.pyx":276
+ *                     pending_type = -1
+ *                     pending_ref_pos = -1
+ *                     pending_ref_chars = ""             # <<<<<<<<<<<<<<
+ *                     pending_alt_chars = ""
+ *                 if on_ref:
+*/
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_mstate_global->__pyx_kp_u_);
+
+        /* "PanPA/Alignment.pyx":277
+ *                     pending_ref_pos = -1
+ *                     pending_ref_chars = ""
+ *                     pending_alt_chars = ""             # <<<<<<<<<<<<<<
+ *                 if on_ref:
+ *                     last_ref_anchor_pos = node_to_ref_start[node_id] + node_pos
+*/
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+        __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_mstate_global->__pyx_kp_u_);
+
+        /* "PanPA/Alignment.pyx":262
+ * 
+ *             if op_type == 2:  # match  flush pending, update anchor
+ *                 if pending_type != -1:             # <<<<<<<<<<<<<<
+ *                     vcf_pos = pending_ref_pos + 1
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+      }
+
+      /* "PanPA/Alignment.pyx":278
+ *                     pending_ref_chars = ""
+ *                     pending_alt_chars = ""
+ *                 if on_ref:             # <<<<<<<<<<<<<<
+ *                     last_ref_anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                     last_ref_anchor_char = node_str
+*/
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_on_ref); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 278, __pyx_L1_error)
+      if (__pyx_t_7) {
+
+        /* "PanPA/Alignment.pyx":279
+ *                     pending_alt_chars = ""
+ *                 if on_ref:
+ *                     last_ref_anchor_pos = node_to_ref_start[node_id] + node_pos             # <<<<<<<<<<<<<<
+ *                     last_ref_anchor_char = node_str
+ *                 continue
+*/
+        if (unlikely(__pyx_v_node_to_ref_start == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          __PYX_ERR(0, 279, __pyx_L1_error)
+        }
+        __pyx_t_12 = __Pyx_PyLong_From_int(__pyx_v_node_id); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 279, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_10 = __Pyx_PyDict_GetItem(__pyx_v_node_to_ref_start, __pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 279, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_t_12 = PyNumber_Add(__pyx_t_10, __pyx_v_node_pos); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 279, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __Pyx_DECREF_SET(__pyx_v_last_ref_anchor_pos, __pyx_t_12);
+        __pyx_t_12 = 0;
+
+        /* "PanPA/Alignment.pyx":280
+ *                 if on_ref:
+ *                     last_ref_anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                     last_ref_anchor_char = node_str             # <<<<<<<<<<<<<<
+ *                 continue
+ * 
+*/
+        __Pyx_INCREF(__pyx_v_node_str);
+        __Pyx_DECREF_SET(__pyx_v_last_ref_anchor_char, __pyx_v_node_str);
+
+        /* "PanPA/Alignment.pyx":278
+ *                     pending_ref_chars = ""
+ *                     pending_alt_chars = ""
+ *                 if on_ref:             # <<<<<<<<<<<<<<
+ *                     last_ref_anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                     last_ref_anchor_char = node_str
+*/
+      }
+
+      /* "PanPA/Alignment.pyx":281
+ *                     last_ref_anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                     last_ref_anchor_char = node_str
+ *                 continue             # <<<<<<<<<<<<<<
+ * 
+ *             if op_type == 3:  # mismatch (SNV)
+*/
+      goto __pyx_L4_continue;
+
+      /* "PanPA/Alignment.pyx":261
+ *             on_ref = node_id in ref_node_set
+ * 
+ *             if op_type == 2:  # match  flush pending, update anchor             # <<<<<<<<<<<<<<
+ *                 if pending_type != -1:
+ *                     vcf_pos = pending_ref_pos + 1
+*/
+    }
+
+    /* "PanPA/Alignment.pyx":283
+ *                 continue
+ * 
+ *             if op_type == 3:  # mismatch (SNV)             # <<<<<<<<<<<<<<
+ *                 if pending_type != -1:
+ *                     vcf_pos = pending_ref_pos + 1
+*/
+    __pyx_t_7 = (__Pyx_PyLong_BoolEqObjC(__pyx_v_op_type, __pyx_mstate_global->__pyx_int_3, 3, 0)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 283, __pyx_L1_error)
+    if (__pyx_t_7) {
+
+      /* "PanPA/Alignment.pyx":284
+ * 
+ *             if op_type == 3:  # mismatch (SNV)
+ *                 if pending_type != -1:             # <<<<<<<<<<<<<<
+ *                     vcf_pos = pending_ref_pos + 1
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+      __pyx_t_7 = (__pyx_v_pending_type != -1L);
+      if (__pyx_t_7) {
+
+        /* "PanPA/Alignment.pyx":285
+ *             if op_type == 3:  # mismatch (SNV)
+ *                 if pending_type != -1:
+ *                     vcf_pos = pending_ref_pos + 1             # <<<<<<<<<<<<<<
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+*/
+        __pyx_t_12 = __Pyx_PyLong_AddObjC(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 285, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_12); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 285, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_v_vcf_pos = __pyx_t_9;
+
+        /* "PanPA/Alignment.pyx":286
+ *                 if pending_type != -1:
+ *                     vcf_pos = pending_ref_pos + 1
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."             # <<<<<<<<<<<<<<
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                     if pending_type == 0:
+*/
+        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_ref_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 286, __pyx_L1_error)
+        if (__pyx_t_7) {
+          __pyx_t_10 = __pyx_v_pending_ref_chars;
+          __Pyx_INCREF(__pyx_t_10);
+          if (!(likely(PyUnicode_CheckExact(__pyx_t_10))||((__pyx_t_10) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_10))) __PYX_ERR(0, 286, __pyx_L1_error)
+          __pyx_t_12 = __pyx_t_10;
+          __pyx_t_10 = 0;
+        } else {
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+          __pyx_t_12 = __pyx_mstate_global->__pyx_kp_u__6;
+        }
+        __Pyx_XDECREF_SET(__pyx_v_ref_field, ((PyObject*)__pyx_t_12));
+        __pyx_t_12 = 0;
+
+        /* "PanPA/Alignment.pyx":287
+ *                     vcf_pos = pending_ref_pos + 1
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."             # <<<<<<<<<<<<<<
+ *                     if pending_type == 0:
+ *                         vartype = "INS"
+*/
+        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_alt_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 287, __pyx_L1_error)
+        if (__pyx_t_7) {
+          __pyx_t_10 = __pyx_v_pending_alt_chars;
+          __Pyx_INCREF(__pyx_t_10);
+          if (!(likely(PyUnicode_CheckExact(__pyx_t_10))||((__pyx_t_10) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_10))) __PYX_ERR(0, 287, __pyx_L1_error)
+          __pyx_t_12 = __pyx_t_10;
+          __pyx_t_10 = 0;
+        } else {
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+          __pyx_t_12 = __pyx_mstate_global->__pyx_kp_u__6;
+        }
+        __Pyx_XDECREF_SET(__pyx_v_alt_field, ((PyObject*)__pyx_t_12));
+        __pyx_t_12 = 0;
+
+        /* "PanPA/Alignment.pyx":288
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                     if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                         vartype = "INS"
+ *                     elif pending_type == 1:
+*/
+        switch (__pyx_v_pending_type) {
+          case 0:
+
+          /* "PanPA/Alignment.pyx":289
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                     if pending_type == 0:
+ *                         vartype = "INS"             # <<<<<<<<<<<<<<
+ *                     elif pending_type == 1:
+ *                         vartype = "DEL"
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_INS);
+          __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_INS);
+
+          /* "PanPA/Alignment.pyx":288
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                     alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                     if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                         vartype = "INS"
+ *                     elif pending_type == 1:
+*/
+          break;
+          case 1:
+
+          /* "PanPA/Alignment.pyx":291
+ *                         vartype = "INS"
+ *                     elif pending_type == 1:
+ *                         vartype = "DEL"             # <<<<<<<<<<<<<<
+ *                     else:
+ *                         vartype = "SNV"
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_DEL);
+          __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_DEL);
+
+          /* "PanPA/Alignment.pyx":290
+ *                     if pending_type == 0:
+ *                         vartype = "INS"
+ *                     elif pending_type == 1:             # <<<<<<<<<<<<<<
+ *                         vartype = "DEL"
+ *                     else:
+*/
+          break;
+          default:
+
+          /* "PanPA/Alignment.pyx":293
+ *                         vartype = "DEL"
+ *                     else:
+ *                         vartype = "SNV"             # <<<<<<<<<<<<<<
+ *                     rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                     records.append(rec)
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_SNV);
+          __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_SNV);
+          break;
+        }
+
+        /* "PanPA/Alignment.pyx":294
+ *                     else:
+ *                         vartype = "SNV"
+ *                     rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"             # <<<<<<<<<<<<<<
+ *                     records.append(rec)
+ *                     pending_type = -1
+*/
+        __pyx_t_12 = __Pyx_PyUnicode_From_int(__pyx_v_vcf_pos, 0, ' ', 'd'); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 294, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_10 = __Pyx_PyUnicode_Unicode(__pyx_v_ref_field); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 294, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_3 = __Pyx_PyUnicode_Unicode(__pyx_v_alt_field); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 294, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_4 = __Pyx_PyUnicode_Unicode(__pyx_v_self->read_name); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 294, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_11[0] = __pyx_t_12;
+        __pyx_t_11[1] = __pyx_mstate_global->__pyx_kp_u__5;
+        __pyx_t_11[2] = __pyx_t_10;
+        __pyx_t_11[3] = __pyx_mstate_global->__pyx_kp_u__5;
+        __pyx_t_11[4] = __pyx_t_3;
+        __pyx_t_11[5] = __pyx_mstate_global->__pyx_kp_u__5;
+        __pyx_t_11[6] = __pyx_t_4;
+        __pyx_t_11[7] = __pyx_mstate_global->__pyx_kp_u__5;
+        __pyx_t_11[8] = __pyx_v_vartype;
+        __pyx_t_2 = __Pyx_PyUnicode_Join(__pyx_t_11, 9, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_12) + 1 * 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_10) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_4) + __Pyx_PyUnicode_GET_LENGTH(__pyx_v_vartype), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_10) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_v_vartype));
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 294, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_XDECREF_SET(__pyx_v_rec, ((PyObject*)__pyx_t_2));
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":295
+ *                         vartype = "SNV"
+ *                     rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                     records.append(rec)             # <<<<<<<<<<<<<<
+ *                     pending_type = -1
+ *                     pending_ref_pos = -1
+*/
+        __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_records, __pyx_v_rec); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 295, __pyx_L1_error)
+
+        /* "PanPA/Alignment.pyx":296
+ *                     rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                     records.append(rec)
+ *                     pending_type = -1             # <<<<<<<<<<<<<<
+ *                     pending_ref_pos = -1
+ *                     pending_ref_chars = ""
+*/
+        __pyx_v_pending_type = -1L;
+
+        /* "PanPA/Alignment.pyx":297
+ *                     records.append(rec)
+ *                     pending_type = -1
+ *                     pending_ref_pos = -1             # <<<<<<<<<<<<<<
+ *                     pending_ref_chars = ""
+ *                     pending_alt_chars = ""
+*/
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_int_neg_1);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_neg_1);
+
+        /* "PanPA/Alignment.pyx":298
+ *                     pending_type = -1
+ *                     pending_ref_pos = -1
+ *                     pending_ref_chars = ""             # <<<<<<<<<<<<<<
+ *                     pending_alt_chars = ""
+ * 
+*/
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_mstate_global->__pyx_kp_u_);
+
+        /* "PanPA/Alignment.pyx":299
+ *                     pending_ref_pos = -1
+ *                     pending_ref_chars = ""
+ *                     pending_alt_chars = ""             # <<<<<<<<<<<<<<
+ * 
+ *                 if on_ref:
+*/
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+        __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_mstate_global->__pyx_kp_u_);
+
+        /* "PanPA/Alignment.pyx":284
+ * 
+ *             if op_type == 3:  # mismatch (SNV)
+ *                 if pending_type != -1:             # <<<<<<<<<<<<<<
+ *                     vcf_pos = pending_ref_pos + 1
+ *                     ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+      }
+
+      /* "PanPA/Alignment.pyx":301
+ *                     pending_alt_chars = ""
+ * 
+ *                 if on_ref:             # <<<<<<<<<<<<<<
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     ref_char = ref_seq[ref_pos_0]
+*/
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_on_ref); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 301, __pyx_L1_error)
+      if (__pyx_t_7) {
+
+        /* "PanPA/Alignment.pyx":302
+ * 
+ *                 if on_ref:
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos             # <<<<<<<<<<<<<<
+ *                     ref_char = ref_seq[ref_pos_0]
+ *                     pending_type = 3
+*/
+        if (unlikely(__pyx_v_node_to_ref_start == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          __PYX_ERR(0, 302, __pyx_L1_error)
+        }
+        __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_node_id); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_node_to_ref_start, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 302, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_t_2 = PyNumber_Add(__pyx_t_4, __pyx_v_node_pos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 302, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_v_ref_pos_0 = __pyx_t_9;
+
+        /* "PanPA/Alignment.pyx":303
+ *                 if on_ref:
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     ref_char = ref_seq[ref_pos_0]             # <<<<<<<<<<<<<<
+ *                     pending_type = 3
+ *                     pending_ref_pos = ref_pos_0
+*/
+        __pyx_t_14 = __Pyx_GetItemInt_Unicode(__pyx_v_ref_seq, __pyx_v_ref_pos_0, int, 1, __Pyx_PyLong_From_int, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_14 == (Py_UCS4)-1)) __PYX_ERR(0, 303, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 303, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        if (!(likely(PyUnicode_CheckExact(__pyx_t_2)) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_2))) __PYX_ERR(0, 303, __pyx_L1_error)
+        __Pyx_XDECREF_SET(__pyx_v_ref_char, ((PyObject*)__pyx_t_2));
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":304
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     ref_char = ref_seq[ref_pos_0]
+ *                     pending_type = 3             # <<<<<<<<<<<<<<
+ *                     pending_ref_pos = ref_pos_0
+ *                     pending_ref_chars = ref_char
+*/
+        __pyx_v_pending_type = 3;
+
+        /* "PanPA/Alignment.pyx":305
+ *                     ref_char = ref_seq[ref_pos_0]
+ *                     pending_type = 3
+ *                     pending_ref_pos = ref_pos_0             # <<<<<<<<<<<<<<
+ *                     pending_ref_chars = ref_char
+ *                     pending_alt_chars = read_str
+*/
+        __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_ref_pos_0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 305, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_pos, __pyx_t_2);
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":306
+ *                     pending_type = 3
+ *                     pending_ref_pos = ref_pos_0
+ *                     pending_ref_chars = ref_char             # <<<<<<<<<<<<<<
+ *                     pending_alt_chars = read_str
+ *                     last_ref_anchor_pos = ref_pos_0
+*/
+        __Pyx_INCREF(__pyx_v_ref_char);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_v_ref_char);
+
+        /* "PanPA/Alignment.pyx":307
+ *                     pending_ref_pos = ref_pos_0
+ *                     pending_ref_chars = ref_char
+ *                     pending_alt_chars = read_str             # <<<<<<<<<<<<<<
+ *                     last_ref_anchor_pos = ref_pos_0
+ *                     last_ref_anchor_char = ref_char
+*/
+        __Pyx_INCREF(__pyx_v_read_str);
+        __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_v_read_str);
+
+        /* "PanPA/Alignment.pyx":308
+ *                     pending_ref_chars = ref_char
+ *                     pending_alt_chars = read_str
+ *                     last_ref_anchor_pos = ref_pos_0             # <<<<<<<<<<<<<<
+ *                     last_ref_anchor_char = ref_char
+ *                 else:
+*/
+        __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_ref_pos_0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF_SET(__pyx_v_last_ref_anchor_pos, __pyx_t_2);
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":309
+ *                     pending_alt_chars = read_str
+ *                     last_ref_anchor_pos = ref_pos_0
+ *                     last_ref_anchor_char = ref_char             # <<<<<<<<<<<<<<
+ *                 else:
+ *                     ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+*/
+        __Pyx_INCREF(__pyx_v_ref_char);
+        __Pyx_DECREF_SET(__pyx_v_last_ref_anchor_char, __pyx_v_ref_char);
+
+        /* "PanPA/Alignment.pyx":301
+ *                     pending_alt_chars = ""
+ * 
+ *                 if on_ref:             # <<<<<<<<<<<<<<
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     ref_char = ref_seq[ref_pos_0]
+*/
+        goto __pyx_L11;
+      }
+
+      /* "PanPA/Alignment.pyx":311
+ *                     last_ref_anchor_char = ref_char
+ *                 else:
+ *                     ancestor_id, ancestor_last_pos = self._find_fork_ancestor(             # <<<<<<<<<<<<<<
+ *                         node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+ *                     anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."
+*/
+      /*else*/ {
+        __pyx_t_4 = ((PyObject *)__pyx_v_self);
+        __Pyx_INCREF(__pyx_t_4);
+
+        /* "PanPA/Alignment.pyx":312
+ *                 else:
+ *                     ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+ *                         node_id, graph, ref_node_set, node_to_ref_start, fork_cache)             # <<<<<<<<<<<<<<
+ *                     anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."
+ *                     pending_type = 3
+*/
+        __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_node_id); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 312, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_5 = 0;
+        {
+          PyObject *__pyx_callargs[6] = {__pyx_t_4, __pyx_t_3, ((PyObject *)__pyx_v_graph), __pyx_v_ref_node_set, __pyx_v_node_to_ref_start, __pyx_v_fork_cache};
+          __pyx_t_2 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_find_fork_ancestor, __pyx_callargs+__pyx_t_5, (6-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 311, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+        }
+        if ((likely(PyTuple_CheckExact(__pyx_t_2))) || (PyList_CheckExact(__pyx_t_2))) {
+          PyObject* sequence = __pyx_t_2;
+          Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
+          if (unlikely(size != 2)) {
+            if (size > 2) __Pyx_RaiseTooManyValuesError(2);
+            else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
+            __PYX_ERR(0, 311, __pyx_L1_error)
+          }
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          if (likely(PyTuple_CheckExact(sequence))) {
+            __pyx_t_3 = PyTuple_GET_ITEM(sequence, 0);
+            __Pyx_INCREF(__pyx_t_3);
+            __pyx_t_4 = PyTuple_GET_ITEM(sequence, 1);
+            __Pyx_INCREF(__pyx_t_4);
+          } else {
+            __pyx_t_3 = __Pyx_PyList_GetItemRefFast(sequence, 0, __Pyx_ReferenceSharing_SharedReference);
+            if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
+            __Pyx_XGOTREF(__pyx_t_3);
+            __pyx_t_4 = __Pyx_PyList_GetItemRefFast(sequence, 1, __Pyx_ReferenceSharing_SharedReference);
+            if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 311, __pyx_L1_error)
+            __Pyx_XGOTREF(__pyx_t_4);
+          }
+          #else
+          __pyx_t_3 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          __pyx_t_4 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 311, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          #endif
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        } else {
+          Py_ssize_t index = -1;
+          __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 311, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __pyx_t_15 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_10);
+          index = 0; __pyx_t_3 = __pyx_t_15(__pyx_t_10); if (unlikely(!__pyx_t_3)) goto __pyx_L12_unpacking_failed;
+          __Pyx_GOTREF(__pyx_t_3);
+          index = 1; __pyx_t_4 = __pyx_t_15(__pyx_t_10); if (unlikely(!__pyx_t_4)) goto __pyx_L12_unpacking_failed;
+          __Pyx_GOTREF(__pyx_t_4);
+          if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_10), 2) < (0)) __PYX_ERR(0, 311, __pyx_L1_error)
+          __pyx_t_15 = NULL;
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          goto __pyx_L13_unpacking_done;
+          __pyx_L12_unpacking_failed:;
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __pyx_t_15 = NULL;
+          if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
+          __PYX_ERR(0, 311, __pyx_L1_error)
+          __pyx_L13_unpacking_done:;
+        }
+
+        /* "PanPA/Alignment.pyx":311
+ *                     last_ref_anchor_char = ref_char
+ *                 else:
+ *                     ancestor_id, ancestor_last_pos = self._find_fork_ancestor(             # <<<<<<<<<<<<<<
+ *                         node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+ *                     anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."
+*/
+        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_3); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 311, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_t_16 = __Pyx_PyLong_As_int(__pyx_t_4); if (unlikely((__pyx_t_16 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 311, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_v_ancestor_id = __pyx_t_9;
+        __pyx_v_ancestor_last_pos = __pyx_t_16;
+
+        /* "PanPA/Alignment.pyx":313
+ *                     ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+ *                         node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+ *                     anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."             # <<<<<<<<<<<<<<
+ *                     pending_type = 3
+ *                     pending_ref_pos = ancestor_last_pos
+*/
+        if (unlikely(__pyx_v_ref_seq == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
+          __PYX_ERR(0, 313, __pyx_L1_error)
+        }
+        __pyx_t_17 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_ref_seq); if (unlikely(__pyx_t_17 == ((Py_ssize_t)-1))) __PYX_ERR(0, 313, __pyx_L1_error)
+        __pyx_t_7 = (__pyx_v_ancestor_last_pos < __pyx_t_17);
+        if (__pyx_t_7) {
+          __pyx_t_14 = __Pyx_GetItemInt_Unicode(__pyx_v_ref_seq, __pyx_v_ancestor_last_pos, int, 1, __Pyx_PyLong_From_int, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_14 == (Py_UCS4)-1)) __PYX_ERR(0, 313, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_14); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 313, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          __pyx_t_2 = __pyx_t_4;
+          __pyx_t_4 = 0;
+        } else {
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+          __pyx_t_2 = __pyx_mstate_global->__pyx_kp_u__6;
+        }
+        __Pyx_XDECREF_SET(__pyx_v_anchor_char, ((PyObject*)__pyx_t_2));
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":314
+ *                         node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+ *                     anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."
+ *                     pending_type = 3             # <<<<<<<<<<<<<<
+ *                     pending_ref_pos = ancestor_last_pos
+ *                     pending_ref_chars = anchor_char + node_str
+*/
+        __pyx_v_pending_type = 3;
+
+        /* "PanPA/Alignment.pyx":315
+ *                     anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."
+ *                     pending_type = 3
+ *                     pending_ref_pos = ancestor_last_pos             # <<<<<<<<<<<<<<
+ *                     pending_ref_chars = anchor_char + node_str
+ *                     pending_alt_chars = anchor_char + read_str
+*/
+        __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_ancestor_last_pos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 315, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_pos, __pyx_t_2);
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":316
+ *                     pending_type = 3
+ *                     pending_ref_pos = ancestor_last_pos
+ *                     pending_ref_chars = anchor_char + node_str             # <<<<<<<<<<<<<<
+ *                     pending_alt_chars = anchor_char + read_str
+ * 
+*/
+        __pyx_t_2 = PyNumber_Add(__pyx_v_anchor_char, __pyx_v_node_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_t_2);
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":317
+ *                     pending_ref_pos = ancestor_last_pos
+ *                     pending_ref_chars = anchor_char + node_str
+ *                     pending_alt_chars = anchor_char + read_str             # <<<<<<<<<<<<<<
+ * 
+ *             elif op_type == 0:  # insertion
+*/
+        __pyx_t_2 = PyNumber_Add(__pyx_v_anchor_char, __pyx_v_read_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 317, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_t_2);
+        __pyx_t_2 = 0;
+      }
+      __pyx_L11:;
+
+      /* "PanPA/Alignment.pyx":283
+ *                 continue
+ * 
+ *             if op_type == 3:  # mismatch (SNV)             # <<<<<<<<<<<<<<
+ *                 if pending_type != -1:
+ *                     vcf_pos = pending_ref_pos + 1
+*/
+      goto __pyx_L9;
+    }
+
+    /* "PanPA/Alignment.pyx":319
+ *                     pending_alt_chars = anchor_char + read_str
+ * 
+ *             elif op_type == 0:  # insertion             # <<<<<<<<<<<<<<
+ *                 if pending_type == 0:
+ *                     pending_alt_chars += read_str
+*/
+    __pyx_t_7 = (__Pyx_PyLong_BoolEqObjC(__pyx_v_op_type, __pyx_mstate_global->__pyx_int_0, 0, 0)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 319, __pyx_L1_error)
+    if (__pyx_t_7) {
+
+      /* "PanPA/Alignment.pyx":320
+ * 
+ *             elif op_type == 0:  # insertion
+ *                 if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                     pending_alt_chars += read_str
+ *                 else:
+*/
+      __pyx_t_7 = (__pyx_v_pending_type == 0);
+      if (__pyx_t_7) {
+
+        /* "PanPA/Alignment.pyx":321
+ *             elif op_type == 0:  # insertion
+ *                 if pending_type == 0:
+ *                     pending_alt_chars += read_str             # <<<<<<<<<<<<<<
+ *                 else:
+ *                     if pending_type != -1:
+*/
+        __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_pending_alt_chars, __pyx_v_read_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 321, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_t_2);
+        __pyx_t_2 = 0;
+
+        /* "PanPA/Alignment.pyx":320
+ * 
+ *             elif op_type == 0:  # insertion
+ *                 if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                     pending_alt_chars += read_str
+ *                 else:
+*/
+        goto __pyx_L14;
+      }
+
+      /* "PanPA/Alignment.pyx":323
+ *                     pending_alt_chars += read_str
+ *                 else:
+ *                     if pending_type != -1:             # <<<<<<<<<<<<<<
+ *                         vcf_pos = pending_ref_pos + 1
+ *                         ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+      /*else*/ {
+        __pyx_t_7 = (__pyx_v_pending_type != -1L);
+        if (__pyx_t_7) {
+
+          /* "PanPA/Alignment.pyx":324
+ *                 else:
+ *                     if pending_type != -1:
+ *                         vcf_pos = pending_ref_pos + 1             # <<<<<<<<<<<<<<
+ *                         ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                         alt_field = pending_alt_chars if pending_alt_chars else "."
+*/
+          __pyx_t_2 = __Pyx_PyLong_AddObjC(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __pyx_t_16 = __Pyx_PyLong_As_int(__pyx_t_2); if (unlikely((__pyx_t_16 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 324, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __pyx_v_vcf_pos = __pyx_t_16;
+
+          /* "PanPA/Alignment.pyx":325
+ *                     if pending_type != -1:
+ *                         vcf_pos = pending_ref_pos + 1
+ *                         ref_field = pending_ref_chars if pending_ref_chars else "."             # <<<<<<<<<<<<<<
+ *                         alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                         if pending_type == 1:
+*/
+          __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_ref_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 325, __pyx_L1_error)
+          if (__pyx_t_7) {
+            __pyx_t_4 = __pyx_v_pending_ref_chars;
+            __Pyx_INCREF(__pyx_t_4);
+            if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_4))) __PYX_ERR(0, 325, __pyx_L1_error)
+            __pyx_t_2 = __pyx_t_4;
+            __pyx_t_4 = 0;
+          } else {
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+            __pyx_t_2 = __pyx_mstate_global->__pyx_kp_u__6;
+          }
+          __Pyx_XDECREF_SET(__pyx_v_ref_field, ((PyObject*)__pyx_t_2));
+          __pyx_t_2 = 0;
+
+          /* "PanPA/Alignment.pyx":326
+ *                         vcf_pos = pending_ref_pos + 1
+ *                         ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                         alt_field = pending_alt_chars if pending_alt_chars else "."             # <<<<<<<<<<<<<<
+ *                         if pending_type == 1:
+ *                             vartype = "DEL"
+*/
+          __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_alt_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 326, __pyx_L1_error)
+          if (__pyx_t_7) {
+            __pyx_t_4 = __pyx_v_pending_alt_chars;
+            __Pyx_INCREF(__pyx_t_4);
+            if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_4))) __PYX_ERR(0, 326, __pyx_L1_error)
+            __pyx_t_2 = __pyx_t_4;
+            __pyx_t_4 = 0;
+          } else {
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+            __pyx_t_2 = __pyx_mstate_global->__pyx_kp_u__6;
+          }
+          __Pyx_XDECREF_SET(__pyx_v_alt_field, ((PyObject*)__pyx_t_2));
+          __pyx_t_2 = 0;
+
+          /* "PanPA/Alignment.pyx":327
+ *                         ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                         alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                         if pending_type == 1:             # <<<<<<<<<<<<<<
+ *                             vartype = "DEL"
+ *                         else:
+*/
+          __pyx_t_7 = (__pyx_v_pending_type == 1);
+          if (__pyx_t_7) {
+
+            /* "PanPA/Alignment.pyx":328
+ *                         alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                         if pending_type == 1:
+ *                             vartype = "DEL"             # <<<<<<<<<<<<<<
+ *                         else:
+ *                             vartype = "SNV"
+*/
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_DEL);
+            __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_DEL);
+
+            /* "PanPA/Alignment.pyx":327
+ *                         ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                         alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                         if pending_type == 1:             # <<<<<<<<<<<<<<
+ *                             vartype = "DEL"
+ *                         else:
+*/
+            goto __pyx_L16;
+          }
+
+          /* "PanPA/Alignment.pyx":330
+ *                             vartype = "DEL"
+ *                         else:
+ *                             vartype = "SNV"             # <<<<<<<<<<<<<<
+ *                         rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                         records.append(rec)
+*/
+          /*else*/ {
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_SNV);
+            __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_SNV);
+          }
+          __pyx_L16:;
+
+          /* "PanPA/Alignment.pyx":331
+ *                         else:
+ *                             vartype = "SNV"
+ *                         rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"             # <<<<<<<<<<<<<<
+ *                         records.append(rec)
+ *                         pending_type = -1
+*/
+          __pyx_t_2 = __Pyx_PyUnicode_From_int(__pyx_v_vcf_pos, 0, ' ', 'd'); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 331, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __pyx_t_4 = __Pyx_PyUnicode_Unicode(__pyx_v_ref_field); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 331, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          __pyx_t_3 = __Pyx_PyUnicode_Unicode(__pyx_v_alt_field); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 331, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          __pyx_t_10 = __Pyx_PyUnicode_Unicode(__pyx_v_self->read_name); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 331, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __pyx_t_11[0] = __pyx_t_2;
+          __pyx_t_11[1] = __pyx_mstate_global->__pyx_kp_u__5;
+          __pyx_t_11[2] = __pyx_t_4;
+          __pyx_t_11[3] = __pyx_mstate_global->__pyx_kp_u__5;
+          __pyx_t_11[4] = __pyx_t_3;
+          __pyx_t_11[5] = __pyx_mstate_global->__pyx_kp_u__5;
+          __pyx_t_11[6] = __pyx_t_10;
+          __pyx_t_11[7] = __pyx_mstate_global->__pyx_kp_u__5;
+          __pyx_t_11[8] = __pyx_v_vartype;
+          __pyx_t_12 = __Pyx_PyUnicode_Join(__pyx_t_11, 9, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_2) + 1 * 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_4) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_10) + __Pyx_PyUnicode_GET_LENGTH(__pyx_v_vartype), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_10) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_v_vartype));
+          if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 331, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_12);
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __Pyx_XDECREF_SET(__pyx_v_rec, ((PyObject*)__pyx_t_12));
+          __pyx_t_12 = 0;
+
+          /* "PanPA/Alignment.pyx":332
+ *                             vartype = "SNV"
+ *                         rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                         records.append(rec)             # <<<<<<<<<<<<<<
+ *                         pending_type = -1
+ *                         pending_ref_pos = -1
+*/
+          __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_records, __pyx_v_rec); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 332, __pyx_L1_error)
+
+          /* "PanPA/Alignment.pyx":333
+ *                         rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                         records.append(rec)
+ *                         pending_type = -1             # <<<<<<<<<<<<<<
+ *                         pending_ref_pos = -1
+ *                         pending_ref_chars = ""
+*/
+          __pyx_v_pending_type = -1L;
+
+          /* "PanPA/Alignment.pyx":334
+ *                         records.append(rec)
+ *                         pending_type = -1
+ *                         pending_ref_pos = -1             # <<<<<<<<<<<<<<
+ *                         pending_ref_chars = ""
+ *                         pending_alt_chars = ""
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_int_neg_1);
+          __Pyx_DECREF_SET(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_neg_1);
+
+          /* "PanPA/Alignment.pyx":335
+ *                         pending_type = -1
+ *                         pending_ref_pos = -1
+ *                         pending_ref_chars = ""             # <<<<<<<<<<<<<<
+ *                         pending_alt_chars = ""
+ * 
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+          __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_mstate_global->__pyx_kp_u_);
+
+          /* "PanPA/Alignment.pyx":336
+ *                         pending_ref_pos = -1
+ *                         pending_ref_chars = ""
+ *                         pending_alt_chars = ""             # <<<<<<<<<<<<<<
+ * 
+ *                     if on_ref:
+*/
+          __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+          __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_mstate_global->__pyx_kp_u_);
+
+          /* "PanPA/Alignment.pyx":323
+ *                     pending_alt_chars += read_str
+ *                 else:
+ *                     if pending_type != -1:             # <<<<<<<<<<<<<<
+ *                         vcf_pos = pending_ref_pos + 1
+ *                         ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+        }
+
+        /* "PanPA/Alignment.pyx":338
+ *                         pending_alt_chars = ""
+ * 
+ *                     if on_ref:             # <<<<<<<<<<<<<<
+ *                         anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+*/
+        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_on_ref); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 338, __pyx_L1_error)
+        if (__pyx_t_7) {
+
+          /* "PanPA/Alignment.pyx":339
+ * 
+ *                     if on_ref:
+ *                         anchor_pos = node_to_ref_start[node_id] + node_pos             # <<<<<<<<<<<<<<
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+ *                     elif last_ref_anchor_pos >= 0:
+*/
+          if (unlikely(__pyx_v_node_to_ref_start == Py_None)) {
+            PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+            __PYX_ERR(0, 339, __pyx_L1_error)
+          }
+          __pyx_t_12 = __Pyx_PyLong_From_int(__pyx_v_node_id); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 339, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_12);
+          __pyx_t_10 = __Pyx_PyDict_GetItem(__pyx_v_node_to_ref_start, __pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 339, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+          __pyx_t_12 = PyNumber_Add(__pyx_t_10, __pyx_v_node_pos); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 339, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_12);
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __pyx_t_16 = __Pyx_PyLong_As_int(__pyx_t_12); if (unlikely((__pyx_t_16 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 339, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+          __pyx_v_anchor_pos = __pyx_t_16;
+
+          /* "PanPA/Alignment.pyx":340
+ *                     if on_ref:
+ *                         anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""             # <<<<<<<<<<<<<<
+ *                     elif last_ref_anchor_pos >= 0:
+ *                         anchor_pos = last_ref_anchor_pos
+*/
+          if (unlikely(__pyx_v_ref_seq == Py_None)) {
+            PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
+            __PYX_ERR(0, 340, __pyx_L1_error)
+          }
+          __pyx_t_17 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_ref_seq); if (unlikely(__pyx_t_17 == ((Py_ssize_t)-1))) __PYX_ERR(0, 340, __pyx_L1_error)
+          __pyx_t_7 = (__pyx_v_anchor_pos < __pyx_t_17);
+          if (__pyx_t_7) {
+            __pyx_t_14 = __Pyx_GetItemInt_Unicode(__pyx_v_ref_seq, __pyx_v_anchor_pos, int, 1, __Pyx_PyLong_From_int, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_14 == (Py_UCS4)-1)) __PYX_ERR(0, 340, __pyx_L1_error)
+            __pyx_t_10 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_14); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 340, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_10);
+            __pyx_t_12 = __pyx_t_10;
+            __pyx_t_10 = 0;
+          } else {
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+            __pyx_t_12 = __pyx_mstate_global->__pyx_kp_u_;
+          }
+          __Pyx_XDECREF_SET(__pyx_v_anchor_char, ((PyObject*)__pyx_t_12));
+          __pyx_t_12 = 0;
+
+          /* "PanPA/Alignment.pyx":338
+ *                         pending_alt_chars = ""
+ * 
+ *                     if on_ref:             # <<<<<<<<<<<<<<
+ *                         anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+*/
+          goto __pyx_L17;
+        }
+
+        /* "PanPA/Alignment.pyx":341
+ *                         anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+ *                     elif last_ref_anchor_pos >= 0:             # <<<<<<<<<<<<<<
+ *                         anchor_pos = last_ref_anchor_pos
+ *                         anchor_char = last_ref_anchor_char
+*/
+        __pyx_t_12 = PyObject_RichCompare(__pyx_v_last_ref_anchor_pos, __pyx_mstate_global->__pyx_int_0, Py_GE); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 341, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 341, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        if (__pyx_t_7) {
+
+          /* "PanPA/Alignment.pyx":342
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+ *                     elif last_ref_anchor_pos >= 0:
+ *                         anchor_pos = last_ref_anchor_pos             # <<<<<<<<<<<<<<
+ *                         anchor_char = last_ref_anchor_char
+ *                     else:
+*/
+          __pyx_t_16 = __Pyx_PyLong_As_int(__pyx_v_last_ref_anchor_pos); if (unlikely((__pyx_t_16 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 342, __pyx_L1_error)
+          __pyx_v_anchor_pos = __pyx_t_16;
+
+          /* "PanPA/Alignment.pyx":343
+ *                     elif last_ref_anchor_pos >= 0:
+ *                         anchor_pos = last_ref_anchor_pos
+ *                         anchor_char = last_ref_anchor_char             # <<<<<<<<<<<<<<
+ *                     else:
+ *                         ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+*/
+          __pyx_t_12 = __pyx_v_last_ref_anchor_char;
+          __Pyx_INCREF(__pyx_t_12);
+          if (!(likely(PyUnicode_CheckExact(__pyx_t_12))||((__pyx_t_12) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_12))) __PYX_ERR(0, 343, __pyx_L1_error)
+          __Pyx_XDECREF_SET(__pyx_v_anchor_char, ((PyObject*)__pyx_t_12));
+          __pyx_t_12 = 0;
+
+          /* "PanPA/Alignment.pyx":341
+ *                         anchor_pos = node_to_ref_start[node_id] + node_pos
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+ *                     elif last_ref_anchor_pos >= 0:             # <<<<<<<<<<<<<<
+ *                         anchor_pos = last_ref_anchor_pos
+ *                         anchor_char = last_ref_anchor_char
+*/
+          goto __pyx_L17;
+        }
+
+        /* "PanPA/Alignment.pyx":345
+ *                         anchor_char = last_ref_anchor_char
+ *                     else:
+ *                         ancestor_id, ancestor_last_pos = self._find_fork_ancestor(             # <<<<<<<<<<<<<<
+ *                             node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+ *                         anchor_pos = ancestor_last_pos
+*/
+        /*else*/ {
+          __pyx_t_10 = ((PyObject *)__pyx_v_self);
+          __Pyx_INCREF(__pyx_t_10);
+
+          /* "PanPA/Alignment.pyx":346
+ *                     else:
+ *                         ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+ *                             node_id, graph, ref_node_set, node_to_ref_start, fork_cache)             # <<<<<<<<<<<<<<
+ *                         anchor_pos = ancestor_last_pos
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+*/
+          __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_node_id); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 346, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          __pyx_t_5 = 0;
+          {
+            PyObject *__pyx_callargs[6] = {__pyx_t_10, __pyx_t_3, ((PyObject *)__pyx_v_graph), __pyx_v_ref_node_set, __pyx_v_node_to_ref_start, __pyx_v_fork_cache};
+            __pyx_t_12 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_find_fork_ancestor, __pyx_callargs+__pyx_t_5, (6-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+            __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 345, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_12);
+          }
+          if ((likely(PyTuple_CheckExact(__pyx_t_12))) || (PyList_CheckExact(__pyx_t_12))) {
+            PyObject* sequence = __pyx_t_12;
+            Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
+            if (unlikely(size != 2)) {
+              if (size > 2) __Pyx_RaiseTooManyValuesError(2);
+              else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
+              __PYX_ERR(0, 345, __pyx_L1_error)
+            }
+            #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+            if (likely(PyTuple_CheckExact(sequence))) {
+              __pyx_t_3 = PyTuple_GET_ITEM(sequence, 0);
+              __Pyx_INCREF(__pyx_t_3);
+              __pyx_t_10 = PyTuple_GET_ITEM(sequence, 1);
+              __Pyx_INCREF(__pyx_t_10);
+            } else {
+              __pyx_t_3 = __Pyx_PyList_GetItemRefFast(sequence, 0, __Pyx_ReferenceSharing_SharedReference);
+              if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 345, __pyx_L1_error)
+              __Pyx_XGOTREF(__pyx_t_3);
+              __pyx_t_10 = __Pyx_PyList_GetItemRefFast(sequence, 1, __Pyx_ReferenceSharing_SharedReference);
+              if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 345, __pyx_L1_error)
+              __Pyx_XGOTREF(__pyx_t_10);
+            }
+            #else
+            __pyx_t_3 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 345, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __pyx_t_10 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 345, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_10);
+            #endif
+            __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+          } else {
+            Py_ssize_t index = -1;
+            __pyx_t_4 = PyObject_GetIter(__pyx_t_12); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 345, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_4);
+            __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+            __pyx_t_15 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_4);
+            index = 0; __pyx_t_3 = __pyx_t_15(__pyx_t_4); if (unlikely(!__pyx_t_3)) goto __pyx_L18_unpacking_failed;
+            __Pyx_GOTREF(__pyx_t_3);
+            index = 1; __pyx_t_10 = __pyx_t_15(__pyx_t_4); if (unlikely(!__pyx_t_10)) goto __pyx_L18_unpacking_failed;
+            __Pyx_GOTREF(__pyx_t_10);
+            if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_4), 2) < (0)) __PYX_ERR(0, 345, __pyx_L1_error)
+            __pyx_t_15 = NULL;
+            __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+            goto __pyx_L19_unpacking_done;
+            __pyx_L18_unpacking_failed:;
+            __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+            __pyx_t_15 = NULL;
+            if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
+            __PYX_ERR(0, 345, __pyx_L1_error)
+            __pyx_L19_unpacking_done:;
+          }
+
+          /* "PanPA/Alignment.pyx":345
+ *                         anchor_char = last_ref_anchor_char
+ *                     else:
+ *                         ancestor_id, ancestor_last_pos = self._find_fork_ancestor(             # <<<<<<<<<<<<<<
+ *                             node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+ *                         anchor_pos = ancestor_last_pos
+*/
+          __pyx_t_16 = __Pyx_PyLong_As_int(__pyx_t_3); if (unlikely((__pyx_t_16 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 345, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_10); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 345, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __pyx_v_ancestor_id = __pyx_t_16;
+          __pyx_v_ancestor_last_pos = __pyx_t_9;
+
+          /* "PanPA/Alignment.pyx":347
+ *                         ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+ *                             node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+ *                         anchor_pos = ancestor_last_pos             # <<<<<<<<<<<<<<
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+ * 
+*/
+          __pyx_v_anchor_pos = __pyx_v_ancestor_last_pos;
+
+          /* "PanPA/Alignment.pyx":348
+ *                             node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+ *                         anchor_pos = ancestor_last_pos
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""             # <<<<<<<<<<<<<<
+ * 
+ *                     pending_type = 0
+*/
+          if (unlikely(__pyx_v_ref_seq == Py_None)) {
+            PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
+            __PYX_ERR(0, 348, __pyx_L1_error)
+          }
+          __pyx_t_17 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_ref_seq); if (unlikely(__pyx_t_17 == ((Py_ssize_t)-1))) __PYX_ERR(0, 348, __pyx_L1_error)
+          __pyx_t_7 = (__pyx_v_anchor_pos < __pyx_t_17);
+          if (__pyx_t_7) {
+            __pyx_t_14 = __Pyx_GetItemInt_Unicode(__pyx_v_ref_seq, __pyx_v_anchor_pos, int, 1, __Pyx_PyLong_From_int, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_14 == (Py_UCS4)-1)) __PYX_ERR(0, 348, __pyx_L1_error)
+            __pyx_t_10 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_14); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 348, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_10);
+            __pyx_t_12 = __pyx_t_10;
+            __pyx_t_10 = 0;
+          } else {
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+            __pyx_t_12 = __pyx_mstate_global->__pyx_kp_u_;
+          }
+          __Pyx_XDECREF_SET(__pyx_v_anchor_char, ((PyObject*)__pyx_t_12));
+          __pyx_t_12 = 0;
+        }
+        __pyx_L17:;
+
+        /* "PanPA/Alignment.pyx":350
+ *                         anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+ * 
+ *                     pending_type = 0             # <<<<<<<<<<<<<<
+ *                     pending_ref_pos = anchor_pos
+ *                     pending_ref_chars = anchor_char
+*/
+        __pyx_v_pending_type = 0;
+
+        /* "PanPA/Alignment.pyx":351
+ * 
+ *                     pending_type = 0
+ *                     pending_ref_pos = anchor_pos             # <<<<<<<<<<<<<<
+ *                     pending_ref_chars = anchor_char
+ *                     pending_alt_chars = anchor_char + read_str
+*/
+        __pyx_t_12 = __Pyx_PyLong_From_int(__pyx_v_anchor_pos); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 351, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_pos, __pyx_t_12);
+        __pyx_t_12 = 0;
+
+        /* "PanPA/Alignment.pyx":352
+ *                     pending_type = 0
+ *                     pending_ref_pos = anchor_pos
+ *                     pending_ref_chars = anchor_char             # <<<<<<<<<<<<<<
+ *                     pending_alt_chars = anchor_char + read_str
+ * 
+*/
+        __Pyx_INCREF(__pyx_v_anchor_char);
+        __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_v_anchor_char);
+
+        /* "PanPA/Alignment.pyx":353
+ *                     pending_ref_pos = anchor_pos
+ *                     pending_ref_chars = anchor_char
+ *                     pending_alt_chars = anchor_char + read_str             # <<<<<<<<<<<<<<
+ * 
+ *             elif op_type == 1:  # deletion
+*/
+        __pyx_t_12 = PyNumber_Add(__pyx_v_anchor_char, __pyx_v_read_str); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 353, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_t_12);
+        __pyx_t_12 = 0;
+      }
+      __pyx_L14:;
+
+      /* "PanPA/Alignment.pyx":319
+ *                     pending_alt_chars = anchor_char + read_str
+ * 
+ *             elif op_type == 0:  # insertion             # <<<<<<<<<<<<<<
+ *                 if pending_type == 0:
+ *                     pending_alt_chars += read_str
+*/
+      goto __pyx_L9;
+    }
+
+    /* "PanPA/Alignment.pyx":355
+ *                     pending_alt_chars = anchor_char + read_str
+ * 
+ *             elif op_type == 1:  # deletion             # <<<<<<<<<<<<<<
+ *                 if on_ref:
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+*/
+    __pyx_t_7 = (__Pyx_PyLong_BoolEqObjC(__pyx_v_op_type, __pyx_mstate_global->__pyx_int_1, 1, 0)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 355, __pyx_L1_error)
+    if (__pyx_t_7) {
+
+      /* "PanPA/Alignment.pyx":356
+ * 
+ *             elif op_type == 1:  # deletion
+ *                 if on_ref:             # <<<<<<<<<<<<<<
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     if pending_type == 1 and pending_ref_pos >= 0:
+*/
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_on_ref); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 356, __pyx_L1_error)
+      if (__pyx_t_7) {
+
+        /* "PanPA/Alignment.pyx":357
+ *             elif op_type == 1:  # deletion
+ *                 if on_ref:
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos             # <<<<<<<<<<<<<<
+ *                     if pending_type == 1 and pending_ref_pos >= 0:
+ *                         pending_ref_chars += ref_seq[ref_pos_0]
+*/
+        if (unlikely(__pyx_v_node_to_ref_start == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          __PYX_ERR(0, 357, __pyx_L1_error)
+        }
+        __pyx_t_12 = __Pyx_PyLong_From_int(__pyx_v_node_id); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_10 = __Pyx_PyDict_GetItem(__pyx_v_node_to_ref_start, __pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_t_12 = PyNumber_Add(__pyx_t_10, __pyx_v_node_pos); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_12); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_v_ref_pos_0 = __pyx_t_9;
+
+        /* "PanPA/Alignment.pyx":358
+ *                 if on_ref:
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     if pending_type == 1 and pending_ref_pos >= 0:             # <<<<<<<<<<<<<<
+ *                         pending_ref_chars += ref_seq[ref_pos_0]
+ *                     else:
+*/
+        __pyx_t_6 = (__pyx_v_pending_type == 1);
+        if (__pyx_t_6) {
+        } else {
+          __pyx_t_7 = __pyx_t_6;
+          goto __pyx_L22_bool_binop_done;
+        }
+        __pyx_t_12 = PyObject_RichCompare(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_0, Py_GE); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 358, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 358, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_t_7 = __pyx_t_6;
+        __pyx_L22_bool_binop_done:;
+        if (__pyx_t_7) {
+
+          /* "PanPA/Alignment.pyx":359
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     if pending_type == 1 and pending_ref_pos >= 0:
+ *                         pending_ref_chars += ref_seq[ref_pos_0]             # <<<<<<<<<<<<<<
+ *                     else:
+ *                         if pending_type != -1:
+*/
+          __pyx_t_14 = __Pyx_GetItemInt_Unicode(__pyx_v_ref_seq, __pyx_v_ref_pos_0, int, 1, __Pyx_PyLong_From_int, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_14 == (Py_UCS4)-1)) __PYX_ERR(0, 359, __pyx_L1_error)
+          __pyx_t_12 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_14); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 359, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_12);
+          __pyx_t_10 = PyNumber_InPlaceAdd(__pyx_v_pending_ref_chars, __pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 359, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+          __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_t_10);
+          __pyx_t_10 = 0;
+
+          /* "PanPA/Alignment.pyx":358
+ *                 if on_ref:
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     if pending_type == 1 and pending_ref_pos >= 0:             # <<<<<<<<<<<<<<
+ *                         pending_ref_chars += ref_seq[ref_pos_0]
+ *                     else:
+*/
+          goto __pyx_L21;
+        }
+
+        /* "PanPA/Alignment.pyx":361
+ *                         pending_ref_chars += ref_seq[ref_pos_0]
+ *                     else:
+ *                         if pending_type != -1:             # <<<<<<<<<<<<<<
+ *                             vcf_pos = pending_ref_pos + 1
+ *                             ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+        /*else*/ {
+          __pyx_t_7 = (__pyx_v_pending_type != -1L);
+          if (__pyx_t_7) {
+
+            /* "PanPA/Alignment.pyx":362
+ *                     else:
+ *                         if pending_type != -1:
+ *                             vcf_pos = pending_ref_pos + 1             # <<<<<<<<<<<<<<
+ *                             ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                             alt_field = pending_alt_chars if pending_alt_chars else "."
+*/
+            __pyx_t_10 = __Pyx_PyLong_AddObjC(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 362, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_10);
+            __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_10); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 362, __pyx_L1_error)
+            __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+            __pyx_v_vcf_pos = __pyx_t_9;
+
+            /* "PanPA/Alignment.pyx":363
+ *                         if pending_type != -1:
+ *                             vcf_pos = pending_ref_pos + 1
+ *                             ref_field = pending_ref_chars if pending_ref_chars else "."             # <<<<<<<<<<<<<<
+ *                             alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                             if pending_type == 0:
+*/
+            __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_ref_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 363, __pyx_L1_error)
+            if (__pyx_t_7) {
+              __pyx_t_12 = __pyx_v_pending_ref_chars;
+              __Pyx_INCREF(__pyx_t_12);
+              if (!(likely(PyUnicode_CheckExact(__pyx_t_12))||((__pyx_t_12) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_12))) __PYX_ERR(0, 363, __pyx_L1_error)
+              __pyx_t_10 = __pyx_t_12;
+              __pyx_t_12 = 0;
+            } else {
+              __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+              __pyx_t_10 = __pyx_mstate_global->__pyx_kp_u__6;
+            }
+            __Pyx_XDECREF_SET(__pyx_v_ref_field, ((PyObject*)__pyx_t_10));
+            __pyx_t_10 = 0;
+
+            /* "PanPA/Alignment.pyx":364
+ *                             vcf_pos = pending_ref_pos + 1
+ *                             ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                             alt_field = pending_alt_chars if pending_alt_chars else "."             # <<<<<<<<<<<<<<
+ *                             if pending_type == 0:
+ *                                 vartype = "INS"
+*/
+            __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_alt_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 364, __pyx_L1_error)
+            if (__pyx_t_7) {
+              __pyx_t_12 = __pyx_v_pending_alt_chars;
+              __Pyx_INCREF(__pyx_t_12);
+              if (!(likely(PyUnicode_CheckExact(__pyx_t_12))||((__pyx_t_12) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_12))) __PYX_ERR(0, 364, __pyx_L1_error)
+              __pyx_t_10 = __pyx_t_12;
+              __pyx_t_12 = 0;
+            } else {
+              __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+              __pyx_t_10 = __pyx_mstate_global->__pyx_kp_u__6;
+            }
+            __Pyx_XDECREF_SET(__pyx_v_alt_field, ((PyObject*)__pyx_t_10));
+            __pyx_t_10 = 0;
+
+            /* "PanPA/Alignment.pyx":365
+ *                             ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                             alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                             if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                                 vartype = "INS"
+ *                             else:
+*/
+            __pyx_t_7 = (__pyx_v_pending_type == 0);
+            if (__pyx_t_7) {
+
+              /* "PanPA/Alignment.pyx":366
+ *                             alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                             if pending_type == 0:
+ *                                 vartype = "INS"             # <<<<<<<<<<<<<<
+ *                             else:
+ *                                 vartype = "SNV"
+*/
+              __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_INS);
+              __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_INS);
+
+              /* "PanPA/Alignment.pyx":365
+ *                             ref_field = pending_ref_chars if pending_ref_chars else "."
+ *                             alt_field = pending_alt_chars if pending_alt_chars else "."
+ *                             if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                                 vartype = "INS"
+ *                             else:
+*/
+              goto __pyx_L25;
+            }
+
+            /* "PanPA/Alignment.pyx":368
+ *                                 vartype = "INS"
+ *                             else:
+ *                                 vartype = "SNV"             # <<<<<<<<<<<<<<
+ *                             rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                             records.append(rec)
+*/
+            /*else*/ {
+              __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_SNV);
+              __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_SNV);
+            }
+            __pyx_L25:;
+
+            /* "PanPA/Alignment.pyx":369
+ *                             else:
+ *                                 vartype = "SNV"
+ *                             rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"             # <<<<<<<<<<<<<<
+ *                             records.append(rec)
+ *                             pending_type = -1
+*/
+            __pyx_t_10 = __Pyx_PyUnicode_From_int(__pyx_v_vcf_pos, 0, ' ', 'd'); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 369, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_10);
+            __pyx_t_12 = __Pyx_PyUnicode_Unicode(__pyx_v_ref_field); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 369, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_12);
+            __pyx_t_3 = __Pyx_PyUnicode_Unicode(__pyx_v_alt_field); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 369, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __pyx_t_4 = __Pyx_PyUnicode_Unicode(__pyx_v_self->read_name); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 369, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_4);
+            __pyx_t_11[0] = __pyx_t_10;
+            __pyx_t_11[1] = __pyx_mstate_global->__pyx_kp_u__5;
+            __pyx_t_11[2] = __pyx_t_12;
+            __pyx_t_11[3] = __pyx_mstate_global->__pyx_kp_u__5;
+            __pyx_t_11[4] = __pyx_t_3;
+            __pyx_t_11[5] = __pyx_mstate_global->__pyx_kp_u__5;
+            __pyx_t_11[6] = __pyx_t_4;
+            __pyx_t_11[7] = __pyx_mstate_global->__pyx_kp_u__5;
+            __pyx_t_11[8] = __pyx_v_vartype;
+            __pyx_t_2 = __Pyx_PyUnicode_Join(__pyx_t_11, 9, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_10) + 1 * 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_12) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_4) + __Pyx_PyUnicode_GET_LENGTH(__pyx_v_vartype), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_12) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_v_vartype));
+            if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 369, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+            __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+            __Pyx_XDECREF_SET(__pyx_v_rec, ((PyObject*)__pyx_t_2));
+            __pyx_t_2 = 0;
+
+            /* "PanPA/Alignment.pyx":370
+ *                                 vartype = "SNV"
+ *                             rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                             records.append(rec)             # <<<<<<<<<<<<<<
+ *                             pending_type = -1
+ *                             pending_ref_pos = -1
+*/
+            __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_records, __pyx_v_rec); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 370, __pyx_L1_error)
+
+            /* "PanPA/Alignment.pyx":371
+ *                             rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *                             records.append(rec)
+ *                             pending_type = -1             # <<<<<<<<<<<<<<
+ *                             pending_ref_pos = -1
+ *                             pending_ref_chars = ""
+*/
+            __pyx_v_pending_type = -1L;
+
+            /* "PanPA/Alignment.pyx":372
+ *                             records.append(rec)
+ *                             pending_type = -1
+ *                             pending_ref_pos = -1             # <<<<<<<<<<<<<<
+ *                             pending_ref_chars = ""
+ *                             pending_alt_chars = ""
+*/
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_int_neg_1);
+            __Pyx_DECREF_SET(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_neg_1);
+
+            /* "PanPA/Alignment.pyx":373
+ *                             pending_type = -1
+ *                             pending_ref_pos = -1
+ *                             pending_ref_chars = ""             # <<<<<<<<<<<<<<
+ *                             pending_alt_chars = ""
+ * 
+*/
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+            __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_mstate_global->__pyx_kp_u_);
+
+            /* "PanPA/Alignment.pyx":374
+ *                             pending_ref_pos = -1
+ *                             pending_ref_chars = ""
+ *                             pending_alt_chars = ""             # <<<<<<<<<<<<<<
+ * 
+ *                         if last_ref_anchor_pos >= 0:
+*/
+            __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+            __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_mstate_global->__pyx_kp_u_);
+
+            /* "PanPA/Alignment.pyx":361
+ *                         pending_ref_chars += ref_seq[ref_pos_0]
+ *                     else:
+ *                         if pending_type != -1:             # <<<<<<<<<<<<<<
+ *                             vcf_pos = pending_ref_pos + 1
+ *                             ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+          }
+
+          /* "PanPA/Alignment.pyx":376
+ *                             pending_alt_chars = ""
+ * 
+ *                         if last_ref_anchor_pos >= 0:             # <<<<<<<<<<<<<<
+ *                             anchor_pos = last_ref_anchor_pos
+ *                             anchor_char = last_ref_anchor_char
+*/
+          __pyx_t_2 = PyObject_RichCompare(__pyx_v_last_ref_anchor_pos, __pyx_mstate_global->__pyx_int_0, Py_GE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 376, __pyx_L1_error)
+          __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 376, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          if (__pyx_t_7) {
+
+            /* "PanPA/Alignment.pyx":377
+ * 
+ *                         if last_ref_anchor_pos >= 0:
+ *                             anchor_pos = last_ref_anchor_pos             # <<<<<<<<<<<<<<
+ *                             anchor_char = last_ref_anchor_char
+ *                         else:
+*/
+            __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_v_last_ref_anchor_pos); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 377, __pyx_L1_error)
+            __pyx_v_anchor_pos = __pyx_t_9;
+
+            /* "PanPA/Alignment.pyx":378
+ *                         if last_ref_anchor_pos >= 0:
+ *                             anchor_pos = last_ref_anchor_pos
+ *                             anchor_char = last_ref_anchor_char             # <<<<<<<<<<<<<<
+ *                         else:
+ *                             anchor_pos = ref_pos_0 - 1 if ref_pos_0 > 0 else 0
+*/
+            __pyx_t_2 = __pyx_v_last_ref_anchor_char;
+            __Pyx_INCREF(__pyx_t_2);
+            if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_2))) __PYX_ERR(0, 378, __pyx_L1_error)
+            __Pyx_XDECREF_SET(__pyx_v_anchor_char, ((PyObject*)__pyx_t_2));
+            __pyx_t_2 = 0;
+
+            /* "PanPA/Alignment.pyx":376
+ *                             pending_alt_chars = ""
+ * 
+ *                         if last_ref_anchor_pos >= 0:             # <<<<<<<<<<<<<<
+ *                             anchor_pos = last_ref_anchor_pos
+ *                             anchor_char = last_ref_anchor_char
+*/
+            goto __pyx_L26;
+          }
+
+          /* "PanPA/Alignment.pyx":380
+ *                             anchor_char = last_ref_anchor_char
+ *                         else:
+ *                             anchor_pos = ref_pos_0 - 1 if ref_pos_0 > 0 else 0             # <<<<<<<<<<<<<<
+ *                             anchor_char = ref_seq[anchor_pos]
+ * 
+*/
+          /*else*/ {
+            __pyx_t_7 = (__pyx_v_ref_pos_0 > 0);
+            if (__pyx_t_7) {
+              __pyx_t_18 = (__pyx_v_ref_pos_0 - 1);
+            } else {
+              __pyx_t_18 = 0;
+            }
+            __pyx_v_anchor_pos = __pyx_t_18;
+
+            /* "PanPA/Alignment.pyx":381
+ *                         else:
+ *                             anchor_pos = ref_pos_0 - 1 if ref_pos_0 > 0 else 0
+ *                             anchor_char = ref_seq[anchor_pos]             # <<<<<<<<<<<<<<
+ * 
+ *                         pending_type = 1
+*/
+            __pyx_t_14 = __Pyx_GetItemInt_Unicode(__pyx_v_ref_seq, __pyx_v_anchor_pos, int, 1, __Pyx_PyLong_From_int, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_14 == (Py_UCS4)-1)) __PYX_ERR(0, 381, __pyx_L1_error)
+            __pyx_t_2 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 381, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            if (!(likely(PyUnicode_CheckExact(__pyx_t_2)) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_2))) __PYX_ERR(0, 381, __pyx_L1_error)
+            __Pyx_XDECREF_SET(__pyx_v_anchor_char, ((PyObject*)__pyx_t_2));
+            __pyx_t_2 = 0;
+          }
+          __pyx_L26:;
+
+          /* "PanPA/Alignment.pyx":383
+ *                             anchor_char = ref_seq[anchor_pos]
+ * 
+ *                         pending_type = 1             # <<<<<<<<<<<<<<
+ *                         pending_ref_pos = anchor_pos
+ *                         pending_ref_chars = anchor_char + ref_seq[ref_pos_0]
+*/
+          __pyx_v_pending_type = 1;
+
+          /* "PanPA/Alignment.pyx":384
+ * 
+ *                         pending_type = 1
+ *                         pending_ref_pos = anchor_pos             # <<<<<<<<<<<<<<
+ *                         pending_ref_chars = anchor_char + ref_seq[ref_pos_0]
+ *                         pending_alt_chars = anchor_char
+*/
+          __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_anchor_pos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 384, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __Pyx_DECREF_SET(__pyx_v_pending_ref_pos, __pyx_t_2);
+          __pyx_t_2 = 0;
+
+          /* "PanPA/Alignment.pyx":385
+ *                         pending_type = 1
+ *                         pending_ref_pos = anchor_pos
+ *                         pending_ref_chars = anchor_char + ref_seq[ref_pos_0]             # <<<<<<<<<<<<<<
+ *                         pending_alt_chars = anchor_char
+ * 
+*/
+          __pyx_t_14 = __Pyx_GetItemInt_Unicode(__pyx_v_ref_seq, __pyx_v_ref_pos_0, int, 1, __Pyx_PyLong_From_int, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_14 == (Py_UCS4)-1)) __PYX_ERR(0, 385, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __pyx_t_4 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_anchor_char, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 385, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __Pyx_DECREF_SET(__pyx_v_pending_ref_chars, __pyx_t_4);
+          __pyx_t_4 = 0;
+
+          /* "PanPA/Alignment.pyx":386
+ *                         pending_ref_pos = anchor_pos
+ *                         pending_ref_chars = anchor_char + ref_seq[ref_pos_0]
+ *                         pending_alt_chars = anchor_char             # <<<<<<<<<<<<<<
+ * 
+ *         # Final flush
+*/
+          __Pyx_INCREF(__pyx_v_anchor_char);
+          __Pyx_DECREF_SET(__pyx_v_pending_alt_chars, __pyx_v_anchor_char);
+        }
+        __pyx_L21:;
+
+        /* "PanPA/Alignment.pyx":356
+ * 
+ *             elif op_type == 1:  # deletion
+ *                 if on_ref:             # <<<<<<<<<<<<<<
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+ *                     if pending_type == 1 and pending_ref_pos >= 0:
+*/
+      }
+
+      /* "PanPA/Alignment.pyx":355
+ *                     pending_alt_chars = anchor_char + read_str
+ * 
+ *             elif op_type == 1:  # deletion             # <<<<<<<<<<<<<<
+ *                 if on_ref:
+ *                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
+*/
+    }
+    __pyx_L9:;
+
+    /* "PanPA/Alignment.pyx":252
+ *         pending_alt_chars = ""
+ * 
+ *         for item in self.info:             # <<<<<<<<<<<<<<
+ *             node_id = item["node_id"]
+ *             node_pos = item["node_pos"]
+*/
+    __pyx_L4_continue:;
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "PanPA/Alignment.pyx":389
+ * 
+ *         # Final flush
+ *         if pending_type != -1:             # <<<<<<<<<<<<<<
+ *             vcf_pos = pending_ref_pos + 1
+ *             ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+  __pyx_t_7 = (__pyx_v_pending_type != -1L);
+  if (__pyx_t_7) {
+
+    /* "PanPA/Alignment.pyx":390
+ *         # Final flush
+ *         if pending_type != -1:
+ *             vcf_pos = pending_ref_pos + 1             # <<<<<<<<<<<<<<
+ *             ref_field = pending_ref_chars if pending_ref_chars else "."
+ *             alt_field = pending_alt_chars if pending_alt_chars else "."
+*/
+    __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_v_pending_ref_pos, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 390, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 390, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_vcf_pos = __pyx_t_9;
+
+    /* "PanPA/Alignment.pyx":391
+ *         if pending_type != -1:
+ *             vcf_pos = pending_ref_pos + 1
+ *             ref_field = pending_ref_chars if pending_ref_chars else "."             # <<<<<<<<<<<<<<
+ *             alt_field = pending_alt_chars if pending_alt_chars else "."
+ *             if pending_type == 0:
+*/
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_ref_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 391, __pyx_L1_error)
+    if (__pyx_t_7) {
+      __pyx_t_4 = __pyx_v_pending_ref_chars;
+      __Pyx_INCREF(__pyx_t_4);
+      if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_4))) __PYX_ERR(0, 391, __pyx_L1_error)
+      __pyx_t_1 = __pyx_t_4;
+      __pyx_t_4 = 0;
+    } else {
+      __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+      __pyx_t_1 = __pyx_mstate_global->__pyx_kp_u__6;
+    }
+    __Pyx_XDECREF_SET(__pyx_v_ref_field, ((PyObject*)__pyx_t_1));
+    __pyx_t_1 = 0;
+
+    /* "PanPA/Alignment.pyx":392
+ *             vcf_pos = pending_ref_pos + 1
+ *             ref_field = pending_ref_chars if pending_ref_chars else "."
+ *             alt_field = pending_alt_chars if pending_alt_chars else "."             # <<<<<<<<<<<<<<
+ *             if pending_type == 0:
+ *                 vartype = "INS"
+*/
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_pending_alt_chars); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 392, __pyx_L1_error)
+    if (__pyx_t_7) {
+      __pyx_t_4 = __pyx_v_pending_alt_chars;
+      __Pyx_INCREF(__pyx_t_4);
+      if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("str", __pyx_t_4))) __PYX_ERR(0, 392, __pyx_L1_error)
+      __pyx_t_1 = __pyx_t_4;
+      __pyx_t_4 = 0;
+    } else {
+      __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__6);
+      __pyx_t_1 = __pyx_mstate_global->__pyx_kp_u__6;
+    }
+    __Pyx_XDECREF_SET(__pyx_v_alt_field, ((PyObject*)__pyx_t_1));
+    __pyx_t_1 = 0;
+
+    /* "PanPA/Alignment.pyx":393
+ *             ref_field = pending_ref_chars if pending_ref_chars else "."
+ *             alt_field = pending_alt_chars if pending_alt_chars else "."
+ *             if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                 vartype = "INS"
+ *             elif pending_type == 1:
+*/
+    switch (__pyx_v_pending_type) {
+      case 0:
+
+      /* "PanPA/Alignment.pyx":394
+ *             alt_field = pending_alt_chars if pending_alt_chars else "."
+ *             if pending_type == 0:
+ *                 vartype = "INS"             # <<<<<<<<<<<<<<
+ *             elif pending_type == 1:
+ *                 vartype = "DEL"
+*/
+      __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_INS);
+      __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_INS);
+
+      /* "PanPA/Alignment.pyx":393
+ *             ref_field = pending_ref_chars if pending_ref_chars else "."
+ *             alt_field = pending_alt_chars if pending_alt_chars else "."
+ *             if pending_type == 0:             # <<<<<<<<<<<<<<
+ *                 vartype = "INS"
+ *             elif pending_type == 1:
+*/
+      break;
+      case 1:
+
+      /* "PanPA/Alignment.pyx":396
+ *                 vartype = "INS"
+ *             elif pending_type == 1:
+ *                 vartype = "DEL"             # <<<<<<<<<<<<<<
+ *             else:
+ *                 vartype = "SNV"
+*/
+      __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_DEL);
+      __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_DEL);
+
+      /* "PanPA/Alignment.pyx":395
+ *             if pending_type == 0:
+ *                 vartype = "INS"
+ *             elif pending_type == 1:             # <<<<<<<<<<<<<<
+ *                 vartype = "DEL"
+ *             else:
+*/
+      break;
+      default:
+
+      /* "PanPA/Alignment.pyx":398
+ *                 vartype = "DEL"
+ *             else:
+ *                 vartype = "SNV"             # <<<<<<<<<<<<<<
+ *             rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *             records.append(rec)
+*/
+      __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_SNV);
+      __Pyx_XDECREF_SET(__pyx_v_vartype, __pyx_mstate_global->__pyx_n_u_SNV);
+      break;
+    }
+
+    /* "PanPA/Alignment.pyx":399
+ *             else:
+ *                 vartype = "SNV"
+ *             rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"             # <<<<<<<<<<<<<<
+ *             records.append(rec)
+ * 
+*/
+    __pyx_t_1 = __Pyx_PyUnicode_From_int(__pyx_v_vcf_pos, 0, ' ', 'd'); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 399, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_4 = __Pyx_PyUnicode_Unicode(__pyx_v_ref_field); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 399, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_2 = __Pyx_PyUnicode_Unicode(__pyx_v_alt_field); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 399, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_3 = __Pyx_PyUnicode_Unicode(__pyx_v_self->read_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 399, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_11[0] = __pyx_t_1;
+    __pyx_t_11[1] = __pyx_mstate_global->__pyx_kp_u__5;
+    __pyx_t_11[2] = __pyx_t_4;
+    __pyx_t_11[3] = __pyx_mstate_global->__pyx_kp_u__5;
+    __pyx_t_11[4] = __pyx_t_2;
+    __pyx_t_11[5] = __pyx_mstate_global->__pyx_kp_u__5;
+    __pyx_t_11[6] = __pyx_t_3;
+    __pyx_t_11[7] = __pyx_mstate_global->__pyx_kp_u__5;
+    __pyx_t_11[8] = __pyx_v_vartype;
+    __pyx_t_12 = __Pyx_PyUnicode_Join(__pyx_t_11, 9, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_1) + 1 * 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_4) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_2) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + __Pyx_PyUnicode_GET_LENGTH(__pyx_v_vartype), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_2) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_v_vartype));
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 399, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_rec, ((PyObject*)__pyx_t_12));
+    __pyx_t_12 = 0;
+
+    /* "PanPA/Alignment.pyx":400
+ *                 vartype = "SNV"
+ *             rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+ *             records.append(rec)             # <<<<<<<<<<<<<<
+ * 
+ *         return records
+*/
+    __pyx_t_13 = __Pyx_PyList_Append(__pyx_v_records, __pyx_v_rec); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 400, __pyx_L1_error)
+
+    /* "PanPA/Alignment.pyx":389
+ * 
+ *         # Final flush
+ *         if pending_type != -1:             # <<<<<<<<<<<<<<
+ *             vcf_pos = pending_ref_pos + 1
+ *             ref_field = pending_ref_chars if pending_ref_chars else "."
+*/
+  }
+
+  /* "PanPA/Alignment.pyx":402
+ *             records.append(rec)
+ * 
+ *         return records             # <<<<<<<<<<<<<<
+ * 
+ *     def _find_fork_ancestor(self, int nid, Graph graph, set ref_node_set,
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_records);
+  __pyx_r = __pyx_v_records;
+  goto __pyx_L0;
+
+  /* "PanPA/Alignment.pyx":214
+ * 
+ * 
+ *     cpdef list generate_vcf_records(self, Graph graph, str ref_seq,             # <<<<<<<<<<<<<<
+ *                                     dict node_to_ref_start, set ref_node_set,
+ *                                     str graph_name):
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_AddTraceback("PanPA.Alignment.Alignment.generate_vcf_records", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_records);
+  __Pyx_XDECREF(__pyx_v_ref_field);
+  __Pyx_XDECREF(__pyx_v_alt_field);
+  __Pyx_XDECREF(__pyx_v_rec);
+  __Pyx_XDECREF(__pyx_v_vartype);
+  __Pyx_XDECREF(__pyx_v_anchor_char);
+  __Pyx_XDECREF(__pyx_v_ref_char);
+  __Pyx_XDECREF(__pyx_v_fork_cache);
+  __Pyx_XDECREF(__pyx_v_last_ref_anchor_pos);
+  __Pyx_XDECREF(__pyx_v_last_ref_anchor_char);
+  __Pyx_XDECREF(__pyx_v_pending_ref_pos);
+  __Pyx_XDECREF(__pyx_v_pending_ref_chars);
+  __Pyx_XDECREF(__pyx_v_pending_alt_chars);
+  __Pyx_XDECREF(__pyx_v_item);
+  __Pyx_XDECREF(__pyx_v_node_pos);
+  __Pyx_XDECREF(__pyx_v_op_type);
+  __Pyx_XDECREF(__pyx_v_node_str);
+  __Pyx_XDECREF(__pyx_v_read_str);
+  __Pyx_XDECREF(__pyx_v_on_ref);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_3generate_vcf_records(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_5PanPA_9Alignment_9Alignment_2generate_vcf_records, "\n        Generate VCF records from the alignment info.\n        self.info must already be reversed (i.e. prepare_aa_gaf was called first).\n\n        Variants are called when the query differs from its aligned path.\n        Positions are reported in reference-path coordinates (1-based).\n\n        For nodes NOT on the reference path, we anchor the variant at the\n        fork ancestor's last reference position (VCF padding-base convention).\n\n        Returns a list of tab-separated strings: POS\\tREF\\tALT\\tSAMPLE_NAME\\tVARTYPE\n        where VARTYPE is one of SNV, INS, DEL.\n        ");
+static PyMethodDef __pyx_mdef_5PanPA_9Alignment_9Alignment_3generate_vcf_records = {"generate_vcf_records", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_3generate_vcf_records, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_5PanPA_9Alignment_9Alignment_2generate_vcf_records};
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_3generate_vcf_records(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph = 0;
+  PyObject *__pyx_v_ref_seq = 0;
+  PyObject *__pyx_v_node_to_ref_start = 0;
+  PyObject *__pyx_v_ref_node_set = 0;
+  PyObject *__pyx_v_graph_name = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[5] = {0,0,0,0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("generate_vcf_records (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_graph,&__pyx_mstate_global->__pyx_n_u_ref_seq,&__pyx_mstate_global->__pyx_n_u_node_to_ref_start,&__pyx_mstate_global->__pyx_n_u_ref_node_set,&__pyx_mstate_global->__pyx_n_u_graph_name,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 214, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  5:
+        values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 214, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  4:
+        values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 214, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  3:
+        values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 214, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 214, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 214, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "generate_vcf_records", 0) < (0)) __PYX_ERR(0, 214, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 5; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("generate_vcf_records", 1, 5, 5, i); __PYX_ERR(0, 214, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 5)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 214, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 214, __pyx_L3_error)
+      values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 214, __pyx_L3_error)
+      values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 214, __pyx_L3_error)
+      values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 214, __pyx_L3_error)
+    }
+    __pyx_v_graph = ((struct __pyx_obj_5PanPA_5Graph_Graph *)values[0]);
+    __pyx_v_ref_seq = ((PyObject*)values[1]);
+    __pyx_v_node_to_ref_start = ((PyObject*)values[2]);
+    __pyx_v_ref_node_set = ((PyObject*)values[3]);
+    __pyx_v_graph_name = ((PyObject*)values[4]);
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("generate_vcf_records", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 214, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("PanPA.Alignment.Alignment.generate_vcf_records", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_graph), __pyx_mstate_global->__pyx_ptype_5PanPA_5Graph_Graph, 1, "graph", 0))) __PYX_ERR(0, 214, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ref_seq), (&PyUnicode_Type), 1, "ref_seq", 1))) __PYX_ERR(0, 214, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_node_to_ref_start), (&PyDict_Type), 1, "node_to_ref_start", 1))) __PYX_ERR(0, 215, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ref_node_set), (&PySet_Type), 1, "ref_node_set", 1))) __PYX_ERR(0, 215, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_graph_name), (&PyUnicode_Type), 1, "graph_name", 1))) __PYX_ERR(0, 216, __pyx_L1_error)
+  __pyx_r = __pyx_pf_5PanPA_9Alignment_9Alignment_2generate_vcf_records(((struct __pyx_obj_5PanPA_9Alignment_Alignment *)__pyx_v_self), __pyx_v_graph, __pyx_v_ref_seq, __pyx_v_node_to_ref_start, __pyx_v_ref_node_set, __pyx_v_graph_name);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_2generate_vcf_records(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph, PyObject *__pyx_v_ref_seq, PyObject *__pyx_v_node_to_ref_start, PyObject *__pyx_v_ref_node_set, PyObject *__pyx_v_graph_name) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("generate_vcf_records", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __pyx_f_5PanPA_9Alignment_9Alignment_generate_vcf_records(__pyx_v_self, __pyx_v_graph, __pyx_v_ref_seq, __pyx_v_node_to_ref_start, __pyx_v_ref_node_set, __pyx_v_graph_name, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("PanPA.Alignment.Alignment.generate_vcf_records", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "PanPA/Alignment.pyx":404
+ *         return records
+ * 
+ *     def _find_fork_ancestor(self, int nid, Graph graph, set ref_node_set,             # <<<<<<<<<<<<<<
+ *                             dict node_to_ref_start, dict fork_cache):
+ *         """
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_5_find_fork_ancestor(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_5PanPA_9Alignment_9Alignment_4_find_fork_ancestor, "\n        Given a node NOT on the reference path, walk backwards through in_nodes\n        (BFS) to find the nearest ancestor that IS on the reference path.\n        Returns (ancestor_node_id, ancestor_last_ref_pos_0based).\n        ");
+static PyMethodDef __pyx_mdef_5PanPA_9Alignment_9Alignment_5_find_fork_ancestor = {"_find_fork_ancestor", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_5_find_fork_ancestor, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_5PanPA_9Alignment_9Alignment_4_find_fork_ancestor};
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_5_find_fork_ancestor(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  int __pyx_v_nid;
+  struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph = 0;
+  PyObject *__pyx_v_ref_node_set = 0;
+  PyObject *__pyx_v_node_to_ref_start = 0;
+  PyObject *__pyx_v_fork_cache = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[5] = {0,0,0,0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_find_fork_ancestor (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_nid,&__pyx_mstate_global->__pyx_n_u_graph,&__pyx_mstate_global->__pyx_n_u_ref_node_set,&__pyx_mstate_global->__pyx_n_u_node_to_ref_start,&__pyx_mstate_global->__pyx_n_u_fork_cache,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 404, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  5:
+        values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 404, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  4:
+        values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 404, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  3:
+        values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 404, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 404, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 404, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "_find_fork_ancestor", 0) < (0)) __PYX_ERR(0, 404, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 5; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("_find_fork_ancestor", 1, 5, 5, i); __PYX_ERR(0, 404, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 5)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 404, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 404, __pyx_L3_error)
+      values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 404, __pyx_L3_error)
+      values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 404, __pyx_L3_error)
+      values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 404, __pyx_L3_error)
+    }
+    __pyx_v_nid = __Pyx_PyLong_As_int(values[0]); if (unlikely((__pyx_v_nid == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 404, __pyx_L3_error)
+    __pyx_v_graph = ((struct __pyx_obj_5PanPA_5Graph_Graph *)values[1]);
+    __pyx_v_ref_node_set = ((PyObject*)values[2]);
+    __pyx_v_node_to_ref_start = ((PyObject*)values[3]);
+    __pyx_v_fork_cache = ((PyObject*)values[4]);
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("_find_fork_ancestor", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 404, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("PanPA.Alignment.Alignment._find_fork_ancestor", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_graph), __pyx_mstate_global->__pyx_ptype_5PanPA_5Graph_Graph, 1, "graph", 0))) __PYX_ERR(0, 404, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ref_node_set), (&PySet_Type), 1, "ref_node_set", 1))) __PYX_ERR(0, 404, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_node_to_ref_start), (&PyDict_Type), 1, "node_to_ref_start", 1))) __PYX_ERR(0, 405, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_fork_cache), (&PyDict_Type), 1, "fork_cache", 1))) __PYX_ERR(0, 405, __pyx_L1_error)
+  __pyx_r = __pyx_pf_5PanPA_9Alignment_9Alignment_4_find_fork_ancestor(((struct __pyx_obj_5PanPA_9Alignment_Alignment *)__pyx_v_self), __pyx_v_nid, __pyx_v_graph, __pyx_v_ref_node_set, __pyx_v_node_to_ref_start, __pyx_v_fork_cache);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_4_find_fork_ancestor(CYTHON_UNUSED struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, int __pyx_v_nid, struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph, PyObject *__pyx_v_ref_node_set, PyObject *__pyx_v_node_to_ref_start, PyObject *__pyx_v_fork_cache) {
+  PyObject *__pyx_v_visited = NULL;
+  PyObject *__pyx_v_bfs_queue = NULL;
+  PyObject *__pyx_v_cur = NULL;
+  PyObject *__pyx_v_ancestor_node = NULL;
+  PyObject *__pyx_v_last_pos = NULL;
+  PyObject *__pyx_v_cur_node = NULL;
+  PyObject *__pyx_v_parent_id = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  int __pyx_t_5;
+  Py_ssize_t __pyx_t_6;
+  PyObject *__pyx_t_7 = NULL;
+  PyObject *(*__pyx_t_8)(PyObject *);
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("_find_fork_ancestor", 0);
+
+  /* "PanPA/Alignment.pyx":411
+ *         Returns (ancestor_node_id, ancestor_last_ref_pos_0based).
+ *         """
+ *         if nid in fork_cache:             # <<<<<<<<<<<<<<
+ *             return fork_cache[nid]
+ *         visited = set()
+*/
+  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_nid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (unlikely(__pyx_v_fork_cache == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+    __PYX_ERR(0, 411, __pyx_L1_error)
+  }
+  __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_t_1, __pyx_v_fork_cache, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 411, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (__pyx_t_2) {
+
+    /* "PanPA/Alignment.pyx":412
+ *         """
+ *         if nid in fork_cache:
+ *             return fork_cache[nid]             # <<<<<<<<<<<<<<
+ *         visited = set()
+ *         bfs_queue = [nid]
+*/
+    __Pyx_XDECREF(__pyx_r);
+    if (unlikely(__pyx_v_fork_cache == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+      __PYX_ERR(0, 412, __pyx_L1_error)
+    }
+    __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_nid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_fork_cache, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_r = __pyx_t_3;
+    __pyx_t_3 = 0;
+    goto __pyx_L0;
+
+    /* "PanPA/Alignment.pyx":411
+ *         Returns (ancestor_node_id, ancestor_last_ref_pos_0based).
+ *         """
+ *         if nid in fork_cache:             # <<<<<<<<<<<<<<
+ *             return fork_cache[nid]
+ *         visited = set()
+*/
+  }
+
+  /* "PanPA/Alignment.pyx":413
+ *         if nid in fork_cache:
+ *             return fork_cache[nid]
+ *         visited = set()             # <<<<<<<<<<<<<<
+ *         bfs_queue = [nid]
+ *         while bfs_queue:
+*/
+  __pyx_t_3 = PySet_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_v_visited = ((PyObject*)__pyx_t_3);
+  __pyx_t_3 = 0;
+
+  /* "PanPA/Alignment.pyx":414
+ *             return fork_cache[nid]
+ *         visited = set()
+ *         bfs_queue = [nid]             # <<<<<<<<<<<<<<
+ *         while bfs_queue:
+ *             cur = bfs_queue.pop(0)
+*/
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_nid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_3);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 414, __pyx_L1_error);
+  __pyx_t_3 = 0;
+  __pyx_v_bfs_queue = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "PanPA/Alignment.pyx":415
+ *         visited = set()
+ *         bfs_queue = [nid]
+ *         while bfs_queue:             # <<<<<<<<<<<<<<
+ *             cur = bfs_queue.pop(0)
+ *             if cur in visited:
+*/
+  while (1) {
+    {
+      Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_v_bfs_queue);
+      if (unlikely(((!CYTHON_ASSUME_SAFE_SIZE) && __pyx_temp < 0))) __PYX_ERR(0, 415, __pyx_L1_error)
+      __pyx_t_2 = (__pyx_temp != 0);
+    }
+
+    if (!__pyx_t_2) break;
+
+    /* "PanPA/Alignment.pyx":416
+ *         bfs_queue = [nid]
+ *         while bfs_queue:
+ *             cur = bfs_queue.pop(0)             # <<<<<<<<<<<<<<
+ *             if cur in visited:
+ *                 continue
+*/
+    __pyx_t_1 = __Pyx_PyList_PopIndex(__pyx_v_bfs_queue, __pyx_mstate_global->__pyx_int_0, 0, 1, Py_ssize_t, PyLong_FromSsize_t); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 416, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_XDECREF_SET(__pyx_v_cur, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "PanPA/Alignment.pyx":417
+ *         while bfs_queue:
+ *             cur = bfs_queue.pop(0)
+ *             if cur in visited:             # <<<<<<<<<<<<<<
+ *                 continue
+ *             visited.add(cur)
+*/
+    __pyx_t_2 = (__Pyx_PySet_ContainsTF(__pyx_v_cur, __pyx_v_visited, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 417, __pyx_L1_error)
+    if (__pyx_t_2) {
+
+      /* "PanPA/Alignment.pyx":418
+ *             cur = bfs_queue.pop(0)
+ *             if cur in visited:
+ *                 continue             # <<<<<<<<<<<<<<
+ *             visited.add(cur)
+ *             if cur != nid and cur in ref_node_set:
+*/
+      goto __pyx_L4_continue;
+
+      /* "PanPA/Alignment.pyx":417
+ *         while bfs_queue:
+ *             cur = bfs_queue.pop(0)
+ *             if cur in visited:             # <<<<<<<<<<<<<<
+ *                 continue
+ *             visited.add(cur)
+*/
+    }
+
+    /* "PanPA/Alignment.pyx":419
+ *             if cur in visited:
+ *                 continue
+ *             visited.add(cur)             # <<<<<<<<<<<<<<
+ *             if cur != nid and cur in ref_node_set:
+ *                 ancestor_node = graph.nodes[cur]
+*/
+    __pyx_t_4 = PySet_Add(__pyx_v_visited, __pyx_v_cur); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 419, __pyx_L1_error)
+
+    /* "PanPA/Alignment.pyx":420
+ *                 continue
+ *             visited.add(cur)
+ *             if cur != nid and cur in ref_node_set:             # <<<<<<<<<<<<<<
+ *                 ancestor_node = graph.nodes[cur]
+ *                 last_pos = node_to_ref_start[cur] + len(ancestor_node.seq) - 1
+*/
+    __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_nid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 420, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = PyObject_RichCompare(__pyx_v_cur, __pyx_t_1, Py_NE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 420, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 420, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (__pyx_t_5) {
+    } else {
+      __pyx_t_2 = __pyx_t_5;
+      goto __pyx_L8_bool_binop_done;
+    }
+    if (unlikely(__pyx_v_ref_node_set == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+      __PYX_ERR(0, 420, __pyx_L1_error)
+    }
+    __pyx_t_5 = (__Pyx_PySet_ContainsTF(__pyx_v_cur, __pyx_v_ref_node_set, Py_EQ)); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 420, __pyx_L1_error)
+    __pyx_t_2 = __pyx_t_5;
+    __pyx_L8_bool_binop_done:;
+    if (__pyx_t_2) {
+
+      /* "PanPA/Alignment.pyx":421
+ *             visited.add(cur)
+ *             if cur != nid and cur in ref_node_set:
+ *                 ancestor_node = graph.nodes[cur]             # <<<<<<<<<<<<<<
+ *                 last_pos = node_to_ref_start[cur] + len(ancestor_node.seq) - 1
+ *                 fork_cache[nid] = (cur, last_pos)
+*/
+      if (unlikely(__pyx_v_graph->nodes == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 421, __pyx_L1_error)
+      }
+      __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_graph->nodes, __pyx_v_cur); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 421, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_v_ancestor_node = __pyx_t_3;
+      __pyx_t_3 = 0;
+
+      /* "PanPA/Alignment.pyx":422
+ *             if cur != nid and cur in ref_node_set:
+ *                 ancestor_node = graph.nodes[cur]
+ *                 last_pos = node_to_ref_start[cur] + len(ancestor_node.seq) - 1             # <<<<<<<<<<<<<<
+ *                 fork_cache[nid] = (cur, last_pos)
+ *                 return (cur, last_pos)
+*/
+      if (unlikely(__pyx_v_node_to_ref_start == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 422, __pyx_L1_error)
+      }
+      __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_node_to_ref_start, __pyx_v_cur); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 422, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_ancestor_node, __pyx_mstate_global->__pyx_n_u_seq); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 422, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_6 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 422, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_1 = PyLong_FromSsize_t(__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 422, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_7 = PyNumber_Add(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 422, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_1 = __Pyx_PyLong_SubtractObjC(__pyx_t_7, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 422, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_v_last_pos = __pyx_t_1;
+      __pyx_t_1 = 0;
+
+      /* "PanPA/Alignment.pyx":423
+ *                 ancestor_node = graph.nodes[cur]
+ *                 last_pos = node_to_ref_start[cur] + len(ancestor_node.seq) - 1
+ *                 fork_cache[nid] = (cur, last_pos)             # <<<<<<<<<<<<<<
+ *                 return (cur, last_pos)
+ *             cur_node = graph.nodes[cur]
+*/
+      __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 423, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_INCREF(__pyx_v_cur);
+      __Pyx_GIVEREF(__pyx_v_cur);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_cur) != (0)) __PYX_ERR(0, 423, __pyx_L1_error);
+      __Pyx_INCREF(__pyx_v_last_pos);
+      __Pyx_GIVEREF(__pyx_v_last_pos);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_last_pos) != (0)) __PYX_ERR(0, 423, __pyx_L1_error);
+      if (unlikely(__pyx_v_fork_cache == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 423, __pyx_L1_error)
+      }
+      __pyx_t_7 = __Pyx_PyLong_From_int(__pyx_v_nid); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 423, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      if (unlikely((PyDict_SetItem(__pyx_v_fork_cache, __pyx_t_7, __pyx_t_1) < 0))) __PYX_ERR(0, 423, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+      /* "PanPA/Alignment.pyx":424
+ *                 last_pos = node_to_ref_start[cur] + len(ancestor_node.seq) - 1
+ *                 fork_cache[nid] = (cur, last_pos)
+ *                 return (cur, last_pos)             # <<<<<<<<<<<<<<
+ *             cur_node = graph.nodes[cur]
+ *             for parent_id in cur_node.in_nodes:
+*/
+      __Pyx_XDECREF(__pyx_r);
+      __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 424, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_INCREF(__pyx_v_cur);
+      __Pyx_GIVEREF(__pyx_v_cur);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_cur) != (0)) __PYX_ERR(0, 424, __pyx_L1_error);
+      __Pyx_INCREF(__pyx_v_last_pos);
+      __Pyx_GIVEREF(__pyx_v_last_pos);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_last_pos) != (0)) __PYX_ERR(0, 424, __pyx_L1_error);
+      __pyx_r = __pyx_t_1;
+      __pyx_t_1 = 0;
+      goto __pyx_L0;
+
+      /* "PanPA/Alignment.pyx":420
+ *                 continue
+ *             visited.add(cur)
+ *             if cur != nid and cur in ref_node_set:             # <<<<<<<<<<<<<<
+ *                 ancestor_node = graph.nodes[cur]
+ *                 last_pos = node_to_ref_start[cur] + len(ancestor_node.seq) - 1
+*/
+    }
+
+    /* "PanPA/Alignment.pyx":425
+ *                 fork_cache[nid] = (cur, last_pos)
+ *                 return (cur, last_pos)
+ *             cur_node = graph.nodes[cur]             # <<<<<<<<<<<<<<
+ *             for parent_id in cur_node.in_nodes:
+ *                 if parent_id not in visited:
+*/
+    if (unlikely(__pyx_v_graph->nodes == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+      __PYX_ERR(0, 425, __pyx_L1_error)
+    }
+    __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_graph->nodes, __pyx_v_cur); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 425, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_XDECREF_SET(__pyx_v_cur_node, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "PanPA/Alignment.pyx":426
+ *                 return (cur, last_pos)
+ *             cur_node = graph.nodes[cur]
+ *             for parent_id in cur_node.in_nodes:             # <<<<<<<<<<<<<<
+ *                 if parent_id not in visited:
+ *                     bfs_queue.append(parent_id)
+*/
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_cur_node, __pyx_mstate_global->__pyx_n_u_in_nodes); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 426, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+      __pyx_t_7 = __pyx_t_1; __Pyx_INCREF(__pyx_t_7);
+      __pyx_t_6 = 0;
+      __pyx_t_8 = NULL;
+    } else {
+      __pyx_t_6 = -1; __pyx_t_7 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 426, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_8 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 426, __pyx_L1_error)
+    }
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    for (;;) {
+      if (likely(!__pyx_t_8)) {
+        if (likely(PyList_CheckExact(__pyx_t_7))) {
+          {
+            Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_7);
+            #if !CYTHON_ASSUME_SAFE_SIZE
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 426, __pyx_L1_error)
+            #endif
+            if (__pyx_t_6 >= __pyx_temp) break;
+          }
+          __pyx_t_1 = __Pyx_PyList_GetItemRefFast(__pyx_t_7, __pyx_t_6, __Pyx_ReferenceSharing_OwnStrongReference);
+          ++__pyx_t_6;
+        } else {
+          {
+            Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_7);
+            #if !CYTHON_ASSUME_SAFE_SIZE
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 426, __pyx_L1_error)
+            #endif
+            if (__pyx_t_6 >= __pyx_temp) break;
+          }
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_7, __pyx_t_6));
+          #else
+          __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_7, __pyx_t_6);
+          #endif
+          ++__pyx_t_6;
+        }
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 426, __pyx_L1_error)
+      } else {
+        __pyx_t_1 = __pyx_t_8(__pyx_t_7);
+        if (unlikely(!__pyx_t_1)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 426, __pyx_L1_error)
+            PyErr_Clear();
+          }
+          break;
+        }
+      }
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_XDECREF_SET(__pyx_v_parent_id, __pyx_t_1);
+      __pyx_t_1 = 0;
+
+      /* "PanPA/Alignment.pyx":427
+ *             cur_node = graph.nodes[cur]
+ *             for parent_id in cur_node.in_nodes:
+ *                 if parent_id not in visited:             # <<<<<<<<<<<<<<
+ *                     bfs_queue.append(parent_id)
+ *         fork_cache[nid] = (nid, 0)
+*/
+      __pyx_t_2 = (__Pyx_PySet_ContainsTF(__pyx_v_parent_id, __pyx_v_visited, Py_NE)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 427, __pyx_L1_error)
+      if (__pyx_t_2) {
+
+        /* "PanPA/Alignment.pyx":428
+ *             for parent_id in cur_node.in_nodes:
+ *                 if parent_id not in visited:
+ *                     bfs_queue.append(parent_id)             # <<<<<<<<<<<<<<
+ *         fork_cache[nid] = (nid, 0)
+ *         return (nid, 0)
+*/
+        __pyx_t_4 = __Pyx_PyList_Append(__pyx_v_bfs_queue, __pyx_v_parent_id); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 428, __pyx_L1_error)
+
+        /* "PanPA/Alignment.pyx":427
+ *             cur_node = graph.nodes[cur]
+ *             for parent_id in cur_node.in_nodes:
+ *                 if parent_id not in visited:             # <<<<<<<<<<<<<<
+ *                     bfs_queue.append(parent_id)
+ *         fork_cache[nid] = (nid, 0)
+*/
+      }
+
+      /* "PanPA/Alignment.pyx":426
+ *                 return (cur, last_pos)
+ *             cur_node = graph.nodes[cur]
+ *             for parent_id in cur_node.in_nodes:             # <<<<<<<<<<<<<<
+ *                 if parent_id not in visited:
+ *                     bfs_queue.append(parent_id)
+*/
+    }
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_L4_continue:;
+  }
+
+  /* "PanPA/Alignment.pyx":429
+ *                 if parent_id not in visited:
+ *                     bfs_queue.append(parent_id)
+ *         fork_cache[nid] = (nid, 0)             # <<<<<<<<<<<<<<
+ *         return (nid, 0)
+*/
+  __pyx_t_7 = __Pyx_PyLong_From_int(__pyx_v_nid); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 429, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 429, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_7);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_7) != (0)) __PYX_ERR(0, 429, __pyx_L1_error);
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_int_0);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_int_0);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_mstate_global->__pyx_int_0) != (0)) __PYX_ERR(0, 429, __pyx_L1_error);
+  __pyx_t_7 = 0;
+  if (unlikely(__pyx_v_fork_cache == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(0, 429, __pyx_L1_error)
+  }
+  __pyx_t_7 = __Pyx_PyLong_From_int(__pyx_v_nid); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 429, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (unlikely((PyDict_SetItem(__pyx_v_fork_cache, __pyx_t_7, __pyx_t_1) < 0))) __PYX_ERR(0, 429, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "PanPA/Alignment.pyx":430
+ *                     bfs_queue.append(parent_id)
+ *         fork_cache[nid] = (nid, 0)
+ *         return (nid, 0)             # <<<<<<<<<<<<<<
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_nid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 430, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 430, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 430, __pyx_L1_error);
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_int_0);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_int_0);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_mstate_global->__pyx_int_0) != (0)) __PYX_ERR(0, 430, __pyx_L1_error);
+  __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_7;
+  __pyx_t_7 = 0;
+  goto __pyx_L0;
+
+  /* "PanPA/Alignment.pyx":404
+ *         return records
+ * 
+ *     def _find_fork_ancestor(self, int nid, Graph graph, set ref_node_set,             # <<<<<<<<<<<<<<
+ *                             dict node_to_ref_start, dict fork_cache):
+ *         """
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_AddTraceback("PanPA.Alignment.Alignment._find_fork_ancestor", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_visited);
+  __Pyx_XDECREF(__pyx_v_bfs_queue);
+  __Pyx_XDECREF(__pyx_v_cur);
+  __Pyx_XDECREF(__pyx_v_ancestor_node);
+  __Pyx_XDECREF(__pyx_v_last_pos);
+  __Pyx_XDECREF(__pyx_v_cur_node);
+  __Pyx_XDECREF(__pyx_v_parent_id);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
@@ -5341,15 +8635,15 @@ static void __pyx_f_5PanPA_9Alignment_9Alignment_prepare_dna_gaf(struct __pyx_ob
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_3__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_7__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_5PanPA_9Alignment_9Alignment_3__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_3__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_3__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_5PanPA_9Alignment_9Alignment_7__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_7__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5375,14 +8669,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_5PanPA_9Alignment_9Alignment_2__reduce_cython__(((struct __pyx_obj_5PanPA_9Alignment_Alignment *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5PanPA_9Alignment_9Alignment_6__reduce_cython__(((struct __pyx_obj_5PanPA_9Alignment_Alignment *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_2__reduce_cython__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self) {
+static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_6__reduce_cython__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self) {
   PyObject *__pyx_v_state = 0;
   PyObject *__pyx_v__dict = 0;
   int __pyx_v_use_setstate;
@@ -5678,15 +8972,15 @@ static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_2__reduce_cython__(struct
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_5__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_9__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_5PanPA_9Alignment_9Alignment_5__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_5__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_5__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_5PanPA_9Alignment_9Alignment_9__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5PanPA_9Alignment_9Alignment_9__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5752,7 +9046,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_5PanPA_9Alignment_9Alignment_4__setstate_cython__(((struct __pyx_obj_5PanPA_9Alignment_Alignment *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_5PanPA_9Alignment_9Alignment_8__setstate_cython__(((struct __pyx_obj_5PanPA_9Alignment_Alignment *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -5762,7 +9056,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_4__setstate_cython__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_5PanPA_9Alignment_9Alignment_8__setstate_cython__(struct __pyx_obj_5PanPA_9Alignment_Alignment *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -6228,8 +9522,9 @@ static int __pyx_tp_clear_5PanPA_9Alignment_Alignment(PyObject *o) {
 }
 
 static PyMethodDef __pyx_methods_5PanPA_9Alignment_Alignment[] = {
-  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_3__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_5__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"_find_fork_ancestor", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_5_find_fork_ancestor, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_5PanPA_9Alignment_9Alignment_4_find_fork_ancestor},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5PanPA_9Alignment_9Alignment_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
@@ -6380,6 +9675,7 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
   __pyx_vtabptr_5PanPA_9Alignment_Alignment = &__pyx_vtable_5PanPA_9Alignment_Alignment;
   __pyx_vtable_5PanPA_9Alignment_Alignment.prepare_aa_gaf = (void (*)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *))__pyx_f_5PanPA_9Alignment_9Alignment_prepare_aa_gaf;
   __pyx_vtable_5PanPA_9Alignment_Alignment.prepare_dna_gaf = (void (*)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *))__pyx_f_5PanPA_9Alignment_9Alignment_prepare_dna_gaf;
+  __pyx_vtable_5PanPA_9Alignment_Alignment.generate_vcf_records = (PyObject *(*)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch))__pyx_f_5PanPA_9Alignment_9Alignment_generate_vcf_records;
   #if CYTHON_USE_TYPE_SPECS
   __pyx_mstate->__pyx_ptype_5PanPA_9Alignment_Alignment = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_5PanPA_9Alignment_Alignment_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_5PanPA_9Alignment_Alignment)) __PYX_ERR(0, 9, __pyx_L1_error)
   if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_5PanPA_9Alignment_Alignment_spec, __pyx_mstate->__pyx_ptype_5PanPA_9Alignment_Alignment) < (0)) __PYX_ERR(0, 9, __pyx_L1_error)
@@ -6763,12 +10059,42 @@ __Pyx_RefNannySetupContext("PyInit_Alignment", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_logging, __pyx_t_2) < (0)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
+  /* "PanPA/Alignment.pyx":214
+ * 
+ * 
+ *     cpdef list generate_vcf_records(self, Graph graph, str ref_seq,             # <<<<<<<<<<<<<<
+ *                                     dict node_to_ref_start, set ref_node_set,
+ *                                     str graph_name):
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5PanPA_9Alignment_9Alignment_3generate_vcf_records, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Alignment_generate_vcf_records, NULL, __pyx_mstate_global->__pyx_n_u_PanPA_Alignment, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_5PanPA_9Alignment_Alignment, __pyx_mstate_global->__pyx_n_u_generate_vcf_records, __pyx_t_2) < (0)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "PanPA/Alignment.pyx":404
+ *         return records
+ * 
+ *     def _find_fork_ancestor(self, int nid, Graph graph, set ref_node_set,             # <<<<<<<<<<<<<<
+ *                             dict node_to_ref_start, dict fork_cache):
+ *         """
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5PanPA_9Alignment_9Alignment_5_find_fork_ancestor, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Alignment__find_fork_ancestor, NULL, __pyx_mstate_global->__pyx_n_u_PanPA_Alignment, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 404, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_5PanPA_9Alignment_Alignment, __pyx_mstate_global->__pyx_n_u_find_fork_ancestor, __pyx_t_2) < (0)) __PYX_ERR(0, 404, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
  *     cdef object _dict
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5PanPA_9Alignment_9Alignment_3__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Alignment___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_PanPA_Alignment, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5PanPA_9Alignment_9Alignment_7__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Alignment___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_PanPA_Alignment, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -6782,7 +10108,7 @@ __Pyx_RefNannySetupContext("PyInit_Alignment", 0);
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_Alignment__set_state(self, __pyx_state)
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5PanPA_9Alignment_9Alignment_5__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Alignment___setstate_cython, NULL, __pyx_mstate_global->__pyx_n_u_PanPA_Alignment, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5PanPA_9Alignment_9Alignment_9__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Alignment___setstate_cython, NULL, __pyx_mstate_global->__pyx_n_u_PanPA_Alignment, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -6797,7 +10123,7 @@ __Pyx_RefNannySetupContext("PyInit_Alignment", 0);
  *     cdef object __pyx_result
  *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0x9c90ca5, 0xeced106, 0x3392c8e, b'alignment_score, gaf, id_score, info, n_indels, n_matches, n_mismatches, path, read_len, read_name')
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5PanPA_9Alignment_1__pyx_unpickle_Alignment, 0, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Alignment, NULL, __pyx_mstate_global->__pyx_n_u_PanPA_Alignment, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5PanPA_9Alignment_1__pyx_unpickle_Alignment, 0, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Alignment, NULL, __pyx_mstate_global->__pyx_n_u_PanPA_Alignment, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -6878,34 +10204,34 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 8; } index[] = {{0},{5},{5},{5},{41},{4},{179},{1},{1},{1},{1},{1},{8},{5},{7},{5},{6},{2},{5},{9},{14},{9},{27},{29},{1},{1},{15},{20},{1},{15},{6},{18},{17},{18},{8},{5},{5},{4},{6},{8},{12},{13},{5},{7},{8},{10},{8},{7},{8},{3},{14},{12},{11},{10},{24},{14},{12},{8},{9},{8},{10},{17},{13},{5},{4},{12},{10},{12},{19},{5},{3},{8},{4},{6},{12},{6},{201},{55},{11}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (864 bytes) */
-const char* const cstring = "BZh91AY&SY\244\t\344-\000\000S\377\377\367\355\274\210\354\237g\377\257\347}\361\277\377\377\357@@@@@@@@@@@@@\000@\000@\002\275\331\262qP\347\021S$\362\236FO*\031\223L$=G\250\320\r4\006\032#\010\032\003\324<S#M\007\223I\355P\202\t\204j\230\315MOH\006\200\000\320\000h\000\000\000\000\000\0005O#MJf\2204d\000\000\000\0324\321\240\001\240\000\000246\246\217A\251\352d\022\231\212y1L\312OI\350\2324\0004=A\241\246\200\000\000\000\000\362&\363\004Z\006\340\000\375~\3031\331\313\327\334\354\252\252\356\206o\030\350n\346\245\231\222\210\305\204\345~sg\374BP(\306\221\030F\252v\255:\"e\032s\274\216e\010\316\177\351\307\346\330Z>\326D\366\265\252\260\030D\251\260\037\034\251T\004\225\316?\315\001\366\230\023\245\220b\351\266\3224M`\254xJ}9*d[\003\371\232\333\2069\327B\302\356\342^\261\332e\250\302\362i\017\202\272*\262ysKq\235#\333x\321`8e\021F\367No48\223\022\311w\312\314\265U\202\270\225]R\273\025\206\374\316\335\014\002\303>v\260\013\0024\001\370G\000J\226\2145\025\0137\372\253\221\360D\3764\022Z\215\201\314tp\307\000`\210\314\362\311\014\3100\336\001\t\244\003\030a\306fbZ1J}G\336\371\264\257\300\241\267\271\247\034\010s\027z\tu^\224\262$\260RT\2145\217\367\023\203\177\000\352t\000\243\004\256\001_\247\250\365\213\235p:g\033\200p@ \3240\024\225\261\273uO :\360\220\007\235!\013\246\326\205\242\322\217d\312\021\t.\236\025\200BZ\177\270\2418\0012\351\247:\032\206\013\0179\313p\2155Js( \204\360\224\311\031\210\210`@AEX\225\262\324\236\017\240T\0334Qg\242bR/\342\216\274F\006\000,\204\\\016\217\032\223\311I\021\225o\234\203\204m\254k\022\332J\006\035\311\216\354\306\243l\321\321\nf\033\351,\200\034\300}A\002Q\306`15\341!R\263\023\030n{nlQ\003H%\002\333\021'J/HG\t\022\020\n\341\0252\022[\000\002[9L\305ZE:\300A+\261c\3441\200\340\324\224\220<\201\361OJ\310\201\205\002\233Z\031\202\275}\237\037E\323\341l\362L\216\255E\341CV \322\215\020\200.\321j\020\264\"\227\351_\310\256\027\236\005\363\212\333\325\201,\301\344\023\037\331\013\215\355\004\322\006K\232V\2243\2756\021\214\225K\330""\t\240DL\214K\341\2250^\250:H\274G@\"\260\"\221g\027V\\\362\014 K\254\324\224\344\205\351ZH\307\004\245\333\347.\244\343\177Z\220\3029\232<\221N\\\000\274\223\300\014\224\022\020\3338Q\314g\362\372>\262\035y\366}\271\211\204\210b\013\321Z[.?\270\240\216\307\277D\367\252D\016\362M\241\004A\265\306\031aN\230\0226\277\264o\333\010)\021C~\221\206\020\032\262\332\224\373\216\247f\366\266\275\304\356E\366/_\032Vi\020`b\001I\225\205\334\221N\024$)\002y\013@";
-    PyObject *data = __Pyx_DecompressString(cstring, 864, 2);
+    const struct { const unsigned int length: 11; } index[] = {{0},{5},{5},{5},{41},{4},{179},{19},{1},{1},{1},{1},{1},{1},{8},{5},{7},{5},{6},{2},{5},{9},{14},{9},{27},{29},{29},{30},{1},{3},{1},{3},{15},{20},{3},{1},{15},{13},{6},{18},{9},{17},{18},{3},{8},{8},{5},{5},{4},{19},{10},{6},{8},{20},{12},{5},{10},{8},{13},{5},{8},{7},{8},{10},{8},{7},{3},{7},{8},{8},{17},{9},{3},{14},{12},{11},{10},{24},{14},{12},{8},{9},{8},{8},{10},{17},{13},{12},{7},{5},{4},{3},{12},{10},{12},{19},{5},{3},{8},{4},{6},{12},{6},{7},{197},{1193},{201},{55},{11}};
+    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1838 bytes) */
+const char* const cstring = "BZh91AY&SYEf\023\212\000\001r\377\377\377\357\377\377\377\377\377\377\377\347\177\377\277\377\377\357@@@@@@@@@@@@@\000@\000`\006>\005\341\263\234J\013\263#\200\030\032$\324\311\03153\322f\224\362M\350\311\241 \323\014\247\244\323L\230\236S\320\323I\246L\231=M\006F#OMOM\032h\236\"2\006\210\t\220\t\211\264\246\321\241\003H\365'\250\332\236\220\014\232\031\242\000\000\003!\221\243@\000b\014\322\0202a0\002d\300\000& `\000\000\004\300\230\004`\000\002`\000\000\004\251\350!&\211\246\223M=\010\323SO\322@\000\r\r4\000\006\200\000\000\000\000\000\32014\030\241\030M\025=M\2447\252d\001\240\000\000\000\000\007\250\001\246\200\000\006\200\000\031\033Q\003&\023\000&L\000\002b\006\000\000\000L\t\200F\000\000&\000\000\002\371\021\262\271\r- vI__\326O\341\237\264\207\360\344\204\nYT\266\237\353\351s\257t\261\373\221\224\207u\357{\352\253,\033\352\307\007J\346]\024W\204\037\210\\\347JH\"PE!\022/>\3554\nB\000$@\320\2320\345Q\020\257\006Z\007\266\233\341\270\204!3Z% \030\326\206\272\345F\0148\021\305\261\2557\\\311\211\206\224n&\001@\256\262\220% \221$R\327\324\327\326\216\245\254)0\t\321\\d\021A\002\022)\000 !TC\216\234]p\025\n\247\021\027\rh\314\275\222\002h\204\201\244YT\"\0376\213\217\014v\307\326\361\345\321\025\253\"u\233Z|\210\317\334z\253\273j\242\272\177\211\027\026\274\323JR\262\317]C\200\n\372<`\030d\270\365\231\022\244\021\323\t\205\277\0163\227\254\227)\273\205\356C\323zg\220j\310ac\023\221\230\266%\204dCZ\216\353\227\314\034\177\323\303\340\2619\363f\304\222\222\203\003a2\330$y\311+\2265\347\237\3245\226\366\317\203\027T\371\362\323\204\364\334\352\375\375\374i\251\036)\2739s#g\245\304\321M4\203i\366\345\211a\312&\243\246\362w*e\203\331\364q\037\014\234@a\271\271\200\353\334\372\340 !\260k^X\376\000\373\273\336\314\2153u\231Z\377nC\2461\255\265\376K\016\023\316\000\267\030c\271\224\356\363\300?6eQ\031;\227\327i\275\027\242)I\r\023\t\233\t\004\203\016\224\n\221\203\n\250I\006\016\210P\225\220\225IP\353\022\246c\325^\304\0245V\204\266+\344>\276S\202(M\336\265]E\273\233""\372\260K|\017\303\352\230;^T\377\332\234\377<M\274\035\245\342@\241m\217\032 =\214\030lA\241G\214^\2234\203\323\275\030\325\037\335\371\r\036\r\363S<Z4HAzg\254p\251>\340\0226\270\320\351B\242l\2227\364;o\371\314kz\3358\366\261\227\r\202i\233@\377\255#\330\336\240j\335\346\270\032\207jQ\240\022u\376\250\177\347\262\216gG\241{H\227+\252\313\321\211\214\330\277B\226\326\"\300\302\265{\322\tD\302x\210\347\273\343\311X\305n\325)uaS\314\306\321\005\220\232\036\320\312\360\354\316(5N7\325\335\210\016\325\265r\364|\177'\024\204,\340\025Hn\352P\025\222\243\343\002\327\320\262\r#Q\210m\010\r\236\362w\367w\367\224L3\006(\200\364p\342\003\033\333(u\320\2520\034\242\330\022\261[\262\332\323;\342c;j\220\203\036\t\r}s\032\3311\211\245\r\305n\nSs\206\330\215\326\274\246\016\214\006\230\264\246\273(\223\035{o\300`if\305\210\0260-&f\246\230\210\302\205\004\020\264\306\242\343\242D\200kw\200\242tL\215\213\215\221\023S\\\267\207\274\200q\3564:1\225iPt\214U\004\352R\322\220\301\231&%\006\334\336\014\227sq\013\004\300\313\023\201\276\364\210\327Uj\325\351D\363n\206\024\326`\010\\\246\347\031\267!\000%\006\203\005`\245>m\366\033c\2204\020\310\375\212\327(b\304%\252Y\027.&\207\246\214\372\363E9\235\364JR\226\330\306\202\213n\314\300Q\211\265\312\001]]X\335j\217l\260\033e\005\333\325\270\315w\034d!9\033\2671y\343(\007\272\r\2658(\240!\206\010\2033\241Yc\005\212r\000\3550F\364\333\213j'7\20071Y\201\006E\235\316\020*P\220\022\024Q\260\340\332\214rE\317\232\266\274\305\241\350\266\322Vm\244\202\270\262#^\275ct\261l\247\210\302\213\003\0140\300\205>\301ehF\200\242\202\014\3331\246 \342\243@\260ZxmR\004\013o\264s%td\036\330\263\255&\333\304q\235\262\361\364^k63\265\ru;\371\316\022\327\014\312\271\304\204\236\215\207\364\314?%T\357\200\271J\201\026\356\224\032\261\244\352\304\226\245\032\220\000\245F\322#b\014D'IN\n\004#\200S\232\300\327\226CB\320KA\004\254\305%H\024\345\236\367\214\200>ujR\347;\342\225\323\244\320\201.W)\202\267#\006/Nq\210l\300,\301\030\260p\331\301,3\200\217\362\300#T\301>s""\032\351~\327\314\000\375y?\277\25313j\227\353\210\205YG\366\333\006C\3569\007x\306\2235\3000c\375\362@.\035\337\355&+f\330\007\325T\033\373#(\031\001S\006\206\302\235\025E6\307ZL\360\001\200\246\274B\343\210W8\322\220\223\021\005Xu\315\220\242-oh\356\354Gk\334\262m61k\212\321\375\366\304\343\003\327\303'\206Ig%40x\233\222\"\2218n\212\341\\9\007.Z\247 0\033\002 e\3370\214i\244:y\310\207\003#i\002(B\021\351j5\206L\204\323\r\010\304\202\310\273hc\212f\3270\002\244\333\005\035\304B\2411\r\23151*\033\233\243\227E\264\035\314!\276&\0079\3343\220#\211}D\334e\307.v\257_b\004Y\335\334\0210\310\341x\256\220,\366\021\343\2100zX8\007f{\274\307\375\020;1\006\324\n8\020\004\336 \304\206\251\344d\325q\200\207\367\344\350M\245c:\217\303\306\344E\307>z\375\242\003\373\305\302\372^\214>I e\350\010\267\007\236\r\371\374\304\332{bP\327\030\272\300\275^W\203PjR\022\241\354\317\031`J_$XVX\267PcC\360\354\266\036\026\036~\207\266\336\222\305j}k\003\216\265\034\335\345\237\237\222\377E8HA:\224\244\371\312\245!D\250\351\021\323\022\304\n\311\353\016\360\322;\332\322\362\3031\344\017G\260\305\212\333\263\232\022L`\223\t(d\370^v\232\014\013=\331\241Y0\367\231\035\035,Y\262\326\263Z\341\205k\205Rgg%\2245q\036+\222\366\261d\221\230=L/V\247\376.\344\212p\241 \212\314'\024";
+    PyObject *data = __Pyx_DecompressString(cstring, 1838, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (757 bytes) */
-const char* const cstring = "x\332eQ;o\023A\020\216-C\214\202\210xH)(X\004R$\036\026\221\302\313\201 \213<\210\004\226\363\020$)\262Z\337\3169\033\237w\317\267\273\216O<\2242\245K\227.\257L\231\322e\312+]\346'\344'0k\203\023\304I\2673\363\355\35473\337\2246\213\242\270\272Q\334-\226\277\240WVd\265\264B|\025\021\263/4a\201\250\311\006H\363\014c B\372\212 \374\375gYI(+\003\0103C>\306f_Iw\303!\020U\210\230\201 &\332D\3023\340\270\230$\225\345\312\363\3717\363\204IN\"8\000\317h\242m\325\013\230\326\240\211\362I\325\212\300\010IL\034\202.\2205\237\304\312\022\t\300\211Q$\304\274\253\017\260!I4\230ag\263LJe\230\021JR|.dm\226p\021a\021\321\002\367z\205\005\032\nO\027\337\337\370\3008\247\230\014^\r\307\346B\263j\000\274U\364\213 \235[\363\004\307@\350Q\310\337\2711dM+\033y\260X\372\253\310\330)P\032\001\267\036Po(\003\245W\257\260A\215}]^.\255U\230\254\224\n\343$J+q\033\377%\324\212\226\241m6\300\337\036\013O\265\247\"`a\010\2223\035KO\250\002\"\312\242P\240)\035\252Ak`\204\201\206\013\021\246\002E\210\230\007U\346\325)\345\216xd \212\220\255-\014n\270\301\020\365\255\364\360\316\021\214\332\244Th:.\340Hu\240j5\024\200\322\006Cb\374\032\212\333\300\245R\311\032#\013\207x(\0164T:T!\245!\316\344\355\203W\327\2661\212\"\32060#\377O-\347\272e\217<+C\341\325\221\370\2124\016o\031\267\007W\246iY0*\211\222p\032\200\034Z\007\r\035,>^\006\375o-c\000\332\350*+\271\206\300\037\256\350\317 \350q\360\331\260M}\251\310\377K\034F:\306jh0\331\raC\216\240\3250No\261\300\202>\312\\\344'\256\335:\336Jo?\352\315\367Z\311\326\311\375\323\245\376d\337\234-\244_w\323]?\365\017\322\2038\215\177^LL\374\312,g\321,g\327\234Y\313n9\263\225\335vf;\273\223\035\344n\036\257v\346:+\335g=6\310M\036\265\216\277u\226\273\367\272\353\203\374\235\316\303A~\246\323<\307\303t_\366&{6\371\230\230\223W\2473\375k\375\315\263\334\331J\272\261\223\356\354\245{,e\220B\230\206\207\351a\333\3214\007\371\351t\372I\3628a\311\341I\275?s\2269\377\027\271}\2249\317=\3506S\362\342d\352t\241_O\3277\006\271\273\235\267\335O\275Ro\335\221\374\350\274\356b""\013O\223\271\344\363\351\255>\3667u<w\224\031\344f{\315\344z\302~\003\271\017\275\211";
-    PyObject *data = __Pyx_DecompressString(cstring, 757, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (1717 bytes) */
+const char* const cstring = "x\332\315TOS\333\310\022\307^\263qj\275\2007\336\305\001o\"\033\007\022\022\310:\017\222@\036\373V\313\237,UY\n\203\023\010\233\335\251\2614v\024\214d[\022\340z\217W\034}\324q\216:\352\250\243\216:\3728G\035\365\021\370\010\333#\023'\274\360\001\236\253<\335\3233\323\375\373u\267Z\334]V\226_\356,\037,o\375\016\332\226&\274\0247\204\232\326\026\214\367\212.\340\206RW\217\210j<\202=\021\024\265\246\t`\376\367\331\226\246\222-\315 `\306\206\260\3321\336k*?\221IC\251\22266H\243#\350F[\221\014\302}aU\330^\337\236[x\276 `U\026\332\344\003\221\014]\320\315\252\324\300\272NtA\253\tUSi\030\212*\030\235&\321\347\205\315\232\320\321LA%D\026\014Mh\302\275\317\037\000 U\320\211\021!\233\301\252\252\031\330P4\025\301sE\255\317\010\262\322\206 \3121\341\2577pC'\363\333X\335\026\037\213\037Y\3157;\247\017\177^\2719\377/,\313\010\034\020\251\016\251\220\025\035W\033D>^\256-\023\225\253uI\221a\243\350\375\255\374ONM\255\353\232\331\226\310\317\003\177\237\034#\324&\262)\021$E\251A\350\363#\000\255\003\326k\017k\212*#\310\377!\302\252DtCk\177:\254\0235J-:\226j\340_\322\332\262\276\266\266\376jssk7b6?\270\213\320v\347\024\376kP\000\264EN\215\035R\333\335z\263?((\322\3419\371\030\003\270\313\0047\233D\225\261\336Q%E\233\207c\315\204j\020\275Z\323Q\313$&A(\312=\252\023C1\310\021\337\3029R \345m,\221*\226\016%H\210\331w\207\220\314\203\367\005i\267!\334\251b\\C0\332HXzO@;\302\360\244f\252\022B\327\321\345\326\313\344\241z\0337\337G\013R\361\021\001\030<\254\216\024\035\r\300s\234:\2006PS\323\033Z\275\016UC\350\010\303e\370\035i\262\331 \\\343\016\"IN`Q\344\210\300\245\200\227\221\204\232G\322\320\000M\r\266\270m4q\233'S\221\233Z\023!h'\0044\244C\335<\352\357\332D7\033F_\277\204\315U\336\341}\315T\233\212t\010 >+\035\267\037\033\274\3218\244\226\211\033}xP/\0315\210\032In\212\024\200\027I\2007\350:\364E\377\r\014\344\024E\360\373\224\210\021Q!-\310\227*\353\244Q\003=\352\320\313\224\200&\223\032\216H\014\372\026]\323\303\321N\357@\205@\300eN\321l\312`4u2\270~\214\033&\321\217\025\035\n#""\237\213\027#C7S\335\205\256n\345\203\324-k\231\226)\016\222\337[\345 \231\261D.F\2728H}g=\240\013\264e\307\202\324h\327\260\376a\341`,\315\037,X-:0\312\264He{\312.\007c\202=l\277qJ\216\030\214M\262\311G\216\350\274v\013\356\252\333\362\276\365\337\364\236\364\340\312\004\315\323\347\366\242\023\013\306\262t\230\226\203\324\270e\322\r;o\227\202\324\230\365-\335\347\2168\246=[\0142?r\001\226\344wV\336zN\027\001Kr\314\032\266\312@\2428t\363G*^\244\372\\\014\253\304\241\225.\276\036\2729A\323a\362.m\005|\t\223Y\000\233\234\244\245 \231\243b\264\204\311T\3677k\215\223\370\001\010\344\341\014p\030\264\004\347\327X.\2250\365\275\265Ow\355X\010\324O-\235\3469\322\025;\301\221\336aw\346\235\252\033\0132\002\023\026\331\342\253\236xE\035\267\316\354U\273\025d\013v>\270=mKN:\322\303\310\220\231\240\005*\322\003\273\345\244\\\321}\347\247\375\242\257\262\312\353 3I\237E\331\311\024y\230\031p\221\271\017\351\213\026\010\017\007\263l\366\205W\3626\375\035\037\016\037:%(\323\377\013\304\260\017\021\242\224\334\264\373\300{\342\225\203\314]zbc~k\212?\232\266\361g\2242\263N>\"\021f\362,\277\350V\330\322\357\3208\331\274=\356\214\260\247\233\275t\220)\3303N\232\315\376\302~\331a;\025V\331c{\373l\277\306j\365\253.S\356\257\356'%L\337\246\267\240\234QB\276\342\327\0368\3510b\275\006\201\263\005Vx\002\355*\006\331\"+.\261\245m\266]\276\252O\322\025\347+Ho\016\374\207|\t\262wh\325\216\331\023\320\364\257\274\230\227\363\313\276\334\233g\373o\203\354G\222Y\316*\313\253\222\205/\"ZxP8\270\307\356=u\261\333\361\343~>\310N\333u\247\354h\336\037\275xo\252W\356\251\354\335\237\301\3559g\027\n\226\275\007\337@\226G\345\217\226\274\014[)\263\362N\220\273g\3579[l9\312\320\345\235/\275\204_\346\371\177\023\362E\211\372\275\320v2ln\305\333\365\001\302\234\263\007e/\207Q\026\022\300$7\315\246\237\272U/\026\344\356\263\373+l\245\302\233\341\212~\227\2369\253N+\020\240\250!_\202\\\301.\300\027}\340\264\334\224'z\357z\351^\261O57e?s\362<\273<M\271\307\360,\367\023p\347\013\004e\223\217\035\335\005""\007P\264 \307\375\2016\341>q_{\263\376\257~\0352\000\326\031`\000\375\312[0\313\303A\266_yqo\006\2325\332\210|<\244\272+4\021}\351\354\207i\273\n\031IeYv\216\315\255\371\342\025u\264{FWa\214\360\251\025\244\357P\311NGz\030\031`>\026`Z\036\300\204L\301\250{\347\245\275\242\247\302\207\004c\350\031\237 ar\264\333:\217]$\207\206G\272\025\226\236\262\027\354c\247\342Nzk\376\r\337\350\275`o\016\330\001\264\355\007\366\241\303:g\027CC\377\215\255\307A\254\3077\271\330\214W\270\250\304\367\271\330\217\277\215\007\211T\367\245U\2626\350#\250f\342\306\371qw\317Z\247\031\332\037\221A\022\032+L\362y\265h\337\260MH\276\341>\365\306\375a\177\267\227\350m\260\235\267\354\355_\354/\3140a\244\311\232'\354\344\224\273\201Q9\312Fg\235\242\203\235\023\367\320\037\357\305\302\253\226\364y,L\3008e\302O\3567\336\013\377\220\367_\342\226\265D\177\213&48\371\017\247\035$\037F\037\303\210\017\370\276\351\226\316cA\002\312\341|\355\340\277\0018\374ao";
+    PyObject *data = __Pyx_DecompressString(cstring, 1717, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (1134 bytes) */
-const char* const bytes = "AS:i:GR:Z:NM:i:No GAF for this alignment, the info is {}NoneNote that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.+>=\t?add_notecg:Z:disabledv:f:enablegcid:f:isenabled<stringsource>AlignmentAlignment.__reduce_cython__Alignment.__setstate_cython__DIPanPA.Alignment__Pyx_PyDict_NextRefXalignment_scoreappendasyncio.coroutines__class_getitem__cline_in_traceback__dict___dicterrorexitformat__func____getstate___is_coroutineitemslogging__main____module____name____new__node_pospop__pyx_checksum__pyx_result__pyx_state__pyx_type__pyx_unpickle_Alignment__pyx_vtable____qualname__read_lenread_nameread_pos__reduce____reduce_cython____reduce_ex__roundself__set_name__setdefault__setstate____setstate_cython__statesys__test__typeupdateuse_setstatevalues\200\001\360\010\000\005\016\210T\320\021#\2404\240v\250T\260\033\270D\300\007\300t\310;\320VZ\320Zf\320fj\320jy\320y}\360\000\000~\001E\002\360\000\000E\002I\002\360\000\000I\002T\002\360\000\000T\002X\002\360\000\000X\002Y\002\330\004\014\210G\2201\220F\230,\240a\330\004\007\200v\210W\220E\230\024\230Q\330\010\022\220!\330\010\027\220q\340\010\027\220t\2305\240\007\240u\250C\250t\2606\270\027\300\005\300S\310\004\310F\320RY\320Y^\320^a\320ae\320ep\320pw\320wx\330\004\007\200q\330\010\017\320\017*\250$\250a\250w\260k\300\027\310\001\340\010\017\320\017*\250$\250a\250w\260k\300\021\200\001\340\004\037\230q\320 0\260\013\270;\300k\320QR\330\004\023\2209\230H\240A\240Q\330\004\007\200|\2207\230!\330\010+\2501\250L\270\016\300a\330\004\013\2101\200\001\330\004'\240q\250\006\250a";
+    #else /* compression: none (2806 bytes) */
+const char* const bytes = "AS:i:GR:Z:NM:i:No GAF for this alignment, the info is {}NoneNote that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.PanPA/Alignment.pyx+>=\t.?add_notecg:Z:disabledv:f:enablegcid:f:isenabled<stringsource>AlignmentAlignment.__reduce_cython__Alignment.__setstate_cython__Alignment._find_fork_ancestorAlignment.generate_vcf_recordsDDELIINSPanPA.Alignment__Pyx_PyDict_NextRefSNVXalignment_scoreancestor_nodeappendasyncio.coroutinesbfs_queue__class_getitem__cline_in_tracebackcurcur_node__dict___dicterrorexit_find_fork_ancestorfork_cacheformat__func__generate_vcf_records__getstate__graphgraph_namein_nodes_is_coroutineitemslast_poslogging__main____module____name____new__nidnode_idnode_posnode_strnode_to_ref_startparent_idpop__pyx_checksum__pyx_result__pyx_state__pyx_type__pyx_unpickle_Alignment__pyx_vtable____qualname__read_lenread_nameread_posread_str__reduce____reduce_cython____reduce_ex__ref_node_setref_seqroundselfseq__set_name__setdefault__setstate____setstate_cython__statesys__test__typeupdateuse_setstatevaluesvisited\200A\360\016\000\t\014\2104\210s\220!\330\014\023\220:\230Q\230a\330\010\025\220Q\330\010\024\220A\220Q\330\010\016\210a\330\014\022\220)\2304\230q\240\001\330\014\017\210t\2203\220a\330\020\021\330\014\023\2204\220q\230\001\330\014\017\210t\2203\220d\230$\230d\240#\240Q\330\020 \240\005\240V\2501\250A\330\020\033\320\033,\250A\250U\260\"\260C\260q\270\r\300V\3102\310Q\330\020\032\230!\2308\2405\250\001\330\020\030\230\005\230Q\330\014\027\220u\230F\240!\2401\330\014\020\220\r\230X\240Q\330\020\023\220:\230W\240A\330\024\035\230W\240A\240Q\330\010\022\220!\2208\2305\240\001\330\010\020\220\005\220Q\200A\360$\000\t\035\230A\360\014\000\t\014\2104\210t\2201\330\014\023\2201\360\006\000\t\032\230\021\340\010\037\230q\330\010\037\230q\340\010\030\230\001\330\010\033\2301\330\010\034\230A\330\010\034\230A\340\010\014\210H\220D\230\001\330""\014\026\220d\230!\2301\330\014\027\220t\2301\230A\330\014\026\220d\230!\2301\330\014\027\220t\2301\230A\330\014\027\220t\2301\230A\340\014\025\220X\230S\240\001\340\014\017\210x\220s\230!\330\020\023\220=\240\004\240A\330\024\036\320\036.\250b\260\001\330\024 \320 5\3205L\310A\330\024 \320 5\3205L\310A\330\024\027\220}\240C\240q\330\030\"\240!\330\031&\240c\250\021\330\030\"\240!\340\030\"\240!\330\024\032\230\"\230A\230Z\240q\250\014\260A\260\\\300\021\300$\300n\320TU\330\024\033\2307\240!\2401\330\024$\240A\330\024'\240q\330\024(\250\001\330\024(\250\001\330\020\023\2201\330\024*\320*;\2701\270I\300R\300q\330\024+\2501\330\020\021\340\014\017\210x\220s\230!\330\020\023\220=\240\004\240A\330\024\036\320\036.\250b\260\001\330\024 \320 5\3205L\310A\330\024 \320 5\3205L\310A\330\024\027\220}\240C\240q\330\030\"\240!\330\031&\240c\250\021\330\030\"\240!\340\030\"\240!\330\024\032\230\"\230A\230Z\240q\250\014\260A\260\\\300\021\300$\300n\320TU\330\024\033\2307\240!\2401\330\024$\240A\330\024'\240q\330\024(\250\001\330\024(\250\001\340\020\023\2201\330\024 \320 1\260\021\260)\2702\270Q\330\024\037\230w\240a\240q\330\024#\2401\330\024&\240a\330\024(\250\001\330\024(\250\001\330\024*\250!\330\024+\2501\340\024!\320!5\260T\3209M\310Q\330\030!\240\027\250\016\3206I\310\021\330\024\"\240'\250\021\320*@\320@R\320RT\320TW\320WX\320Xf\320fg\330\024#\2401\330\024&\240a\330\024(\250\014\260B\260a\330\024(\250\014\260B\260a\340\021\031\230\023\230A\330\020\023\220=\240\003\2401\330\024)\250\021\340\024\027\220}\240D\250\001\330\030\"\320\"2\260\"\260A\330\030$\320$9\3209P\320PQ\330\030$\320$9\3209P\320PQ\330\030\033\230=\250\003\2501\330\034&\240a\340\034&\240a\330\030\036\230b\240\001\240\032\2501\250L\270\001\270\034\300Q\300d\310.\320XY\330\030\037\230w\240a\240q\330\030(\250\001\330\030+\2501\330\030,\250A\330\030,\250A\340\024\027\220q\330\030%\320%6\260a\260y\300\002\300!\330\030&\240g\250Q\250o\270[\310\002\310#\310Q\310n\320\\]\330\031-\250S\260\001\330\030%\240Q\330\030&""\240a\340\030%\320%9\270\024\320=Q\320QR\330\034%\240W\250N\320:M\310Q\330\030%\240Q\330\030&\240g\250Q\250o\270[\310\002\310#\310Q\310n\320\\]\340\024#\2401\330\024&\240a\330\024(\250\001\330\024(\250\014\260B\260a\340\021\031\230\023\230A\330\020\023\2201\330\024 \320 1\260\021\260)\2702\270Q\330\024\027\220}\240C\240r\250\024\320-=\270S\300\001\330\030-\250W\260A\260Q\340\030\033\230=\250\004\250A\330\034&\320&6\260b\270\001\330\034(\320(=\320=T\320TU\330\034(\320(=\320=T\320TU\330\034\037\230}\250C\250q\330 *\250!\340 *\250!\330\034\"\240\"\240A\240Z\250q\260\014\270A\270\\\310\021\310$\310n\320\\]\330\034#\2407\250!\2501\330\034,\250A\330\034/\250q\330\0340\260\001\330\0340\260\001\340\030\033\320\033/\250s\260!\330\034)\250\021\330\034*\250!\340\034)\250\032\2602\260U\270*\300B\300g\310Q\330\034*\250'\260\021\260!\340\030'\240q\330\030*\250!\330\030,\250L\270\002\270'\300\021\300!\330\030,\250A\360\006\000\t\014\210=\230\004\230A\330\014\026\320\026&\240b\250\001\330\014\030\320\030-\320-D\300A\330\014\030\320\030-\320-D\300A\330\014\017\210}\230C\230q\330\020\032\230!\330\021\036\230c\240\021\330\020\032\230!\340\020\032\230!\330\014\022\220\"\220A\220Z\230q\240\014\250A\250\\\270\021\270$\270n\310A\330\014\023\2207\230!\2301\340\010\017\210q\200\001\360\010\000\005\016\210T\320\021#\2404\240v\250T\260\033\270D\300\007\300t\310;\320VZ\320Zf\320fj\320jy\320y}\360\000\000~\001E\002\360\000\000E\002I\002\360\000\000I\002T\002\360\000\000T\002X\002\360\000\000X\002Y\002\330\004\014\210G\2201\220F\230,\240a\330\004\007\200v\210W\220E\230\024\230Q\330\010\022\220!\330\010\027\220q\340\010\027\220t\2305\240\007\240u\250C\250t\2606\270\027\300\005\300S\310\004\310F\320RY\320Y^\320^a\320ae\320ep\320pw\320wx\330\004\007\200q\330\010\017\320\017*\250$\250a\250w\260k\300\027\310\001\340\010\017\320\017*\250$\250a\250w\260k\300\021\200\001\340\004\037\230q\320 0\260\013\270;\300k\320QR\330\004\023\2209\230H\240A\240Q\330\004\007\200|\2207\230!\330\010+\2501\250L\270\016""\300a\330\004\013\2101\200\001\330\004'\240q\250\006\250a";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 76; i++) {
+    for (int i = 0; i < 104; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
-      if (likely(string) && i >= 21) PyUnicode_InternInPlace(&string);
+      if (likely(string) && i >= 23) PyUnicode_InternInPlace(&string);
       if (unlikely(!string)) {
         Py_XDECREF(data);
         __PYX_ERR(0, 1, __pyx_L1_error)
@@ -6913,7 +10239,7 @@ const char* const bytes = "AS:i:GR:Z:NM:i:No GAF for this alignment, the info is
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 76; i < 79; i++) {
+    for (int i = 104; i < 109; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -6924,15 +10250,15 @@ const char* const bytes = "AS:i:GR:Z:NM:i:No GAF for this alignment, the info is
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 79; i++) {
+    for (Py_ssize_t i = 0; i < 109; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 76;
-      for (Py_ssize_t i=0; i<3; ++i) {
+      PyObject **table = stringtab + 104;
+      for (Py_ssize_t i=0; i<5; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         #if PY_VERSION_HEX < 0x030E0000
         if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -6951,18 +10277,18 @@ const char* const bytes = "AS:i:GR:Z:NM:i:No GAF for this alignment, the info is
   }
   {
     PyObject **numbertab = __pyx_mstate->__pyx_number_tab + 0;
-    int8_t const cint_constants_1[] = {0,1,4};
+    int8_t const cint_constants_1[] = {0,-1,1,2,3,4};
     int16_t const cint_constants_2[] = {255};
     int32_t const cint_constants_4[] = {164170917L};
-    for (int i = 0; i < 5; i++) {
-      numbertab[i] = PyLong_FromLong((i < 3 ? cint_constants_1[i - 0] : (i < 4 ? cint_constants_2[i - 3] : cint_constants_4[i - 4])));
+    for (int i = 0; i < 8; i++) {
+      numbertab[i] = PyLong_FromLong((i < 6 ? cint_constants_1[i - 0] : (i < 7 ? cint_constants_2[i - 6] : cint_constants_4[i - 7])));
       if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_number_tab;
-    for (Py_ssize_t i=0; i<5; ++i) {
+    for (Py_ssize_t i=0; i<8; ++i) {
       #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
       #if PY_VERSION_HEX < 0x030E0000
       if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -6984,12 +10310,12 @@ const char* const bytes = "AS:i:GR:Z:NM:i:No GAF for this alignment, the info is
 }
 /* #### Code section: init_codeobjects ### */
 typedef struct {
-    unsigned int argcount : 2;
+    unsigned int argcount : 3;
     unsigned int num_posonly_args : 1;
     unsigned int num_kwonly_args : 1;
-    unsigned int nlocals : 3;
+    unsigned int nlocals : 4;
     unsigned int flags : 10;
-    unsigned int first_line : 5;
+    unsigned int first_line : 9;
 } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
 static PyObject* __Pyx_PyCode_New(
@@ -7006,19 +10332,29 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
+    const __Pyx_PyCode_New_function_description descr = {6, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 214};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_graph, __pyx_mstate->__pyx_n_u_ref_seq, __pyx_mstate->__pyx_n_u_node_to_ref_start, __pyx_mstate->__pyx_n_u_ref_node_set, __pyx_mstate->__pyx_n_u_graph_name};
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_PanPA_Alignment_pyx, __pyx_mstate->__pyx_n_u_generate_vcf_records, __pyx_mstate->__pyx_kp_b_iso88591_A_A_4t1_1_q_q_1_A_A_HD_d_1_t1A_d, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {6, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 404};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_nid, __pyx_mstate->__pyx_n_u_graph, __pyx_mstate->__pyx_n_u_ref_node_set, __pyx_mstate->__pyx_n_u_node_to_ref_start, __pyx_mstate->__pyx_n_u_fork_cache, __pyx_mstate->__pyx_n_u_visited, __pyx_mstate->__pyx_n_u_bfs_queue, __pyx_mstate->__pyx_n_u_cur, __pyx_mstate->__pyx_n_u_ancestor_node, __pyx_mstate->__pyx_n_u_last_pos, __pyx_mstate->__pyx_n_u_cur_node, __pyx_mstate->__pyx_n_u_parent_id};
+    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_PanPA_Alignment_pyx, __pyx_mstate->__pyx_n_u_find_fork_ancestor, __pyx_mstate->__pyx_kp_b_iso88591_A_4s_Qa_Q_AQ_a_4q_t3a_4q_t3d_d_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+  }
+  {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_state, __pyx_mstate->__pyx_n_u_dict_2, __pyx_mstate->__pyx_n_u_use_setstate};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_T_4vT_D_t_VZZffjjyy_E_E_I_I_T_T, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_T_4vT_D_t_VZZffjjyy_E_E_I_I_T_T, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 16};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_q_a, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_q_a, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 4};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_pyx_type, __pyx_mstate->__pyx_n_u_pyx_checksum, __pyx_mstate->__pyx_n_u_pyx_state, __pyx_mstate->__pyx_n_u_pyx_result};
-    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_pyx_unpickle_Alignment, __pyx_mstate->__pyx_kp_b_iso88591_q_0_kQR_9HAQ_7_1L_a_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_pyx_unpickle_Alignment, __pyx_mstate->__pyx_kp_b_iso88591_q_0_kQR_9HAQ_7_1L_a_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;
@@ -9104,6 +12440,468 @@ static CYTHON_INLINE PyObject* __Pyx_PyUnicode_Unicode(PyObject *obj) {
     return __Pyx_NewRef(obj);
 }
 
+/* PyObjectCallNoArg (used by pyfrozenset_new) */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+    PyObject *arg[2] = {NULL, NULL};
+    return __Pyx_PyObject_FastCall(func, arg + 1, 0 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET);
+}
+
+/* pyfrozenset_new (used by PySetContains) */
+static CYTHON_INLINE PyObject* __Pyx_PyFrozenSet_New(PyObject* it) {
+    if (it) {
+        PyObject* result;
+#if CYTHON_COMPILING_IN_PYPY
+        PyObject* args;
+        args = PyTuple_Pack(1, it);
+        if (unlikely(!args))
+            return NULL;
+        result = PyObject_Call((PyObject*)&PyFrozenSet_Type, args, NULL);
+        Py_DECREF(args);
+        return result;
+#else
+        if (PyFrozenSet_CheckExact(it)) {
+            Py_INCREF(it);
+            return it;
+        }
+        result = PyFrozenSet_New(it);
+        if (unlikely(!result))
+            return NULL;
+        if ((__PYX_LIMITED_VERSION_HEX >= 0x030A0000)
+#if CYTHON_COMPILING_IN_LIMITED_API
+            || __Pyx_get_runtime_version() >= 0x030A0000
+#endif
+            )
+            return result;
+        {
+            Py_ssize_t size = __Pyx_PySet_GET_SIZE(result);
+            if (likely(size > 0))
+                return result;
+#if !CYTHON_ASSUME_SAFE_SIZE
+            if (unlikely(size < 0)) {
+                Py_DECREF(result);
+                return NULL;
+            }
+#endif
+        }
+        Py_DECREF(result);
+#endif
+    }
+    return __Pyx_PyObject_CallNoArg((PyObject*) &PyFrozenSet_Type);
+}
+
+/* PySetContains */
+static int __Pyx_PySet_ContainsUnhashable(PyObject *set, PyObject *key) {
+    int result = -1;
+    if (PySet_Check(key) && PyErr_ExceptionMatches(PyExc_TypeError)) {
+        PyObject *tmpkey;
+        PyErr_Clear();
+        tmpkey = __Pyx_PyFrozenSet_New(key);
+        if (tmpkey != NULL) {
+            result = PySet_Contains(set, tmpkey);
+            Py_DECREF(tmpkey);
+        }
+    }
+    return result;
+}
+static CYTHON_INLINE int __Pyx_PySet_ContainsTF(PyObject* key, PyObject* set, int eq) {
+    int result = PySet_Contains(set, key);
+    if (unlikely(result < 0)) {
+        result = __Pyx_PySet_ContainsUnhashable(set, key);
+    }
+    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
+}
+
+/* PyLongCompare */
+static CYTHON_INLINE int __Pyx_PyLong_BoolEqObjC(PyObject *op1, PyObject *op2, long intval, long inplace) {
+    CYTHON_MAYBE_UNUSED_VAR(intval);
+    CYTHON_UNUSED_VAR(inplace);
+    if (op1 == op2) {
+        return 1;
+    }
+    #if CYTHON_USE_PYLONG_INTERNALS
+    if (likely(PyLong_CheckExact(op1))) {
+        int unequal;
+        unsigned long uintval;
+        Py_ssize_t size = __Pyx_PyLong_DigitCount(op1);
+        const digit* digits = __Pyx_PyLong_Digits(op1);
+        if (intval == 0) {
+            return (__Pyx_PyLong_IsZero(op1) == 1);
+        } else if (intval < 0) {
+            if (__Pyx_PyLong_IsNonNeg(op1))
+                return 0;
+            intval = -intval;
+        } else {
+            if (__Pyx_PyLong_IsNeg(op1))
+                return 0;
+        }
+        uintval = (unsigned long) intval;
+#if PyLong_SHIFT * 4 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 4)) {
+            unequal = (size != 5) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[3] != ((uintval >> (3 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[4] != ((uintval >> (4 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 3 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 3)) {
+            unequal = (size != 4) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[3] != ((uintval >> (3 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 2 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 2)) {
+            unequal = (size != 3) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 1 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 1)) {
+            unequal = (size != 2) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+            unequal = (size != 1) || (((unsigned long) digits[0]) != (uintval & (unsigned long) PyLong_MASK));
+        return (unequal == 0);
+    }
+    #endif
+    if (PyFloat_CheckExact(op1)) {
+        const long b = intval;
+        double a = __Pyx_PyFloat_AS_DOUBLE(op1);
+        return ((double)a == (double)b);
+    }
+    return __Pyx_PyObject_IsTrueAndDecref(
+        PyObject_RichCompare(op1, op2, Py_EQ));
+}
+
+/* JoinPyUnicode */
+static PyObject* __Pyx_PyUnicode_Join(PyObject** values, Py_ssize_t value_count, Py_ssize_t result_ulength,
+                                      Py_UCS4 max_char) {
+#if CYTHON_USE_UNICODE_INTERNALS && CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    PyObject *result_uval;
+    int result_ukind, kind_shift;
+    Py_ssize_t i, char_pos;
+    void *result_udata;
+    if (max_char > 1114111) max_char = 1114111;
+    result_uval = PyUnicode_New(result_ulength, max_char);
+    if (unlikely(!result_uval)) return NULL;
+    result_ukind = (max_char <= 255) ? PyUnicode_1BYTE_KIND : (max_char <= 65535) ? PyUnicode_2BYTE_KIND : PyUnicode_4BYTE_KIND;
+    kind_shift = (result_ukind == PyUnicode_4BYTE_KIND) ? 2 : result_ukind - 1;
+    result_udata = PyUnicode_DATA(result_uval);
+    assert(kind_shift == 2 || kind_shift == 1 || kind_shift == 0);
+    if (unlikely((PY_SSIZE_T_MAX >> kind_shift) - result_ulength < 0))
+        goto overflow;
+    char_pos = 0;
+    for (i=0; i < value_count; i++) {
+        int ukind;
+        Py_ssize_t ulength;
+        void *udata;
+        PyObject *uval = values[i];
+        #if !CYTHON_COMPILING_IN_LIMITED_API
+        if (__Pyx_PyUnicode_READY(uval) == (-1))
+            goto bad;
+        #endif
+        ulength = __Pyx_PyUnicode_GET_LENGTH(uval);
+        #if !CYTHON_ASSUME_SAFE_SIZE
+        if (unlikely(ulength < 0)) goto bad;
+        #endif
+        if (unlikely(!ulength))
+            continue;
+        if (unlikely((PY_SSIZE_T_MAX >> kind_shift) - ulength < char_pos))
+            goto overflow;
+        ukind = __Pyx_PyUnicode_KIND(uval);
+        udata = __Pyx_PyUnicode_DATA(uval);
+        if (ukind == result_ukind) {
+            memcpy((char *)result_udata + (char_pos << kind_shift), udata, (size_t) (ulength << kind_shift));
+        } else {
+            #if PY_VERSION_HEX >= 0x030d0000
+            if (unlikely(PyUnicode_CopyCharacters(result_uval, char_pos, uval, 0, ulength) < 0)) goto bad;
+            #elif CYTHON_COMPILING_IN_CPYTHON || defined(_PyUnicode_FastCopyCharacters)
+            _PyUnicode_FastCopyCharacters(result_uval, char_pos, uval, 0, ulength);
+            #else
+            Py_ssize_t j;
+            for (j=0; j < ulength; j++) {
+                Py_UCS4 uchar = __Pyx_PyUnicode_READ(ukind, udata, j);
+                __Pyx_PyUnicode_WRITE(result_ukind, result_udata, char_pos+j, uchar);
+            }
+            #endif
+        }
+        char_pos += ulength;
+    }
+    return result_uval;
+overflow:
+    PyErr_SetString(PyExc_OverflowError, "join() result is too long for a Python string");
+bad:
+    Py_DECREF(result_uval);
+    return NULL;
+#else
+    Py_ssize_t i;
+    PyObject *result = NULL;
+    PyObject *value_tuple = PyTuple_New(value_count);
+    if (unlikely(!value_tuple)) return NULL;
+    CYTHON_UNUSED_VAR(max_char);
+    CYTHON_UNUSED_VAR(result_ulength);
+    for (i=0; i<value_count; i++) {
+        if (__Pyx_PyTuple_SET_ITEM(value_tuple, i, values[i]) != (0)) goto bad;
+        Py_INCREF(values[i]);
+    }
+    result = PyUnicode_Join(__pyx_mstate_global->__pyx_empty_unicode, value_tuple);
+bad:
+    Py_DECREF(value_tuple);
+    return result;
+#endif
+}
+
+/* SetStringIndexingError (used by GetItemIntUnicode) */
+static void __Pyx_SetStringIndexingError(const char* message, int has_gil) {
+    if (!has_gil) {
+        PyGILState_STATE gil_state = PyGILState_Ensure();
+        PyErr_SetString(PyExc_IndexError, message);
+        PyGILState_Release(gil_state);
+    } else
+        PyErr_SetString(PyExc_IndexError, message);
+}
+
+/* GetItemIntUnicode */
+static CYTHON_INLINE Py_UCS4 __Pyx_GetItemInt_Unicode_Fast(PyObject* ustring, Py_ssize_t i,
+                                                           int wraparound, int boundscheck, int has_gil) {
+    Py_ssize_t length;
+    if (unlikely(__Pyx_PyUnicode_READY(ustring) < 0)) return (Py_UCS4)-1;
+    if (wraparound | boundscheck) {
+        length = __Pyx_PyUnicode_GET_LENGTH(ustring);
+        #if !CYTHON_ASSUME_SAFE_SIZE
+        if (unlikely(length < 0)) return (Py_UCS4)-1;
+        #endif
+        if (wraparound & unlikely(i < 0)) i += length;
+        if ((!boundscheck) || likely(__Pyx_is_valid_index(i, length))) {
+            return __Pyx_PyUnicode_READ_CHAR(ustring, i);
+        } else {
+            __Pyx_SetStringIndexingError("string index out of range", has_gil);
+            return (Py_UCS4)-1;
+        }
+    } else {
+        return __Pyx_PyUnicode_READ_CHAR(ustring, i);
+    }
+}
+
+/* RaiseTooManyValuesToUnpack */
+static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected) {
+    PyErr_Format(PyExc_ValueError,
+                 "too many values to unpack (expected %" CYTHON_FORMAT_SSIZE_T "d)", expected);
+}
+
+/* RaiseNeedMoreValuesToUnpack */
+static CYTHON_INLINE void __Pyx_RaiseNeedMoreValuesError(Py_ssize_t index) {
+    PyErr_Format(PyExc_ValueError,
+                 "need more than %" CYTHON_FORMAT_SSIZE_T "d value%.1s to unpack",
+                 index, (index == 1) ? "" : "s");
+}
+
+/* IterFinish */
+static CYTHON_INLINE int __Pyx_IterFinish(void) {
+    PyObject* exc_type;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    exc_type = __Pyx_PyErr_CurrentExceptionType();
+    if (unlikely(exc_type)) {
+        if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration)))
+            return -1;
+        __Pyx_PyErr_Clear();
+        return 0;
+    }
+    return 0;
+}
+
+/* UnpackItemEndCheck */
+static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected) {
+    if (unlikely(retval)) {
+        Py_DECREF(retval);
+        __Pyx_RaiseTooManyValuesError(expected);
+        return -1;
+    }
+    return __Pyx_IterFinish();
+}
+
+/* ArgTypeTestFunc (used by ArgTypeTest) */
+static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact)
+{
+    __Pyx_TypeName type_name;
+    __Pyx_TypeName obj_type_name;
+    PyObject *extra_info = __pyx_mstate_global->__pyx_empty_unicode;
+    int from_annotation_subclass = 0;
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    else if (!exact) {
+        if (likely(__Pyx_TypeCheck(obj, type))) return 1;
+    } else if (exact == 2) {
+        if (__Pyx_TypeCheck(obj, type)) {
+            from_annotation_subclass = 1;
+            extra_info = __pyx_mstate_global->__pyx_kp_u_Note_that_Cython_is_deliberately;
+        }
+    }
+    type_name = __Pyx_PyType_GetFullyQualifiedName(type);
+    obj_type_name = __Pyx_PyType_GetFullyQualifiedName(Py_TYPE(obj));
+    PyErr_Format(PyExc_TypeError,
+        "Argument '%.200s' has incorrect type (expected " __Pyx_FMT_TYPENAME
+        ", got " __Pyx_FMT_TYPENAME ")"
+#if __PYX_LIMITED_VERSION_HEX < 0x030C0000
+        "%s%U"
+#endif
+        , name, type_name, obj_type_name
+#if __PYX_LIMITED_VERSION_HEX < 0x030C0000
+        , (from_annotation_subclass ? ". " : ""), extra_info
+#endif
+        );
+#if __PYX_LIMITED_VERSION_HEX >= 0x030C0000
+    if (exact == 2 && from_annotation_subclass) {
+        PyObject *res;
+        PyObject *vargs[2];
+        vargs[0] = PyErr_GetRaisedException();
+        vargs[1] = extra_info;
+        res = PyObject_VectorcallMethod(__pyx_mstate_global->__pyx_kp_u_add_note, vargs, 2, NULL);
+        Py_XDECREF(res);
+        PyErr_SetRaisedException(vargs[0]);
+    }
+#endif
+    __Pyx_DECREF_TypeName(type_name);
+    __Pyx_DECREF_TypeName(obj_type_name);
+    return 0;
+}
+
+/* pop_index */
+static PyObject* __Pyx__PyObject_PopNewIndex(PyObject* L, PyObject* py_ix) {
+    PyObject *r;
+    if (unlikely(!py_ix)) return NULL;
+    r = __Pyx__PyObject_PopIndex(L, py_ix);
+    Py_DECREF(py_ix);
+    return r;
+}
+static PyObject* __Pyx__PyObject_PopIndex(PyObject* L, PyObject* py_ix) {
+    return __Pyx_PyObject_CallMethod1(L, __pyx_mstate_global->__pyx_n_u_pop, py_ix);
+}
+#if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS && CYTHON_ASSUME_SAFE_SIZE
+static PyObject* __Pyx__PyList_PopIndex(PyObject* L, PyObject* py_ix, Py_ssize_t ix) {
+    Py_ssize_t size = PyList_GET_SIZE(L);
+    if (likely(size > (((PyListObject*)L)->allocated >> 1))) {
+        Py_ssize_t cix = ix;
+        if (cix < 0) {
+            cix += size;
+        }
+        if (likely(__Pyx_is_valid_index(cix, size))) {
+            PyObject* v = PyList_GET_ITEM(L, cix);
+            __Pyx_SET_SIZE(L, Py_SIZE(L) - 1);
+            size -= 1;
+            memmove(&PyList_GET_ITEM(L, cix), &PyList_GET_ITEM(L, cix+1), (size_t)(size-cix)*sizeof(PyObject*));
+            return v;
+        }
+    }
+    if (py_ix == Py_None) {
+        return __Pyx__PyObject_PopNewIndex(L, PyLong_FromSsize_t(ix));
+    } else {
+        return __Pyx__PyObject_PopIndex(L, py_ix);
+    }
+}
+#endif
+
+/* PyLongBinop */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_Fallback___Pyx_PyLong_SubtractObjC(PyObject *op1, PyObject *op2, int inplace) {
+    return (inplace ? PyNumber_InPlaceSubtract : PyNumber_Subtract)(op1, op2);
+}
+#if CYTHON_USE_PYLONG_INTERNALS
+static PyObject* __Pyx_Unpacked___Pyx_PyLong_SubtractObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check) {
+    CYTHON_MAYBE_UNUSED_VAR(inplace);
+    CYTHON_UNUSED_VAR(zerodivision_check);
+    const long b = intval;
+    long a;
+    const PY_LONG_LONG llb = intval;
+    PY_LONG_LONG lla;
+    if (unlikely(__Pyx_PyLong_IsZero(op1))) {
+        return PyLong_FromLong(-intval);
+    }
+    const int is_positive = __Pyx_PyLong_IsPos(op1);
+    const digit* digits = __Pyx_PyLong_Digits(op1);
+    const Py_ssize_t size = __Pyx_PyLong_DigitCount(op1);
+    if (likely(size == 1)) {
+        a = (long) digits[0];
+        if (!is_positive) a *= -1;
+    } else {
+        switch (size) {
+            case 2:
+                if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                    a = (long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                    if (!is_positive) a *= -1;
+                    goto calculate_long;
+                } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
+                    lla = (PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                    if (!is_positive) lla *= -1;
+                    goto calculate_long_long;
+                }
+                break;
+            case 3:
+                if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                    a = (long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                    if (!is_positive) a *= -1;
+                    goto calculate_long;
+                } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
+                    lla = (PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                    if (!is_positive) lla *= -1;
+                    goto calculate_long_long;
+                }
+                break;
+            case 4:
+                if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                    a = (long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                    if (!is_positive) a *= -1;
+                    goto calculate_long;
+                } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
+                    lla = (PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                    if (!is_positive) lla *= -1;
+                    goto calculate_long_long;
+                }
+                break;
+        }
+        return PyLong_Type.tp_as_number->nb_subtract(op1, op2);
+    }
+    calculate_long:
+        {
+            long x;
+            x = a - b;
+            return PyLong_FromLong(x);
+        }
+    calculate_long_long:
+        {
+            PY_LONG_LONG llx;
+            llx = lla - llb;
+            return PyLong_FromLongLong(llx);
+        }
+    
+}
+#endif
+static PyObject* __Pyx_Float___Pyx_PyLong_SubtractObjC(PyObject *float_val, long intval, int zerodivision_check) {
+    CYTHON_UNUSED_VAR(zerodivision_check);
+    const long b = intval;
+    double a = __Pyx_PyFloat_AS_DOUBLE(float_val);
+        double result;
+        
+        result = ((double)a) - (double)b;
+        return PyFloat_FromDouble(result);
+}
+static CYTHON_INLINE PyObject* __Pyx_PyLong_SubtractObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check) {
+    CYTHON_MAYBE_UNUSED_VAR(intval);
+    CYTHON_UNUSED_VAR(zerodivision_check);
+    #if CYTHON_USE_PYLONG_INTERNALS
+    if (likely(PyLong_CheckExact(op1))) {
+        return __Pyx_Unpacked___Pyx_PyLong_SubtractObjC(op1, op2, intval, inplace, zerodivision_check);
+    }
+    #endif
+    if (PyFloat_CheckExact(op1)) {
+        return __Pyx_Float___Pyx_PyLong_SubtractObjC(op1, intval, zerodivision_check);
+    }
+    return __Pyx_Fallback___Pyx_PyLong_SubtractObjC(op1, op2, inplace);
+}
+#endif
+
 /* RejectKeywords */
 static void __Pyx_RejectKeywords(const char* function_name, PyObject *kwds) {
     PyObject *key = NULL;
@@ -9161,54 +12959,6 @@ static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *o, PyObject *n, PyObject
     r = PyObject_GetAttr(o, n);
     return (likely(r)) ? r : __Pyx_GetAttr3Default(d);
 #endif
-}
-
-/* ArgTypeTestFunc (used by ArgTypeTest) */
-static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact)
-{
-    __Pyx_TypeName type_name;
-    __Pyx_TypeName obj_type_name;
-    PyObject *extra_info = __pyx_mstate_global->__pyx_empty_unicode;
-    int from_annotation_subclass = 0;
-    if (unlikely(!type)) {
-        PyErr_SetString(PyExc_SystemError, "Missing type object");
-        return 0;
-    }
-    else if (!exact) {
-        if (likely(__Pyx_TypeCheck(obj, type))) return 1;
-    } else if (exact == 2) {
-        if (__Pyx_TypeCheck(obj, type)) {
-            from_annotation_subclass = 1;
-            extra_info = __pyx_mstate_global->__pyx_kp_u_Note_that_Cython_is_deliberately;
-        }
-    }
-    type_name = __Pyx_PyType_GetFullyQualifiedName(type);
-    obj_type_name = __Pyx_PyType_GetFullyQualifiedName(Py_TYPE(obj));
-    PyErr_Format(PyExc_TypeError,
-        "Argument '%.200s' has incorrect type (expected " __Pyx_FMT_TYPENAME
-        ", got " __Pyx_FMT_TYPENAME ")"
-#if __PYX_LIMITED_VERSION_HEX < 0x030C0000
-        "%s%U"
-#endif
-        , name, type_name, obj_type_name
-#if __PYX_LIMITED_VERSION_HEX < 0x030C0000
-        , (from_annotation_subclass ? ". " : ""), extra_info
-#endif
-        );
-#if __PYX_LIMITED_VERSION_HEX >= 0x030C0000
-    if (exact == 2 && from_annotation_subclass) {
-        PyObject *res;
-        PyObject *vargs[2];
-        vargs[0] = PyErr_GetRaisedException();
-        vargs[1] = extra_info;
-        res = PyObject_VectorcallMethod(__pyx_mstate_global->__pyx_kp_u_add_note, vargs, 2, NULL);
-        Py_XDECREF(res);
-        PyErr_SetRaisedException(vargs[0]);
-    }
-#endif
-    __Pyx_DECREF_TypeName(type_name);
-    __Pyx_DECREF_TypeName(obj_type_name);
-    return 0;
 }
 
 /* AllocateExtensionType */
@@ -9409,12 +13159,6 @@ static int __Pyx_fix_up_extension_type_from_spec(PyType_Spec *spec, PyTypeObject
         PyType_Modified(type);
 #endif  // PY_VERSION_HEX > 0x030900B1
     return 0;
-}
-
-/* PyObjectCallNoArg (used by PyObjectCallMethod0) */
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
-    PyObject *arg[2] = {NULL, NULL};
-    return __Pyx_PyObject_FastCall(func, arg + 1, 0 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET);
 }
 
 /* PyObjectCallMethod0 (used by PyType_Ready) */
@@ -12547,7 +16291,7 @@ __Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
         result = name;
         name = NULL;
     } else {
-        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__6);
+        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__7);
     }
     goto done;
 }

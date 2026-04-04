@@ -1517,6 +1517,23 @@ struct __pyx_opt_args_5PanPA_5Graph_5Graph_read_gfa {
   int __pyx_n;
   PyObject *paths;
 };
+struct __pyx_opt_args_5PanPA_20graph_smith_waterman_align_to_graph_sw;
+
+/* "PanPA/graph_smith_waterman.pxd":6
+ * 
+ * 
+ * cdef vector[string] align_to_graph_sw(Graph graph, str read, str read_name, bint print_dp,             # <<<<<<<<<<<<<<
+ *                              vector[int] sub_matrix, int gap_score, min_id_score,
+ *                              bint vcf_mode=*, str ref_seq=*, dict node_to_ref_start=*,
+*/
+struct __pyx_opt_args_5PanPA_20graph_smith_waterman_align_to_graph_sw {
+  int __pyx_n;
+  int vcf_mode;
+  PyObject *ref_seq;
+  PyObject *node_to_ref_start;
+  PyObject *ref_node_set;
+  PyObject *graph_name;
+};
 
 /* "PanPA/Graph.pxd":5
  * 
@@ -1585,6 +1602,7 @@ struct __pyx_vtabstruct_5PanPA_5Graph_Graph {
   void (*read_gfa)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, struct __pyx_opt_args_5PanPA_5Graph_5Graph_read_gfa *__pyx_optional_args);
   void (*write_gfa)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *);
   PyObject *(*path_seq)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *);
+  PyObject *(*compute_reference_path)(struct __pyx_obj_5PanPA_5Graph_Graph *, int __pyx_skip_dispatch);
 };
 static struct __pyx_vtabstruct_5PanPA_5Graph_Graph *__pyx_vtabptr_5PanPA_5Graph_Graph;
 
@@ -1600,6 +1618,7 @@ static struct __pyx_vtabstruct_5PanPA_5Graph_Graph *__pyx_vtabptr_5PanPA_5Graph_
 struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment {
   void (*prepare_aa_gaf)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *);
   void (*prepare_dna_gaf)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *);
+  PyObject *(*generate_vcf_records)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch);
 };
 static struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment *__pyx_vtabptr_5PanPA_9Alignment_Alignment;
 /* #### Code section: utility_code_proto ### */
@@ -1850,6 +1869,13 @@ static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int eq
 
 /* UnicodeEquals.proto */
 static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* PyObjectFastCallMethod.proto */
+#if CYTHON_VECTORCALL && PY_VERSION_HEX >= 0x03090000
+#define __Pyx_PyObject_FastCallMethod(name, args, nargsf) PyObject_VectorcallMethod(name, args, nargsf, NULL)
+#else
+static PyObject *__Pyx_PyObject_FastCallMethod(PyObject *name, PyObject *const *args, size_t nargsf);
+#endif
 
 /* FunctionExport.proto */
 static int __Pyx_ExportFunction(PyObject *api_dict, const char *name, void (*f)(void), const char *sig);
@@ -2194,7 +2220,7 @@ typedef struct {
   PyObject *__pyx_empty_unicode;
   PyTypeObject *__pyx_ptype_5PanPA_5Graph_Graph;
   PyTypeObject *__pyx_ptype_5PanPA_9Alignment_Alignment;
-  PyObject *__pyx_string_tab[25];
+  PyObject *__pyx_string_tab[28];
   PyObject *__pyx_number_tab[2];
 /* #### Code section: module_state_contents ### */
 /* CodeObjectCache.module_state_decls */
@@ -2228,28 +2254,31 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_kp_u_ __pyx_string_tab[0]
 #define __pyx_kp_u_This_is_the_dp_table __pyx_string_tab[1]
 #define __pyx_kp_u_This_is_the_traceback_table __pyx_string_tab[2]
-#define __pyx_kp_u__2 __pyx_string_tab[3]
-#define __pyx_kp_u__3 __pyx_string_tab[4]
-#define __pyx_kp_u__4 __pyx_string_tab[5]
-#define __pyx_kp_u__6 __pyx_string_tab[6]
-#define __pyx_n_u__5 __pyx_string_tab[7]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[8]
-#define __pyx_n_u_main __pyx_string_tab[9]
-#define __pyx_n_u_module __pyx_string_tab[10]
-#define __pyx_n_u_name __pyx_string_tab[11]
-#define __pyx_n_u_node_id __pyx_string_tab[12]
-#define __pyx_n_u_node_pos __pyx_string_tab[13]
-#define __pyx_n_u_node_str __pyx_string_tab[14]
-#define __pyx_n_u_print __pyx_string_tab[15]
-#define __pyx_n_u_pyx_capi __pyx_string_tab[16]
-#define __pyx_n_u_pyx_vtable __pyx_string_tab[17]
-#define __pyx_n_u_qualname __pyx_string_tab[18]
-#define __pyx_n_u_read_pos __pyx_string_tab[19]
-#define __pyx_n_u_read_str __pyx_string_tab[20]
-#define __pyx_n_u_setdefault __pyx_string_tab[21]
-#define __pyx_n_u_test __pyx_string_tab[22]
-#define __pyx_n_u_type __pyx_string_tab[23]
-#define __pyx_kp_b_std_vector_std_string_struct___p __pyx_string_tab[24]
+#define __pyx_kp_u_VCF __pyx_string_tab[3]
+#define __pyx_kp_u__2 __pyx_string_tab[4]
+#define __pyx_kp_u__3 __pyx_string_tab[5]
+#define __pyx_kp_u__4 __pyx_string_tab[6]
+#define __pyx_kp_u__5 __pyx_string_tab[7]
+#define __pyx_kp_u__7 __pyx_string_tab[8]
+#define __pyx_n_u__6 __pyx_string_tab[9]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[10]
+#define __pyx_n_u_encode __pyx_string_tab[11]
+#define __pyx_n_u_main __pyx_string_tab[12]
+#define __pyx_n_u_module __pyx_string_tab[13]
+#define __pyx_n_u_name __pyx_string_tab[14]
+#define __pyx_n_u_node_id __pyx_string_tab[15]
+#define __pyx_n_u_node_pos __pyx_string_tab[16]
+#define __pyx_n_u_node_str __pyx_string_tab[17]
+#define __pyx_n_u_print __pyx_string_tab[18]
+#define __pyx_n_u_pyx_capi __pyx_string_tab[19]
+#define __pyx_n_u_pyx_vtable __pyx_string_tab[20]
+#define __pyx_n_u_qualname __pyx_string_tab[21]
+#define __pyx_n_u_read_pos __pyx_string_tab[22]
+#define __pyx_n_u_read_str __pyx_string_tab[23]
+#define __pyx_n_u_setdefault __pyx_string_tab[24]
+#define __pyx_n_u_test __pyx_string_tab[25]
+#define __pyx_n_u_type __pyx_string_tab[26]
+#define __pyx_kp_b_std_vector_std_string_struct___p __pyx_string_tab[27]
 #define __pyx_int_0 __pyx_number_tab[0]
 #define __pyx_int_1 __pyx_number_tab[1]
 /* #### Code section: module_state_clear ### */
@@ -2268,7 +2297,7 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   #endif
   Py_CLEAR(clear_module_state->__pyx_ptype_5PanPA_5Graph_Graph);
   Py_CLEAR(clear_module_state->__pyx_ptype_5PanPA_9Alignment_Alignment);
-  for (int i=0; i<25; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<28; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* #### Code section: module_state_clear_end ### */
@@ -2288,7 +2317,7 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_empty_unicode);
   Py_VISIT(traverse_module_state->__pyx_ptype_5PanPA_5Graph_Graph);
   Py_VISIT(traverse_module_state->__pyx_ptype_5PanPA_9Alignment_Alignment);
-  for (int i=0; i<25; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<28; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* #### Code section: module_state_traverse_end ### */
@@ -2874,11 +2903,32 @@ static void __pyx_f_5PanPA_20graph_smith_waterman_print_dp_table(int __pyx_v_all
  * 
  * 
  * cdef vector[string] align_to_graph_sw(Graph graph, str read,str read_name, bint print_dp,             # <<<<<<<<<<<<<<
- *                              vector[int] sub_matrix, int gap_score, min_id_score) except *:
- * 
+ *                              vector[int] sub_matrix, int gap_score, min_id_score,
+ *                              bint vcf_mode=False, str ref_seq="", dict node_to_ref_start=None,
 */
 
-static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_graph_sw(struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph, PyObject *__pyx_v_read, PyObject *__pyx_v_read_name, int __pyx_v_print_dp, std::vector<int>  __pyx_v_sub_matrix, int __pyx_v_gap_score, PyObject *__pyx_v_min_id_score) {
+static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_graph_sw(struct __pyx_obj_5PanPA_5Graph_Graph *__pyx_v_graph, PyObject *__pyx_v_read, PyObject *__pyx_v_read_name, int __pyx_v_print_dp, std::vector<int>  __pyx_v_sub_matrix, int __pyx_v_gap_score, PyObject *__pyx_v_min_id_score, struct __pyx_opt_args_5PanPA_20graph_smith_waterman_align_to_graph_sw *__pyx_optional_args) {
+
+  /* "PanPA/graph_smith_waterman.pyx":41
+ * cdef vector[string] align_to_graph_sw(Graph graph, str read,str read_name, bint print_dp,
+ *                              vector[int] sub_matrix, int gap_score, min_id_score,
+ *                              bint vcf_mode=False, str ref_seq="", dict node_to_ref_start=None,             # <<<<<<<<<<<<<<
+ *                              set ref_node_set=None, str graph_name="") except *:
+ * 
+*/
+  int __pyx_v_vcf_mode = ((int)0);
+  PyObject *__pyx_v_ref_seq = ((PyObject*)__pyx_mstate_global->__pyx_kp_u__5);
+  PyObject *__pyx_v_node_to_ref_start = ((PyObject*)Py_None);
+
+  /* "PanPA/graph_smith_waterman.pyx":42
+ *                              vector[int] sub_matrix, int gap_score, min_id_score,
+ *                              bint vcf_mode=False, str ref_seq="", dict node_to_ref_start=None,
+ *                              set ref_node_set=None, str graph_name="") except *:             # <<<<<<<<<<<<<<
+ * 
+ *     """
+*/
+  PyObject *__pyx_v_ref_node_set = ((PyObject*)Py_None);
+  PyObject *__pyx_v_graph_name = ((PyObject*)__pyx_mstate_global->__pyx_kp_u__5);
   std::vector<std::string>  __pyx_v_alignments;
   std::vector<int>  __pyx_v_intervals;
   std::vector<int>  __pyx_v_in_nodes_vec;
@@ -2927,6 +2977,8 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   CYTHON_UNUSED int __pyx_v_test;
   PyObject *__pyx_v_graph_character = NULL;
   long __pyx_v_cigar;
+  PyObject *__pyx_v_vcf_records = NULL;
+  PyObject *__pyx_v_vcf_rec = NULL;
   std::vector<std::string>  __pyx_r;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2963,21 +3015,38 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("align_to_graph_sw", 0);
+  if (__pyx_optional_args) {
+    if (__pyx_optional_args->__pyx_n > 0) {
+      __pyx_v_vcf_mode = __pyx_optional_args->vcf_mode;
+      if (__pyx_optional_args->__pyx_n > 1) {
+        __pyx_v_ref_seq = __pyx_optional_args->ref_seq;
+        if (__pyx_optional_args->__pyx_n > 2) {
+          __pyx_v_node_to_ref_start = __pyx_optional_args->node_to_ref_start;
+          if (__pyx_optional_args->__pyx_n > 3) {
+            __pyx_v_ref_node_set = __pyx_optional_args->ref_node_set;
+            if (__pyx_optional_args->__pyx_n > 4) {
+              __pyx_v_graph_name = __pyx_optional_args->graph_name;
+            }
+          }
+        }
+      }
+    }
+  }
 
-  /* "PanPA/graph_smith_waterman.pyx":51
+  /* "PanPA/graph_smith_waterman.pyx":53
  *     cdef vector[string] alignments
  *     cdef string one_alignment
  *     alignments = []             # <<<<<<<<<<<<<<
  *     ########################################################
  * 
 */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_convert_vector_from_py_std_3a__3a_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_vector_from_py_std_3a__3a_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_alignments = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
 
-  /* "PanPA/graph_smith_waterman.pyx":63
+  /* "PanPA/graph_smith_waterman.pyx":65
  *     # in_nodes_map = graph.in_nodes_map
  *     cdef vector[int] intervals
  *     intervals = graph.intervals             # <<<<<<<<<<<<<<
@@ -2987,7 +3056,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   __pyx_t_3 = __pyx_v_graph->intervals;
   __pyx_v_intervals = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-  /* "PanPA/graph_smith_waterman.pyx":65
+  /* "PanPA/graph_smith_waterman.pyx":67
  *     intervals = graph.intervals
  *     cdef vector[int] in_nodes_vec
  *     in_nodes_vec = graph.in_nodes             # <<<<<<<<<<<<<<
@@ -2997,7 +3066,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   __pyx_t_3 = __pyx_v_graph->in_nodes;
   __pyx_v_in_nodes_vec = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-  /* "PanPA/graph_smith_waterman.pyx":68
+  /* "PanPA/graph_smith_waterman.pyx":70
  * 
  *     cdef vector[int] j_node, j_pos, node_ends
  *     node_ends = graph.node_ends             # <<<<<<<<<<<<<<
@@ -3007,7 +3076,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   __pyx_t_3 = __pyx_v_graph->node_ends;
   __pyx_v_node_ends = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-  /* "PanPA/graph_smith_waterman.pyx":69
+  /* "PanPA/graph_smith_waterman.pyx":71
  *     cdef vector[int] j_node, j_pos, node_ends
  *     node_ends = graph.node_ends
  *     j_node = graph.j_node             # <<<<<<<<<<<<<<
@@ -3017,7 +3086,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   __pyx_t_3 = __pyx_v_graph->j_node;
   __pyx_v_j_node = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-  /* "PanPA/graph_smith_waterman.pyx":70
+  /* "PanPA/graph_smith_waterman.pyx":72
  *     node_ends = graph.node_ends
  *     j_node = graph.j_node
  *     j_pos = graph.j_pos             # <<<<<<<<<<<<<<
@@ -3027,7 +3096,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   __pyx_t_3 = __pyx_v_graph->j_pos;
   __pyx_v_j_pos = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-  /* "PanPA/graph_smith_waterman.pyx":76
+  /* "PanPA/graph_smith_waterman.pyx":78
  * 
  *     cdef vector[int] all_seq_as_int
  *     all_seq_as_int = graph.all_seqs             # <<<<<<<<<<<<<<
@@ -3037,7 +3106,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   __pyx_t_3 = __pyx_v_graph->all_seqs;
   __pyx_v_all_seq_as_int = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-  /* "PanPA/graph_smith_waterman.pyx":83
+  /* "PanPA/graph_smith_waterman.pyx":85
  *     Defining some variables I need for the algorithm
  *     """
  *     cdef int which_node = -1  # counter to tell me in which node I am in the column loop             # <<<<<<<<<<<<<<
@@ -3046,7 +3115,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   __pyx_v_which_node = -1;
 
-  /* "PanPA/graph_smith_waterman.pyx":86
+  /* "PanPA/graph_smith_waterman.pyx":88
  * 
  *     # keeping track of all possible max scores in the whole dp_table
  *     cdef int global_max = 0             # <<<<<<<<<<<<<<
@@ -3055,7 +3124,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   __pyx_v_global_max = 0;
 
-  /* "PanPA/graph_smith_waterman.pyx":102
+  /* "PanPA/graph_smith_waterman.pyx":104
  *     """
  *     cdef int current_node_id, current_node_pos
  *     cdef int counter = 0  # for testing             # <<<<<<<<<<<<<<
@@ -3064,7 +3133,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   __pyx_v_counter = 0;
 
-  /* "PanPA/graph_smith_waterman.pyx":116
+  /* "PanPA/graph_smith_waterman.pyx":118
  *     cdef int read_len, graph_seq_len
  * 
  *     read_len = len(read)             # <<<<<<<<<<<<<<
@@ -3073,12 +3142,12 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   if (unlikely(__pyx_v_read == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 116, __pyx_L1_error)
+    __PYX_ERR(0, 118, __pyx_L1_error)
   }
-  __pyx_t_4 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_read); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_read); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 118, __pyx_L1_error)
   __pyx_v_read_len = __pyx_t_4;
 
-  /* "PanPA/graph_smith_waterman.pyx":117
+  /* "PanPA/graph_smith_waterman.pyx":119
  * 
  *     read_len = len(read)
  *     graph_seq_len = graph.all_seqs.size()             # <<<<<<<<<<<<<<
@@ -3087,7 +3156,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   __pyx_v_graph_seq_len = __pyx_v_graph->all_seqs.size();
 
-  /* "PanPA/graph_smith_waterman.pyx":119
+  /* "PanPA/graph_smith_waterman.pyx":121
  *     graph_seq_len = graph.all_seqs.size()
  * 
  *     dimensions = (read_len + 1) * (graph_seq_len + 1)             # <<<<<<<<<<<<<<
@@ -3096,7 +3165,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   __pyx_v_dimensions = ((__pyx_v_read_len + 1) * (__pyx_v_graph_seq_len + 1));
 
-  /* "PanPA/graph_smith_waterman.pyx":120
+  /* "PanPA/graph_smith_waterman.pyx":122
  * 
  *     dimensions = (read_len + 1) * (graph_seq_len + 1)
  *     dp_table = <int *> malloc(dimensions * sizeof(int))  # allocating memory             # <<<<<<<<<<<<<<
@@ -3105,7 +3174,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   __pyx_v_dp_table = ((int *)malloc((__pyx_v_dimensions * (sizeof(int)))));
 
-  /* "PanPA/graph_smith_waterman.pyx":123
+  /* "PanPA/graph_smith_waterman.pyx":125
  * 
  *     # initializing the vector with 0s, otherwise random values will be filled
  *     for i in range(dimensions):             # <<<<<<<<<<<<<<
@@ -3117,7 +3186,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
     __pyx_v_i = __pyx_t_7;
 
-    /* "PanPA/graph_smith_waterman.pyx":124
+    /* "PanPA/graph_smith_waterman.pyx":126
  *     # initializing the vector with 0s, otherwise random values will be filled
  *     for i in range(dimensions):
  *         dp_table[i] = 0             # <<<<<<<<<<<<<<
@@ -3127,7 +3196,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     (__pyx_v_dp_table[__pyx_v_i]) = 0;
   }
 
-  /* "PanPA/graph_smith_waterman.pyx":131
+  /* "PanPA/graph_smith_waterman.pyx":133
  *     to this linearized substitution matrix when retrieving the pair-score
  *     """
  *     for c in read:             # <<<<<<<<<<<<<<
@@ -3136,36 +3205,36 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   if (unlikely(__pyx_v_read == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' is not iterable");
-    __PYX_ERR(0, 131, __pyx_L1_error)
+    __PYX_ERR(0, 133, __pyx_L1_error)
   }
   __Pyx_INCREF(__pyx_v_read);
   __pyx_t_8 = __pyx_v_read;
-  __pyx_t_6 = __Pyx_init_unicode_iteration(__pyx_t_8, (&__pyx_t_9), (&__pyx_t_10), (&__pyx_t_5)); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(0, 131, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_init_unicode_iteration(__pyx_t_8, (&__pyx_t_9), (&__pyx_t_10), (&__pyx_t_5)); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(0, 133, __pyx_L1_error)
   for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_9; __pyx_t_11++) {
     __pyx_t_4 = __pyx_t_11;
-    __pyx_t_1 = __Pyx_PyUnicode_FromOrdinal(__Pyx_PyUnicode_READ(__pyx_t_5, __pyx_t_10, __pyx_t_4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyUnicode_FromOrdinal(__Pyx_PyUnicode_READ(__pyx_t_5, __pyx_t_10, __pyx_t_4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_c, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "PanPA/graph_smith_waterman.pyx":132
+    /* "PanPA/graph_smith_waterman.pyx":134
  *     """
  *     for c in read:
  *         read_as_int.push_back(ord(c) - 65)             # <<<<<<<<<<<<<<
  * 
  *     # a traceback table also filled with 0s, later will be filled with the index of where the score came from
 */
-    __pyx_t_12 = __Pyx_PyObject_Ord(__pyx_v_c); if (unlikely(__pyx_t_12 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 132, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyObject_Ord(__pyx_v_c); if (unlikely(__pyx_t_12 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 134, __pyx_L1_error)
     try {
       __pyx_v_read_as_int.push_back((__pyx_t_12 - 65));
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(0, 132, __pyx_L1_error)
+      __PYX_ERR(0, 134, __pyx_L1_error)
     }
   }
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-  /* "PanPA/graph_smith_waterman.pyx":136
+  /* "PanPA/graph_smith_waterman.pyx":138
  *     # a traceback table also filled with 0s, later will be filled with the index of where the score came from
  *     cdef int *traceback_table
  *     traceback_table = <int *> malloc(dimensions * sizeof(int))             # <<<<<<<<<<<<<<
@@ -3174,7 +3243,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   __pyx_v_traceback_table = ((int *)malloc((__pyx_v_dimensions * (sizeof(int)))));
 
-  /* "PanPA/graph_smith_waterman.pyx":137
+  /* "PanPA/graph_smith_waterman.pyx":139
  *     cdef int *traceback_table
  *     traceback_table = <int *> malloc(dimensions * sizeof(int))
  *     for i in range(dimensions):             # <<<<<<<<<<<<<<
@@ -3186,7 +3255,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
     __pyx_v_i = __pyx_t_7;
 
-    /* "PanPA/graph_smith_waterman.pyx":138
+    /* "PanPA/graph_smith_waterman.pyx":140
  *     traceback_table = <int *> malloc(dimensions * sizeof(int))
  *     for i in range(dimensions):
  *         traceback_table[i] = 0             # <<<<<<<<<<<<<<
@@ -3196,7 +3265,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     (__pyx_v_traceback_table[__pyx_v_i]) = 0;
   }
 
-  /* "PanPA/graph_smith_waterman.pyx":143
+  /* "PanPA/graph_smith_waterman.pyx":145
  *     # main loop for the alignment
  * 
  *     for i in range(read_len):             # <<<<<<<<<<<<<<
@@ -3208,7 +3277,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
     __pyx_v_i = __pyx_t_7;
 
-    /* "PanPA/graph_smith_waterman.pyx":145
+    /* "PanPA/graph_smith_waterman.pyx":147
  *     for i in range(read_len):
  *         # adding one to keep first row and first column 0
  *         i += 1             # <<<<<<<<<<<<<<
@@ -3217,7 +3286,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
     __pyx_v_i = (__pyx_v_i + 1);
 
-    /* "PanPA/graph_smith_waterman.pyx":147
+    /* "PanPA/graph_smith_waterman.pyx":149
  *         i += 1
  * 
  *         which_node = -1  # resetting the node counter             # <<<<<<<<<<<<<<
@@ -3226,7 +3295,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
     __pyx_v_which_node = -1;
 
-    /* "PanPA/graph_smith_waterman.pyx":150
+    /* "PanPA/graph_smith_waterman.pyx":152
  * 
  *         # because the dp table is 1d, I need to convert between i,j to 1d coordinates
  *         row = i * (graph_seq_len + 1)             # <<<<<<<<<<<<<<
@@ -3235,7 +3304,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
     __pyx_v_row = (__pyx_v_i * (__pyx_v_graph_seq_len + 1));
 
-    /* "PanPA/graph_smith_waterman.pyx":151
+    /* "PanPA/graph_smith_waterman.pyx":153
  *         # because the dp table is 1d, I need to convert between i,j to 1d coordinates
  *         row = i * (graph_seq_len + 1)
  *         for j in range(graph_seq_len):             # <<<<<<<<<<<<<<
@@ -3247,7 +3316,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
       __pyx_v_j = __pyx_t_15;
 
-      /* "PanPA/graph_smith_waterman.pyx":154
+      /* "PanPA/graph_smith_waterman.pyx":156
  * 
  *             # counter += 1
  *             maximum = 0             # <<<<<<<<<<<<<<
@@ -3256,7 +3325,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_maximum = 0;
 
-      /* "PanPA/graph_smith_waterman.pyx":155
+      /* "PanPA/graph_smith_waterman.pyx":157
  *             # counter += 1
  *             maximum = 0
  *             j += 1             # <<<<<<<<<<<<<<
@@ -3265,7 +3334,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_j = (__pyx_v_j + 1);
 
-      /* "PanPA/graph_smith_waterman.pyx":170
+      /* "PanPA/graph_smith_waterman.pyx":172
  *             smaller than j because of the topological sorting
  *             """
  *             in_nodes.clear()             # <<<<<<<<<<<<<<
@@ -3274,7 +3343,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_in_nodes.clear();
 
-      /* "PanPA/graph_smith_waterman.pyx":171
+      /* "PanPA/graph_smith_waterman.pyx":173
  *             """
  *             in_nodes.clear()
  *             in_nodes_size = 0             # <<<<<<<<<<<<<<
@@ -3283,7 +3352,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_in_nodes_size = 0;
 
-      /* "PanPA/graph_smith_waterman.pyx":173
+      /* "PanPA/graph_smith_waterman.pyx":175
  *             in_nodes_size = 0
  * 
  *             current_node_id = j_node[j-1]  # which node corresponds to the current j             # <<<<<<<<<<<<<<
@@ -3292,7 +3361,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_current_node_id = (__pyx_v_j_node[(__pyx_v_j - 1)]);
 
-      /* "PanPA/graph_smith_waterman.pyx":174
+      /* "PanPA/graph_smith_waterman.pyx":176
  * 
  *             current_node_id = j_node[j-1]  # which node corresponds to the current j
  *             current_node_pos = j_pos[j-1]  # where in that node am I             # <<<<<<<<<<<<<<
@@ -3301,7 +3370,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_current_node_pos = (__pyx_v_j_pos[(__pyx_v_j - 1)]);
 
-      /* "PanPA/graph_smith_waterman.pyx":175
+      /* "PanPA/graph_smith_waterman.pyx":177
  *             current_node_id = j_node[j-1]  # which node corresponds to the current j
  *             current_node_pos = j_pos[j-1]  # where in that node am I
  *             if current_node_pos == 0:  # we are at a new node             # <<<<<<<<<<<<<<
@@ -3311,7 +3380,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_t_16 = (__pyx_v_current_node_pos == 0);
       if (__pyx_t_16) {
 
-        /* "PanPA/graph_smith_waterman.pyx":176
+        /* "PanPA/graph_smith_waterman.pyx":178
  *             current_node_pos = j_pos[j-1]  # where in that node am I
  *             if current_node_pos == 0:  # we are at a new node
  *                 which_node += 1             # <<<<<<<<<<<<<<
@@ -3320,7 +3389,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_which_node = (__pyx_v_which_node + 1);
 
-        /* "PanPA/graph_smith_waterman.pyx":175
+        /* "PanPA/graph_smith_waterman.pyx":177
  *             current_node_id = j_node[j-1]  # which node corresponds to the current j
  *             current_node_pos = j_pos[j-1]  # where in that node am I
  *             if current_node_pos == 0:  # we are at a new node             # <<<<<<<<<<<<<<
@@ -3329,7 +3398,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       }
 
-      /* "PanPA/graph_smith_waterman.pyx":178
+      /* "PanPA/graph_smith_waterman.pyx":180
  *                 which_node += 1
  * 
  *             for l in range(intervals[which_node], intervals[which_node + 1]):             # <<<<<<<<<<<<<<
@@ -3341,7 +3410,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       for (__pyx_t_19 = (__pyx_v_intervals[__pyx_v_which_node]); __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_l = __pyx_t_19;
 
-        /* "PanPA/graph_smith_waterman.pyx":179
+        /* "PanPA/graph_smith_waterman.pyx":181
  * 
  *             for l in range(intervals[which_node], intervals[which_node + 1]):
  *                 in_nodes.push_back(in_nodes_vec[l])             # <<<<<<<<<<<<<<
@@ -3352,11 +3421,11 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           __pyx_v_in_nodes.push_back((__pyx_v_in_nodes_vec[__pyx_v_l]));
         } catch(...) {
           __Pyx_CppExn2PyErr();
-          __PYX_ERR(0, 179, __pyx_L1_error)
+          __PYX_ERR(0, 181, __pyx_L1_error)
         }
       }
 
-      /* "PanPA/graph_smith_waterman.pyx":181
+      /* "PanPA/graph_smith_waterman.pyx":183
  *                 in_nodes.push_back(in_nodes_vec[l])
  *             # in_nodes = in_nodes_map[which_node]
  *             in_nodes_size = in_nodes.size()             # <<<<<<<<<<<<<<
@@ -3365,7 +3434,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_in_nodes_size = __pyx_v_in_nodes.size();
 
-      /* "PanPA/graph_smith_waterman.pyx":186
+      /* "PanPA/graph_smith_waterman.pyx":188
  * 
  *             # 1 and 2 situation
  *             if (current_node_pos != 0) or (current_node_pos == 0 and in_nodes_size == 0):             # <<<<<<<<<<<<<<
@@ -3389,7 +3458,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_L17_bool_binop_done:;
       if (__pyx_t_16) {
 
-        /* "PanPA/graph_smith_waterman.pyx":189
+        /* "PanPA/graph_smith_waterman.pyx":191
  *             # if (current_node_pos != 0) or :
  * 
  *                 current_cell = row + j             # <<<<<<<<<<<<<<
@@ -3398,7 +3467,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_current_cell = (__pyx_v_row + __pyx_v_j);
 
-        /* "PanPA/graph_smith_waterman.pyx":190
+        /* "PanPA/graph_smith_waterman.pyx":192
  * 
  *                 current_cell = row + j
  *                 left_cell = current_cell - 1             # <<<<<<<<<<<<<<
@@ -3407,7 +3476,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_left_cell = (__pyx_v_current_cell - 1);
 
-        /* "PanPA/graph_smith_waterman.pyx":191
+        /* "PanPA/graph_smith_waterman.pyx":193
  *                 current_cell = row + j
  *                 left_cell = current_cell - 1
  *                 above_cell = current_cell - graph_seq_len - 1             # <<<<<<<<<<<<<<
@@ -3416,7 +3485,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_above_cell = ((__pyx_v_current_cell - __pyx_v_graph_seq_len) - 1);
 
-        /* "PanPA/graph_smith_waterman.pyx":192
+        /* "PanPA/graph_smith_waterman.pyx":194
  *                 left_cell = current_cell - 1
  *                 above_cell = current_cell - graph_seq_len - 1
  *                 diagonal_cell = above_cell - 1             # <<<<<<<<<<<<<<
@@ -3425,7 +3494,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_diagonal_cell = (__pyx_v_above_cell - 1);
 
-        /* "PanPA/graph_smith_waterman.pyx":202
+        /* "PanPA/graph_smith_waterman.pyx":204
  *                 This adds a bit speed up compared to accessing key:value maps
  *                 """
  *                 match_miss = dp_table[diagonal_cell] + sub_matrix[read_as_int[i-1]*27 + all_seq_as_int[j-1]]             # <<<<<<<<<<<<<<
@@ -3434,7 +3503,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_match_miss = ((__pyx_v_dp_table[__pyx_v_diagonal_cell]) + (__pyx_v_sub_matrix[(((__pyx_v_read_as_int[(__pyx_v_i - 1)]) * 27) + (__pyx_v_all_seq_as_int[(__pyx_v_j - 1)]))]));
 
-        /* "PanPA/graph_smith_waterman.pyx":204
+        /* "PanPA/graph_smith_waterman.pyx":206
  *                 match_miss = dp_table[diagonal_cell] + sub_matrix[read_as_int[i-1]*27 + all_seq_as_int[j-1]]
  * 
  *                 deletion = dp_table[left_cell] + gap_score             # <<<<<<<<<<<<<<
@@ -3443,7 +3512,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_deletion = ((__pyx_v_dp_table[__pyx_v_left_cell]) + __pyx_v_gap_score);
 
-        /* "PanPA/graph_smith_waterman.pyx":205
+        /* "PanPA/graph_smith_waterman.pyx":207
  * 
  *                 deletion = dp_table[left_cell] + gap_score
  *                 insertion = dp_table[above_cell] + gap_score             # <<<<<<<<<<<<<<
@@ -3452,7 +3521,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_insertion = ((__pyx_v_dp_table[__pyx_v_above_cell]) + __pyx_v_gap_score);
 
-        /* "PanPA/graph_smith_waterman.pyx":207
+        /* "PanPA/graph_smith_waterman.pyx":209
  *                 insertion = dp_table[above_cell] + gap_score
  * 
  *                 local_max = max(match_miss, deletion, insertion, 0)             # <<<<<<<<<<<<<<
@@ -3485,7 +3554,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         }
         __pyx_v_local_max = __pyx_t_22;
 
-        /* "PanPA/graph_smith_waterman.pyx":211
+        /* "PanPA/graph_smith_waterman.pyx":213
  *                 # print(f"1 read/graph {chr(read_as_int[i-1]+65)}/{chr(all_seq_as_int[j-1] + 65)} match or miss score {match_miss}, deletion {deletion}, insertion {insertion}, local_max {local_max}")
  *                 # filling the traceback table
  *                 if local_max == match_miss:             # <<<<<<<<<<<<<<
@@ -3495,7 +3564,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         __pyx_t_16 = (__pyx_v_local_max == __pyx_v_match_miss);
         if (__pyx_t_16) {
 
-          /* "PanPA/graph_smith_waterman.pyx":212
+          /* "PanPA/graph_smith_waterman.pyx":214
  *                 # filling the traceback table
  *                 if local_max == match_miss:
  *                     traceback_table[current_cell] = diagonal_cell             # <<<<<<<<<<<<<<
@@ -3504,7 +3573,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           (__pyx_v_traceback_table[__pyx_v_current_cell]) = __pyx_v_diagonal_cell;
 
-          /* "PanPA/graph_smith_waterman.pyx":211
+          /* "PanPA/graph_smith_waterman.pyx":213
  *                 # print(f"1 read/graph {chr(read_as_int[i-1]+65)}/{chr(all_seq_as_int[j-1] + 65)} match or miss score {match_miss}, deletion {deletion}, insertion {insertion}, local_max {local_max}")
  *                 # filling the traceback table
  *                 if local_max == match_miss:             # <<<<<<<<<<<<<<
@@ -3514,7 +3583,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           goto __pyx_L20;
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":213
+        /* "PanPA/graph_smith_waterman.pyx":215
  *                 if local_max == match_miss:
  *                     traceback_table[current_cell] = diagonal_cell
  *                 elif local_max == deletion:             # <<<<<<<<<<<<<<
@@ -3524,7 +3593,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         __pyx_t_16 = (__pyx_v_local_max == __pyx_v_deletion);
         if (__pyx_t_16) {
 
-          /* "PanPA/graph_smith_waterman.pyx":214
+          /* "PanPA/graph_smith_waterman.pyx":216
  *                     traceback_table[current_cell] = diagonal_cell
  *                 elif local_max == deletion:
  *                     traceback_table[current_cell] = left_cell             # <<<<<<<<<<<<<<
@@ -3533,7 +3602,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           (__pyx_v_traceback_table[__pyx_v_current_cell]) = __pyx_v_left_cell;
 
-          /* "PanPA/graph_smith_waterman.pyx":213
+          /* "PanPA/graph_smith_waterman.pyx":215
  *                 if local_max == match_miss:
  *                     traceback_table[current_cell] = diagonal_cell
  *                 elif local_max == deletion:             # <<<<<<<<<<<<<<
@@ -3543,7 +3612,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           goto __pyx_L20;
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":215
+        /* "PanPA/graph_smith_waterman.pyx":217
  *                 elif local_max == deletion:
  *                     traceback_table[current_cell] = left_cell
  *                 elif local_max == insertion:             # <<<<<<<<<<<<<<
@@ -3553,7 +3622,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         __pyx_t_16 = (__pyx_v_local_max == __pyx_v_insertion);
         if (__pyx_t_16) {
 
-          /* "PanPA/graph_smith_waterman.pyx":216
+          /* "PanPA/graph_smith_waterman.pyx":218
  *                     traceback_table[current_cell] = left_cell
  *                 elif local_max == insertion:
  *                     traceback_table[current_cell] = above_cell             # <<<<<<<<<<<<<<
@@ -3562,7 +3631,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           (__pyx_v_traceback_table[__pyx_v_current_cell]) = __pyx_v_above_cell;
 
-          /* "PanPA/graph_smith_waterman.pyx":215
+          /* "PanPA/graph_smith_waterman.pyx":217
  *                 elif local_max == deletion:
  *                     traceback_table[current_cell] = left_cell
  *                 elif local_max == insertion:             # <<<<<<<<<<<<<<
@@ -3572,7 +3641,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         }
         __pyx_L20:;
 
-        /* "PanPA/graph_smith_waterman.pyx":230
+        /* "PanPA/graph_smith_waterman.pyx":232
  * 
  * 
  *                 dp_table[current_cell] = local_max             # <<<<<<<<<<<<<<
@@ -3581,7 +3650,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         (__pyx_v_dp_table[__pyx_v_current_cell]) = __pyx_v_local_max;
 
-        /* "PanPA/graph_smith_waterman.pyx":186
+        /* "PanPA/graph_smith_waterman.pyx":188
  * 
  *             # 1 and 2 situation
  *             if (current_node_pos != 0) or (current_node_pos == 0 and in_nodes_size == 0):             # <<<<<<<<<<<<<<
@@ -3591,7 +3660,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         goto __pyx_L16;
       }
 
-      /* "PanPA/graph_smith_waterman.pyx":235
+      /* "PanPA/graph_smith_waterman.pyx":237
  * 
  *             # situation 3
  *             elif (current_node_pos == 0) and (in_nodes_size != 0):             # <<<<<<<<<<<<<<
@@ -3609,7 +3678,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_L21_bool_binop_done:;
       if (__pyx_t_16) {
 
-        /* "PanPA/graph_smith_waterman.pyx":240
+        /* "PanPA/graph_smith_waterman.pyx":242
  * 
  *                 # for in nodes I only need to choose one so coord is an integer and not a vector like the global max
  *                 in_nodes_max = 0             # <<<<<<<<<<<<<<
@@ -3618,7 +3687,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_in_nodes_max = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":241
+        /* "PanPA/graph_smith_waterman.pyx":243
  *                 # for in nodes I only need to choose one so coord is an integer and not a vector like the global max
  *                 in_nodes_max = 0
  *                 in_nodes_max_coord = 0             # <<<<<<<<<<<<<<
@@ -3627,7 +3696,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_in_nodes_max_coord = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":248
+        /* "PanPA/graph_smith_waterman.pyx":250
  *                 therefore, can only need to be calculated once before looping through all incoming edges
  *                 """
  *                 current_cell = row + j             # <<<<<<<<<<<<<<
@@ -3636,7 +3705,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_current_cell = (__pyx_v_row + __pyx_v_j);
 
-        /* "PanPA/graph_smith_waterman.pyx":249
+        /* "PanPA/graph_smith_waterman.pyx":251
  *                 """
  *                 current_cell = row + j
  *                 above_cell = current_cell - graph_seq_len - 1             # <<<<<<<<<<<<<<
@@ -3645,7 +3714,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_above_cell = ((__pyx_v_current_cell - __pyx_v_graph_seq_len) - 1);
 
-        /* "PanPA/graph_smith_waterman.pyx":251
+        /* "PanPA/graph_smith_waterman.pyx":253
  *                 above_cell = current_cell - graph_seq_len - 1
  * 
  *                 insertion = dp_table[above_cell] + gap_score             # <<<<<<<<<<<<<<
@@ -3654,7 +3723,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_insertion = ((__pyx_v_dp_table[__pyx_v_above_cell]) + __pyx_v_gap_score);
 
-        /* "PanPA/graph_smith_waterman.pyx":253
+        /* "PanPA/graph_smith_waterman.pyx":255
  *                 insertion = dp_table[above_cell] + gap_score
  * 
  *                 for previous_node in in_nodes:             # <<<<<<<<<<<<<<
@@ -3666,7 +3735,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           __pyx_t_17 = *__pyx_t_23;
           __pyx_v_previous_node = __pyx_t_17;
 
-          /* "PanPA/graph_smith_waterman.pyx":257
+          /* "PanPA/graph_smith_waterman.pyx":259
  *                     # node_ends tells me where to jump in the dp table
  *                     # so instead of j-1 I get some other previous_j
  *                     previous_j = node_ends[previous_node]             # <<<<<<<<<<<<<<
@@ -3675,7 +3744,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           __pyx_v_previous_j = (__pyx_v_node_ends[__pyx_v_previous_node]);
 
-          /* "PanPA/graph_smith_waterman.pyx":259
+          /* "PanPA/graph_smith_waterman.pyx":261
  *                     previous_j = node_ends[previous_node]
  * 
  *                     left_cell = row + previous_j             # <<<<<<<<<<<<<<
@@ -3684,7 +3753,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           __pyx_v_left_cell = (__pyx_v_row + __pyx_v_previous_j);
 
-          /* "PanPA/graph_smith_waterman.pyx":260
+          /* "PanPA/graph_smith_waterman.pyx":262
  * 
  *                     left_cell = row + previous_j
  *                     diagonal_cell = left_cell - graph_seq_len - 1             # <<<<<<<<<<<<<<
@@ -3693,7 +3762,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           __pyx_v_diagonal_cell = ((__pyx_v_left_cell - __pyx_v_graph_seq_len) - 1);
 
-          /* "PanPA/graph_smith_waterman.pyx":262
+          /* "PanPA/graph_smith_waterman.pyx":264
  *                     diagonal_cell = left_cell - graph_seq_len - 1
  * 
  *                     match_miss = dp_table[diagonal_cell] + sub_matrix[read_as_int[i - 1]*27 + all_seq_as_int[j-1]]             # <<<<<<<<<<<<<<
@@ -3702,7 +3771,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           __pyx_v_match_miss = ((__pyx_v_dp_table[__pyx_v_diagonal_cell]) + (__pyx_v_sub_matrix[(((__pyx_v_read_as_int[(__pyx_v_i - 1)]) * 27) + (__pyx_v_all_seq_as_int[(__pyx_v_j - 1)]))]));
 
-          /* "PanPA/graph_smith_waterman.pyx":267
+          /* "PanPA/graph_smith_waterman.pyx":269
  *                     #       sub_matrix[read_as_int[i-1] + all_seq_as_int[j-1]], in_nodes_size)
  * 
  *                     deletion = dp_table[left_cell] + gap_score             # <<<<<<<<<<<<<<
@@ -3711,7 +3780,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           __pyx_v_deletion = ((__pyx_v_dp_table[__pyx_v_left_cell]) + __pyx_v_gap_score);
 
-          /* "PanPA/graph_smith_waterman.pyx":270
+          /* "PanPA/graph_smith_waterman.pyx":272
  * 
  *                     # updating in_nodes_max which will tell me which jump had the best score
  *                     local_max = max(match_miss, deletion, insertion, 0)             # <<<<<<<<<<<<<<
@@ -3744,7 +3813,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           }
           __pyx_v_local_max = __pyx_t_12;
 
-          /* "PanPA/graph_smith_waterman.pyx":273
+          /* "PanPA/graph_smith_waterman.pyx":275
  *                     # print(f"2 read/graph {chr(read_as_int[i - 1] + 65)}/{chr(all_seq_as_int[j - 1] + 65)} match or miss score {match_miss}, deletion {deletion}, insertion {insertion}, local_max {local_max}")
  * 
  *                     if local_max > in_nodes_max:             # <<<<<<<<<<<<<<
@@ -3754,7 +3823,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           __pyx_t_16 = (__pyx_v_local_max > __pyx_v_in_nodes_max);
           if (__pyx_t_16) {
 
-            /* "PanPA/graph_smith_waterman.pyx":275
+            /* "PanPA/graph_smith_waterman.pyx":277
  *                     if local_max > in_nodes_max:
  *                         # filling the traceback table with the potential max
  *                         if local_max == match_miss:             # <<<<<<<<<<<<<<
@@ -3764,7 +3833,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
             __pyx_t_16 = (__pyx_v_local_max == __pyx_v_match_miss);
             if (__pyx_t_16) {
 
-              /* "PanPA/graph_smith_waterman.pyx":276
+              /* "PanPA/graph_smith_waterman.pyx":278
  *                         # filling the traceback table with the potential max
  *                         if local_max == match_miss:
  *                             in_nodes_max_coord = diagonal_cell             # <<<<<<<<<<<<<<
@@ -3773,7 +3842,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
               __pyx_v_in_nodes_max_coord = __pyx_v_diagonal_cell;
 
-              /* "PanPA/graph_smith_waterman.pyx":275
+              /* "PanPA/graph_smith_waterman.pyx":277
  *                     if local_max > in_nodes_max:
  *                         # filling the traceback table with the potential max
  *                         if local_max == match_miss:             # <<<<<<<<<<<<<<
@@ -3783,7 +3852,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
               goto __pyx_L26;
             }
 
-            /* "PanPA/graph_smith_waterman.pyx":277
+            /* "PanPA/graph_smith_waterman.pyx":279
  *                         if local_max == match_miss:
  *                             in_nodes_max_coord = diagonal_cell
  *                         elif local_max == deletion:             # <<<<<<<<<<<<<<
@@ -3793,7 +3862,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
             __pyx_t_16 = (__pyx_v_local_max == __pyx_v_deletion);
             if (__pyx_t_16) {
 
-              /* "PanPA/graph_smith_waterman.pyx":278
+              /* "PanPA/graph_smith_waterman.pyx":280
  *                             in_nodes_max_coord = diagonal_cell
  *                         elif local_max == deletion:
  *                             in_nodes_max_coord = left_cell             # <<<<<<<<<<<<<<
@@ -3802,7 +3871,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
               __pyx_v_in_nodes_max_coord = __pyx_v_left_cell;
 
-              /* "PanPA/graph_smith_waterman.pyx":277
+              /* "PanPA/graph_smith_waterman.pyx":279
  *                         if local_max == match_miss:
  *                             in_nodes_max_coord = diagonal_cell
  *                         elif local_max == deletion:             # <<<<<<<<<<<<<<
@@ -3812,7 +3881,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
               goto __pyx_L26;
             }
 
-            /* "PanPA/graph_smith_waterman.pyx":279
+            /* "PanPA/graph_smith_waterman.pyx":281
  *                         elif local_max == deletion:
  *                             in_nodes_max_coord = left_cell
  *                         elif local_max == insertion:             # <<<<<<<<<<<<<<
@@ -3822,7 +3891,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
             __pyx_t_16 = (__pyx_v_local_max == __pyx_v_insertion);
             if (__pyx_t_16) {
 
-              /* "PanPA/graph_smith_waterman.pyx":280
+              /* "PanPA/graph_smith_waterman.pyx":282
  *                             in_nodes_max_coord = left_cell
  *                         elif local_max == insertion:
  *                             in_nodes_max_coord = above_cell             # <<<<<<<<<<<<<<
@@ -3831,7 +3900,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
               __pyx_v_in_nodes_max_coord = __pyx_v_above_cell;
 
-              /* "PanPA/graph_smith_waterman.pyx":279
+              /* "PanPA/graph_smith_waterman.pyx":281
  *                         elif local_max == deletion:
  *                             in_nodes_max_coord = left_cell
  *                         elif local_max == insertion:             # <<<<<<<<<<<<<<
@@ -3841,7 +3910,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
             }
             __pyx_L26:;
 
-            /* "PanPA/graph_smith_waterman.pyx":282
+            /* "PanPA/graph_smith_waterman.pyx":284
  *                             in_nodes_max_coord = above_cell
  * 
  *                         in_nodes_max = local_max             # <<<<<<<<<<<<<<
@@ -3850,7 +3919,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
             __pyx_v_in_nodes_max = __pyx_v_local_max;
 
-            /* "PanPA/graph_smith_waterman.pyx":273
+            /* "PanPA/graph_smith_waterman.pyx":275
  *                     # print(f"2 read/graph {chr(read_as_int[i - 1] + 65)}/{chr(all_seq_as_int[j - 1] + 65)} match or miss score {match_miss}, deletion {deletion}, insertion {insertion}, local_max {local_max}")
  * 
  *                     if local_max > in_nodes_max:             # <<<<<<<<<<<<<<
@@ -3859,7 +3928,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           }
 
-          /* "PanPA/graph_smith_waterman.pyx":253
+          /* "PanPA/graph_smith_waterman.pyx":255
  *                 insertion = dp_table[above_cell] + gap_score
  * 
  *                 for previous_node in in_nodes:             # <<<<<<<<<<<<<<
@@ -3868,7 +3937,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":292
+        /* "PanPA/graph_smith_waterman.pyx":294
  *                 #     global_max_coord.push_back(current_cell)
  * 
  *                 traceback_table[current_cell] = in_nodes_max_coord             # <<<<<<<<<<<<<<
@@ -3877,7 +3946,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         (__pyx_v_traceback_table[__pyx_v_current_cell]) = __pyx_v_in_nodes_max_coord;
 
-        /* "PanPA/graph_smith_waterman.pyx":293
+        /* "PanPA/graph_smith_waterman.pyx":295
  * 
  *                 traceback_table[current_cell] = in_nodes_max_coord
  *                 dp_table[current_cell] = in_nodes_max             # <<<<<<<<<<<<<<
@@ -3886,7 +3955,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         (__pyx_v_dp_table[__pyx_v_current_cell]) = __pyx_v_in_nodes_max;
 
-        /* "PanPA/graph_smith_waterman.pyx":235
+        /* "PanPA/graph_smith_waterman.pyx":237
  * 
  *             # situation 3
  *             elif (current_node_pos == 0) and (in_nodes_size != 0):             # <<<<<<<<<<<<<<
@@ -3898,7 +3967,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     }
   }
 
-  /* "PanPA/graph_smith_waterman.pyx":296
+  /* "PanPA/graph_smith_waterman.pyx":298
  * 
  *     # print(counter)
  *     if print_dp:             # <<<<<<<<<<<<<<
@@ -3907,7 +3976,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   if (__pyx_v_print_dp) {
 
-    /* "PanPA/graph_smith_waterman.pyx":297
+    /* "PanPA/graph_smith_waterman.pyx":299
  *     # print(counter)
  *     if print_dp:
  *         print("This is the dp table\n")             # <<<<<<<<<<<<<<
@@ -3920,21 +3989,21 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       PyObject *__pyx_callargs[2] = {__pyx_t_24, __pyx_mstate_global->__pyx_kp_u_This_is_the_dp_table};
       __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_25, (2-__pyx_t_25) | (__pyx_t_25*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_24); __pyx_t_24 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 297, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 299, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "PanPA/graph_smith_waterman.pyx":298
+    /* "PanPA/graph_smith_waterman.pyx":300
  *     if print_dp:
  *         print("This is the dp table\n")
  *         print_dp_table(graph_seq_len, read_len, dp_table, all_seq_as_int, read_as_int)             # <<<<<<<<<<<<<<
  *         print("This is the traceback table\n")
  *         print_dp_table(graph_seq_len, read_len, traceback_table, all_seq_as_int, read_as_int)
 */
-    __pyx_f_5PanPA_20graph_smith_waterman_print_dp_table(__pyx_v_graph_seq_len, __pyx_v_read_len, __pyx_v_dp_table, __pyx_v_all_seq_as_int, __pyx_v_read_as_int); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 298, __pyx_L1_error)
+    __pyx_f_5PanPA_20graph_smith_waterman_print_dp_table(__pyx_v_graph_seq_len, __pyx_v_read_len, __pyx_v_dp_table, __pyx_v_all_seq_as_int, __pyx_v_read_as_int); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 300, __pyx_L1_error)
 
-    /* "PanPA/graph_smith_waterman.pyx":299
+    /* "PanPA/graph_smith_waterman.pyx":301
  *         print("This is the dp table\n")
  *         print_dp_table(graph_seq_len, read_len, dp_table, all_seq_as_int, read_as_int)
  *         print("This is the traceback table\n")             # <<<<<<<<<<<<<<
@@ -3947,21 +4016,21 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       PyObject *__pyx_callargs[2] = {__pyx_t_24, __pyx_mstate_global->__pyx_kp_u_This_is_the_traceback_table};
       __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_25, (2-__pyx_t_25) | (__pyx_t_25*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_24); __pyx_t_24 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 299, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 301, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "PanPA/graph_smith_waterman.pyx":300
+    /* "PanPA/graph_smith_waterman.pyx":302
  *         print_dp_table(graph_seq_len, read_len, dp_table, all_seq_as_int, read_as_int)
  *         print("This is the traceback table\n")
  *         print_dp_table(graph_seq_len, read_len, traceback_table, all_seq_as_int, read_as_int)             # <<<<<<<<<<<<<<
  * 
  *     ###############################################################################################
 */
-    __pyx_f_5PanPA_20graph_smith_waterman_print_dp_table(__pyx_v_graph_seq_len, __pyx_v_read_len, __pyx_v_traceback_table, __pyx_v_all_seq_as_int, __pyx_v_read_as_int); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 300, __pyx_L1_error)
+    __pyx_f_5PanPA_20graph_smith_waterman_print_dp_table(__pyx_v_graph_seq_len, __pyx_v_read_len, __pyx_v_traceback_table, __pyx_v_all_seq_as_int, __pyx_v_read_as_int); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 302, __pyx_L1_error)
 
-    /* "PanPA/graph_smith_waterman.pyx":296
+    /* "PanPA/graph_smith_waterman.pyx":298
  * 
  *     # print(counter)
  *     if print_dp:             # <<<<<<<<<<<<<<
@@ -3970,7 +4039,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   }
 
-  /* "PanPA/graph_smith_waterman.pyx":304
+  /* "PanPA/graph_smith_waterman.pyx":306
  *     ###############################################################################################
  *     # finding the max scores and coordinates in the DP table to traceback these best alignments
  *     for i in range(dimensions):             # <<<<<<<<<<<<<<
@@ -3982,7 +4051,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
     __pyx_v_i = __pyx_t_7;
 
-    /* "PanPA/graph_smith_waterman.pyx":307
+    /* "PanPA/graph_smith_waterman.pyx":309
  *         # had to add the > 0 check because on rare occasions, if the read being aligned really have nothing matching
  *         # the algorithm for some reason was getting stuck
  *         if dp_table[i] > 0:             # <<<<<<<<<<<<<<
@@ -3992,7 +4061,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     __pyx_t_16 = ((__pyx_v_dp_table[__pyx_v_i]) > 0);
     if (__pyx_t_16) {
 
-      /* "PanPA/graph_smith_waterman.pyx":308
+      /* "PanPA/graph_smith_waterman.pyx":310
  *         # the algorithm for some reason was getting stuck
  *         if dp_table[i] > 0:
  *             if dp_table[i] > global_max:             # <<<<<<<<<<<<<<
@@ -4002,7 +4071,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_t_16 = ((__pyx_v_dp_table[__pyx_v_i]) > __pyx_v_global_max);
       if (__pyx_t_16) {
 
-        /* "PanPA/graph_smith_waterman.pyx":309
+        /* "PanPA/graph_smith_waterman.pyx":311
  *         if dp_table[i] > 0:
  *             if dp_table[i] > global_max:
  *                 global_max = dp_table[i]             # <<<<<<<<<<<<<<
@@ -4011,7 +4080,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_global_max = (__pyx_v_dp_table[__pyx_v_i]);
 
-        /* "PanPA/graph_smith_waterman.pyx":310
+        /* "PanPA/graph_smith_waterman.pyx":312
  *             if dp_table[i] > global_max:
  *                 global_max = dp_table[i]
  *                 global_max_coord.clear()             # <<<<<<<<<<<<<<
@@ -4020,7 +4089,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_global_max_coord.clear();
 
-        /* "PanPA/graph_smith_waterman.pyx":311
+        /* "PanPA/graph_smith_waterman.pyx":313
  *                 global_max = dp_table[i]
  *                 global_max_coord.clear()
  *                 global_max_coord.push_back(i)             # <<<<<<<<<<<<<<
@@ -4031,10 +4100,10 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           __pyx_v_global_max_coord.push_back(__pyx_v_i);
         } catch(...) {
           __Pyx_CppExn2PyErr();
-          __PYX_ERR(0, 311, __pyx_L1_error)
+          __PYX_ERR(0, 313, __pyx_L1_error)
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":308
+        /* "PanPA/graph_smith_waterman.pyx":310
  *         # the algorithm for some reason was getting stuck
  *         if dp_table[i] > 0:
  *             if dp_table[i] > global_max:             # <<<<<<<<<<<<<<
@@ -4044,7 +4113,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         goto __pyx_L32;
       }
 
-      /* "PanPA/graph_smith_waterman.pyx":312
+      /* "PanPA/graph_smith_waterman.pyx":314
  *                 global_max_coord.clear()
  *                 global_max_coord.push_back(i)
  *             elif dp_table[i] == global_max:             # <<<<<<<<<<<<<<
@@ -4054,7 +4123,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_t_16 = ((__pyx_v_dp_table[__pyx_v_i]) == __pyx_v_global_max);
       if (__pyx_t_16) {
 
-        /* "PanPA/graph_smith_waterman.pyx":313
+        /* "PanPA/graph_smith_waterman.pyx":315
  *                 global_max_coord.push_back(i)
  *             elif dp_table[i] == global_max:
  *                 global_max_coord.push_back(i)             # <<<<<<<<<<<<<<
@@ -4065,10 +4134,10 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           __pyx_v_global_max_coord.push_back(__pyx_v_i);
         } catch(...) {
           __Pyx_CppExn2PyErr();
-          __PYX_ERR(0, 313, __pyx_L1_error)
+          __PYX_ERR(0, 315, __pyx_L1_error)
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":312
+        /* "PanPA/graph_smith_waterman.pyx":314
  *                 global_max_coord.clear()
  *                 global_max_coord.push_back(i)
  *             elif dp_table[i] == global_max:             # <<<<<<<<<<<<<<
@@ -4078,7 +4147,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       }
       __pyx_L32:;
 
-      /* "PanPA/graph_smith_waterman.pyx":307
+      /* "PanPA/graph_smith_waterman.pyx":309
  *         # had to add the > 0 check because on rare occasions, if the read being aligned really have nothing matching
  *         # the algorithm for some reason was getting stuck
  *         if dp_table[i] > 0:             # <<<<<<<<<<<<<<
@@ -4088,7 +4157,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     }
   }
 
-  /* "PanPA/graph_smith_waterman.pyx":320
+  /* "PanPA/graph_smith_waterman.pyx":322
  *     cdef Alignment alignment
  *     cdef int traceback_max, back_j, back_i, alignment_len
  *     cdef int test = 0             # <<<<<<<<<<<<<<
@@ -4097,7 +4166,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   __pyx_v_test = 0;
 
-  /* "PanPA/graph_smith_waterman.pyx":324
+  /* "PanPA/graph_smith_waterman.pyx":326
  *     # print(j_node, j_pos)
  * 
  *     for coord in global_max_coord:             # <<<<<<<<<<<<<<
@@ -4109,7 +4178,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     __pyx_t_5 = *__pyx_t_23;
     __pyx_v_coord = __pyx_t_5;
 
-    /* "PanPA/graph_smith_waterman.pyx":325
+    /* "PanPA/graph_smith_waterman.pyx":327
  * 
  *     for coord in global_max_coord:
  *         alignment = Alignment(read_name, read_len, global_max)             # <<<<<<<<<<<<<<
@@ -4117,9 +4186,9 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
  *         traceback_max = dp_table[coord]
 */
     __pyx_t_24 = NULL;
-    __pyx_t_26 = __Pyx_PyLong_From_int(__pyx_v_read_len); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 325, __pyx_L1_error)
+    __pyx_t_26 = __Pyx_PyLong_From_int(__pyx_v_read_len); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 327, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_26);
-    __pyx_t_27 = __Pyx_PyLong_From_int(__pyx_v_global_max); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 325, __pyx_L1_error)
+    __pyx_t_27 = __Pyx_PyLong_From_int(__pyx_v_global_max); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 327, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_27);
     __pyx_t_25 = 1;
     {
@@ -4128,13 +4197,13 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __Pyx_XDECREF(__pyx_t_24); __pyx_t_24 = 0;
       __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
       __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 325, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_GOTREF((PyObject *)__pyx_t_1);
     }
     __Pyx_XDECREF_SET(__pyx_v_alignment, ((struct __pyx_obj_5PanPA_9Alignment_Alignment *)__pyx_t_1));
     __pyx_t_1 = 0;
 
-    /* "PanPA/graph_smith_waterman.pyx":327
+    /* "PanPA/graph_smith_waterman.pyx":329
  *         alignment = Alignment(read_name, read_len, global_max)
  * 
  *         traceback_max = dp_table[coord]             # <<<<<<<<<<<<<<
@@ -4143,7 +4212,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
     __pyx_v_traceback_max = (__pyx_v_dp_table[__pyx_v_coord]);
 
-    /* "PanPA/graph_smith_waterman.pyx":328
+    /* "PanPA/graph_smith_waterman.pyx":330
  * 
  *         traceback_max = dp_table[coord]
  *         i = coord // (graph_seq_len + 1)             # <<<<<<<<<<<<<<
@@ -4153,15 +4222,15 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     __pyx_t_12 = (__pyx_v_graph_seq_len + 1);
     if (unlikely(__pyx_t_12 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-      __PYX_ERR(0, 328, __pyx_L1_error)
+      __PYX_ERR(0, 330, __pyx_L1_error)
     }
     else if (sizeof(long) == sizeof(long) && (!(((long)-1) > 0)) && unlikely(__pyx_t_12 == (long)-1)  && unlikely(__Pyx_UNARY_NEG_WOULD_OVERFLOW(__pyx_v_coord))) {
       PyErr_SetString(PyExc_OverflowError, "value too large to perform division");
-      __PYX_ERR(0, 328, __pyx_L1_error)
+      __PYX_ERR(0, 330, __pyx_L1_error)
     }
     __pyx_v_i = __Pyx_div_long(__pyx_v_coord, __pyx_t_12, 0);
 
-    /* "PanPA/graph_smith_waterman.pyx":329
+    /* "PanPA/graph_smith_waterman.pyx":331
  *         traceback_max = dp_table[coord]
  *         i = coord // (graph_seq_len + 1)
  *         j = coord % (graph_seq_len + 1)             # <<<<<<<<<<<<<<
@@ -4171,11 +4240,11 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     __pyx_t_12 = (__pyx_v_graph_seq_len + 1);
     if (unlikely(__pyx_t_12 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-      __PYX_ERR(0, 329, __pyx_L1_error)
+      __PYX_ERR(0, 331, __pyx_L1_error)
     }
     __pyx_v_j = __Pyx_mod_long(__pyx_v_coord, __pyx_t_12, 0);
 
-    /* "PanPA/graph_smith_waterman.pyx":333
+    /* "PanPA/graph_smith_waterman.pyx":335
  *         # while not first row or column, and not a 0 score (maybe alignment just ended in the middle)
  *         # while ((i != 0) and (j != 0)) and (dp_table[coord] != 0):
  *         while ((i != 0) and (j != 0)) and (dp_table[coord] != 0):             # <<<<<<<<<<<<<<
@@ -4200,7 +4269,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_L37_bool_binop_done:;
       if (!__pyx_t_16) break;
 
-      /* "PanPA/graph_smith_waterman.pyx":336
+      /* "PanPA/graph_smith_waterman.pyx":338
  *             # print("current: coord, i, j", coord, i, j)
  * 
  *             back_coord = traceback_table[coord]             # <<<<<<<<<<<<<<
@@ -4209,7 +4278,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_back_coord = (__pyx_v_traceback_table[__pyx_v_coord]);
 
-      /* "PanPA/graph_smith_waterman.pyx":337
+      /* "PanPA/graph_smith_waterman.pyx":339
  * 
  *             back_coord = traceback_table[coord]
  *             back_i = back_coord // (graph_seq_len + 1)             # <<<<<<<<<<<<<<
@@ -4219,15 +4288,15 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_t_12 = (__pyx_v_graph_seq_len + 1);
       if (unlikely(__pyx_t_12 == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 337, __pyx_L1_error)
+        __PYX_ERR(0, 339, __pyx_L1_error)
       }
       else if (sizeof(long) == sizeof(long) && (!(((long)-1) > 0)) && unlikely(__pyx_t_12 == (long)-1)  && unlikely(__Pyx_UNARY_NEG_WOULD_OVERFLOW(__pyx_v_back_coord))) {
         PyErr_SetString(PyExc_OverflowError, "value too large to perform division");
-        __PYX_ERR(0, 337, __pyx_L1_error)
+        __PYX_ERR(0, 339, __pyx_L1_error)
       }
       __pyx_v_back_i = __Pyx_div_long(__pyx_v_back_coord, __pyx_t_12, 0);
 
-      /* "PanPA/graph_smith_waterman.pyx":338
+      /* "PanPA/graph_smith_waterman.pyx":340
  *             back_coord = traceback_table[coord]
  *             back_i = back_coord // (graph_seq_len + 1)
  *             back_j = back_coord % (graph_seq_len + 1)             # <<<<<<<<<<<<<<
@@ -4237,11 +4306,11 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_t_12 = (__pyx_v_graph_seq_len + 1);
       if (unlikely(__pyx_t_12 == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-        __PYX_ERR(0, 338, __pyx_L1_error)
+        __PYX_ERR(0, 340, __pyx_L1_error)
       }
       __pyx_v_back_j = __Pyx_mod_long(__pyx_v_back_coord, __pyx_t_12, 0);
 
-      /* "PanPA/graph_smith_waterman.pyx":342
+      /* "PanPA/graph_smith_waterman.pyx":344
  *             # self.info.append({"node_id": node_id, "node_pos": node_pos, "node_str": node_str,
  *             #               "read_pos": read_pos, "read_str": read_str, "cigar": cigar})
  *             if back_j == j:  # insertion             # <<<<<<<<<<<<<<
@@ -4251,7 +4320,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_t_16 = (__pyx_v_back_j == __pyx_v_j);
       if (__pyx_t_16) {
 
-        /* "PanPA/graph_smith_waterman.pyx":345
+        /* "PanPA/graph_smith_waterman.pyx":347
  *                 # print("insertion")
  *                 # alignment.add_alignment(j_node[j - 1], -1, j_pos[j-1], read_as_int[i - 1], i - 1)
  *                 alignment.info.append(             # <<<<<<<<<<<<<<
@@ -4260,33 +4329,33 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         if (unlikely(__pyx_v_alignment->info == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 345, __pyx_L1_error)
+          __PYX_ERR(0, 347, __pyx_L1_error)
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":346
+        /* "PanPA/graph_smith_waterman.pyx":348
  *                 # alignment.add_alignment(j_node[j - 1], -1, j_pos[j-1], read_as_int[i - 1], i - 1)
  *                 alignment.info.append(
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": "_", "read_pos": i - 1,             # <<<<<<<<<<<<<<
  *                      "read_str": read[i - 1], "type": 0})
  *                 alignment.path.append(j_node[j - 1])
 */
-        __pyx_t_1 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 348, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 346, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 348, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_id, __pyx_t_27) < (0)) __PYX_ERR(0, 346, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_id, __pyx_t_27) < (0)) __PYX_ERR(0, 348, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_pos[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 346, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_pos[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 348, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 346, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 348, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_str, __pyx_mstate_global->__pyx_n_u__5) < (0)) __PYX_ERR(0, 346, __pyx_L1_error)
-        __pyx_t_27 = __Pyx_PyLong_From_long((__pyx_v_i - 1)); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 346, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_str, __pyx_mstate_global->__pyx_n_u__6) < (0)) __PYX_ERR(0, 348, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_long((__pyx_v_i - 1)); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 348, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 346, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 348, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":347
+        /* "PanPA/graph_smith_waterman.pyx":349
  *                 alignment.info.append(
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": "_", "read_pos": i - 1,
  *                      "read_str": read[i - 1], "type": 0})             # <<<<<<<<<<<<<<
@@ -4294,24 +4363,24 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
  *                 alignment.n_indels += 1
 */
         __pyx_t_12 = (__pyx_v_i - 1);
-        __pyx_t_28 = __Pyx_GetItemInt_Unicode(__pyx_v_read, __pyx_t_12, long, 1, __Pyx_PyLong_From_long, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_28 == (Py_UCS4)-1)) __PYX_ERR(0, 347, __pyx_L1_error)
-        __pyx_t_27 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_28); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 347, __pyx_L1_error)
+        __pyx_t_28 = __Pyx_GetItemInt_Unicode(__pyx_v_read, __pyx_t_12, long, 1, __Pyx_PyLong_From_long, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_28 == (Py_UCS4)-1)) __PYX_ERR(0, 349, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_28); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 349, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_str, __pyx_t_27) < (0)) __PYX_ERR(0, 346, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_str, __pyx_t_27) < (0)) __PYX_ERR(0, 348, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_type, __pyx_mstate_global->__pyx_int_0) < (0)) __PYX_ERR(0, 346, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_type, __pyx_mstate_global->__pyx_int_0) < (0)) __PYX_ERR(0, 348, __pyx_L1_error)
 
-        /* "PanPA/graph_smith_waterman.pyx":345
+        /* "PanPA/graph_smith_waterman.pyx":347
  *                 # print("insertion")
  *                 # alignment.add_alignment(j_node[j - 1], -1, j_pos[j-1], read_as_int[i - 1], i - 1)
  *                 alignment.info.append(             # <<<<<<<<<<<<<<
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": "_", "read_pos": i - 1,
  *                      "read_str": read[i - 1], "type": 0})
 */
-        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->info, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 345, __pyx_L1_error)
+        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->info, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 347, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":348
+        /* "PanPA/graph_smith_waterman.pyx":350
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": "_", "read_pos": i - 1,
  *                      "read_str": read[i - 1], "type": 0})
  *                 alignment.path.append(j_node[j - 1])             # <<<<<<<<<<<<<<
@@ -4320,14 +4389,14 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         if (unlikely(__pyx_v_alignment->path == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 348, __pyx_L1_error)
+          __PYX_ERR(0, 350, __pyx_L1_error)
         }
-        __pyx_t_1 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 348, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 350, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->path, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 348, __pyx_L1_error)
+        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->path, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 350, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":349
+        /* "PanPA/graph_smith_waterman.pyx":351
  *                      "read_str": read[i - 1], "type": 0})
  *                 alignment.path.append(j_node[j - 1])
  *                 alignment.n_indels += 1             # <<<<<<<<<<<<<<
@@ -4336,7 +4405,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_alignment->n_indels = (__pyx_v_alignment->n_indels + 1);
 
-        /* "PanPA/graph_smith_waterman.pyx":342
+        /* "PanPA/graph_smith_waterman.pyx":344
  *             # self.info.append({"node_id": node_id, "node_pos": node_pos, "node_str": node_str,
  *             #               "read_pos": read_pos, "read_str": read_str, "cigar": cigar})
  *             if back_j == j:  # insertion             # <<<<<<<<<<<<<<
@@ -4346,7 +4415,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         goto __pyx_L40;
       }
 
-      /* "PanPA/graph_smith_waterman.pyx":351
+      /* "PanPA/graph_smith_waterman.pyx":353
  *                 alignment.n_indels += 1
  * 
  *             elif back_i == i:  # deletion             # <<<<<<<<<<<<<<
@@ -4356,7 +4425,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_t_16 = (__pyx_v_back_i == __pyx_v_i);
       if (__pyx_t_16) {
 
-        /* "PanPA/graph_smith_waterman.pyx":354
+        /* "PanPA/graph_smith_waterman.pyx":356
  *                 # print("deletion")
  *                 # alignment.add_alignment(j_node[j - 1], all_seq_as_int[j-1], j_pos[j - 1], -1, i - 1)
  *                 alignment.info.append(             # <<<<<<<<<<<<<<
@@ -4365,56 +4434,56 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         if (unlikely(__pyx_v_alignment->info == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 354, __pyx_L1_error)
+          __PYX_ERR(0, 356, __pyx_L1_error)
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":355
+        /* "PanPA/graph_smith_waterman.pyx":357
  *                 # alignment.add_alignment(j_node[j - 1], all_seq_as_int[j-1], j_pos[j - 1], -1, i - 1)
  *                 alignment.info.append(
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": chr(all_seq_as_int[j - 1] + 65),             # <<<<<<<<<<<<<<
  *                      "read_pos": i - 1, "read_str": "_", "type": 1})
  *                 alignment.path.append(j_node[j - 1])
 */
-        __pyx_t_1 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 355, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 357, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_id, __pyx_t_27) < (0)) __PYX_ERR(0, 355, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_id, __pyx_t_27) < (0)) __PYX_ERR(0, 357, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_pos[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 355, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_pos[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 357, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 355, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 357, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        __pyx_t_27 = PyUnicode_FromOrdinal(((__pyx_v_all_seq_as_int[(__pyx_v_j - 1)]) + 65)); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 355, __pyx_L1_error)
+        __pyx_t_27 = PyUnicode_FromOrdinal(((__pyx_v_all_seq_as_int[(__pyx_v_j - 1)]) + 65)); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 357, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_str, __pyx_t_27) < (0)) __PYX_ERR(0, 355, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_str, __pyx_t_27) < (0)) __PYX_ERR(0, 357, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":356
+        /* "PanPA/graph_smith_waterman.pyx":358
  *                 alignment.info.append(
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": chr(all_seq_as_int[j - 1] + 65),
  *                      "read_pos": i - 1, "read_str": "_", "type": 1})             # <<<<<<<<<<<<<<
  *                 alignment.path.append(j_node[j - 1])
  *                 alignment.n_indels += 1
 */
-        __pyx_t_27 = __Pyx_PyLong_From_long((__pyx_v_i - 1)); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 356, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_long((__pyx_v_i - 1)); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 358, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 355, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 357, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_str, __pyx_mstate_global->__pyx_n_u__5) < (0)) __PYX_ERR(0, 355, __pyx_L1_error)
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_type, __pyx_mstate_global->__pyx_int_1) < (0)) __PYX_ERR(0, 355, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_str, __pyx_mstate_global->__pyx_n_u__6) < (0)) __PYX_ERR(0, 357, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_type, __pyx_mstate_global->__pyx_int_1) < (0)) __PYX_ERR(0, 357, __pyx_L1_error)
 
-        /* "PanPA/graph_smith_waterman.pyx":354
+        /* "PanPA/graph_smith_waterman.pyx":356
  *                 # print("deletion")
  *                 # alignment.add_alignment(j_node[j - 1], all_seq_as_int[j-1], j_pos[j - 1], -1, i - 1)
  *                 alignment.info.append(             # <<<<<<<<<<<<<<
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": chr(all_seq_as_int[j - 1] + 65),
  *                      "read_pos": i - 1, "read_str": "_", "type": 1})
 */
-        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->info, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 354, __pyx_L1_error)
+        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->info, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 356, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":357
+        /* "PanPA/graph_smith_waterman.pyx":359
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": chr(all_seq_as_int[j - 1] + 65),
  *                      "read_pos": i - 1, "read_str": "_", "type": 1})
  *                 alignment.path.append(j_node[j - 1])             # <<<<<<<<<<<<<<
@@ -4423,14 +4492,14 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         if (unlikely(__pyx_v_alignment->path == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 357, __pyx_L1_error)
+          __PYX_ERR(0, 359, __pyx_L1_error)
         }
-        __pyx_t_1 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->path, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 357, __pyx_L1_error)
+        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->path, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 359, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":358
+        /* "PanPA/graph_smith_waterman.pyx":360
  *                      "read_pos": i - 1, "read_str": "_", "type": 1})
  *                 alignment.path.append(j_node[j - 1])
  *                 alignment.n_indels += 1             # <<<<<<<<<<<<<<
@@ -4439,7 +4508,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         __pyx_v_alignment->n_indels = (__pyx_v_alignment->n_indels + 1);
 
-        /* "PanPA/graph_smith_waterman.pyx":351
+        /* "PanPA/graph_smith_waterman.pyx":353
  *                 alignment.n_indels += 1
  * 
  *             elif back_i == i:  # deletion             # <<<<<<<<<<<<<<
@@ -4449,7 +4518,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         goto __pyx_L40;
       }
 
-      /* "PanPA/graph_smith_waterman.pyx":360
+      /* "PanPA/graph_smith_waterman.pyx":362
  *                 alignment.n_indels += 1
  * 
  *             elif back_i == i - 1:  # match or miss             # <<<<<<<<<<<<<<
@@ -4459,19 +4528,19 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       __pyx_t_16 = (__pyx_v_back_i == (__pyx_v_i - 1));
       if (__pyx_t_16) {
 
-        /* "PanPA/graph_smith_waterman.pyx":362
+        /* "PanPA/graph_smith_waterman.pyx":364
  *             elif back_i == i - 1:  # match or miss
  *                 # print("match or mismatch")
  *                 graph_character = chr(all_seq_as_int[j - 1] + 65)             # <<<<<<<<<<<<<<
  *                 if graph_character == read[i - 1]:
  *                     cigar = 2
 */
-        __pyx_t_1 = PyUnicode_FromOrdinal(((__pyx_v_all_seq_as_int[(__pyx_v_j - 1)]) + 65)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 362, __pyx_L1_error)
+        __pyx_t_1 = PyUnicode_FromOrdinal(((__pyx_v_all_seq_as_int[(__pyx_v_j - 1)]) + 65)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 364, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_XDECREF_SET(__pyx_v_graph_character, ((PyObject*)__pyx_t_1));
         __pyx_t_1 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":363
+        /* "PanPA/graph_smith_waterman.pyx":365
  *                 # print("match or mismatch")
  *                 graph_character = chr(all_seq_as_int[j - 1] + 65)
  *                 if graph_character == read[i - 1]:             # <<<<<<<<<<<<<<
@@ -4479,14 +4548,14 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
  *                     alignment.n_matches += 1
 */
         __pyx_t_12 = (__pyx_v_i - 1);
-        __pyx_t_28 = __Pyx_GetItemInt_Unicode(__pyx_v_read, __pyx_t_12, long, 1, __Pyx_PyLong_From_long, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_28 == (Py_UCS4)-1)) __PYX_ERR(0, 363, __pyx_L1_error)
-        __pyx_t_1 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_28); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
+        __pyx_t_28 = __Pyx_GetItemInt_Unicode(__pyx_v_read, __pyx_t_12, long, 1, __Pyx_PyLong_From_long, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_28 == (Py_UCS4)-1)) __PYX_ERR(0, 365, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_28); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 365, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_16 = (__Pyx_PyUnicode_Equals(__pyx_v_graph_character, __pyx_t_1, Py_EQ)); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 363, __pyx_L1_error)
+        __pyx_t_16 = (__Pyx_PyUnicode_Equals(__pyx_v_graph_character, __pyx_t_1, Py_EQ)); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 365, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         if (__pyx_t_16) {
 
-          /* "PanPA/graph_smith_waterman.pyx":364
+          /* "PanPA/graph_smith_waterman.pyx":366
  *                 graph_character = chr(all_seq_as_int[j - 1] + 65)
  *                 if graph_character == read[i - 1]:
  *                     cigar = 2             # <<<<<<<<<<<<<<
@@ -4495,7 +4564,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           __pyx_v_cigar = 2;
 
-          /* "PanPA/graph_smith_waterman.pyx":365
+          /* "PanPA/graph_smith_waterman.pyx":367
  *                 if graph_character == read[i - 1]:
  *                     cigar = 2
  *                     alignment.n_matches += 1             # <<<<<<<<<<<<<<
@@ -4504,7 +4573,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
           __pyx_v_alignment->n_matches = (__pyx_v_alignment->n_matches + 1);
 
-          /* "PanPA/graph_smith_waterman.pyx":363
+          /* "PanPA/graph_smith_waterman.pyx":365
  *                 # print("match or mismatch")
  *                 graph_character = chr(all_seq_as_int[j - 1] + 65)
  *                 if graph_character == read[i - 1]:             # <<<<<<<<<<<<<<
@@ -4514,7 +4583,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
           goto __pyx_L41;
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":367
+        /* "PanPA/graph_smith_waterman.pyx":369
  *                     alignment.n_matches += 1
  *                 else:
  *                     cigar = 3             # <<<<<<<<<<<<<<
@@ -4524,7 +4593,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         /*else*/ {
           __pyx_v_cigar = 3;
 
-          /* "PanPA/graph_smith_waterman.pyx":368
+          /* "PanPA/graph_smith_waterman.pyx":370
  *                 else:
  *                     cigar = 3
  *                     alignment.n_mismatches += 1             # <<<<<<<<<<<<<<
@@ -4535,7 +4604,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         }
         __pyx_L41:;
 
-        /* "PanPA/graph_smith_waterman.pyx":369
+        /* "PanPA/graph_smith_waterman.pyx":371
  *                     cigar = 3
  *                     alignment.n_mismatches += 1
  *                 alignment.info.append(             # <<<<<<<<<<<<<<
@@ -4544,33 +4613,33 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         if (unlikely(__pyx_v_alignment->info == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 369, __pyx_L1_error)
+          __PYX_ERR(0, 371, __pyx_L1_error)
         }
 
-        /* "PanPA/graph_smith_waterman.pyx":370
+        /* "PanPA/graph_smith_waterman.pyx":372
  *                     alignment.n_mismatches += 1
  *                 alignment.info.append(
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": graph_character, "read_pos": i - 1,             # <<<<<<<<<<<<<<
  *                      "read_str": read[i - 1], "type": cigar})
  *                 alignment.path.append(j_node[j - 1])
 */
-        __pyx_t_1 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 370, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 370, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_id, __pyx_t_27) < (0)) __PYX_ERR(0, 370, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_id, __pyx_t_27) < (0)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_pos[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 370, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_int((__pyx_v_j_pos[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 370, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_str, __pyx_v_graph_character) < (0)) __PYX_ERR(0, 370, __pyx_L1_error)
-        __pyx_t_27 = __Pyx_PyLong_From_long((__pyx_v_i - 1)); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 370, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_node_str, __pyx_v_graph_character) < (0)) __PYX_ERR(0, 372, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_long((__pyx_v_i - 1)); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 370, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_pos, __pyx_t_27) < (0)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":371
+        /* "PanPA/graph_smith_waterman.pyx":373
  *                 alignment.info.append(
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": graph_character, "read_pos": i - 1,
  *                      "read_str": read[i - 1], "type": cigar})             # <<<<<<<<<<<<<<
@@ -4578,27 +4647,27 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
  * 
 */
         __pyx_t_12 = (__pyx_v_i - 1);
-        __pyx_t_28 = __Pyx_GetItemInt_Unicode(__pyx_v_read, __pyx_t_12, long, 1, __Pyx_PyLong_From_long, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_28 == (Py_UCS4)-1)) __PYX_ERR(0, 371, __pyx_L1_error)
-        __pyx_t_27 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_28); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 371, __pyx_L1_error)
+        __pyx_t_28 = __Pyx_GetItemInt_Unicode(__pyx_v_read, __pyx_t_12, long, 1, __Pyx_PyLong_From_long, 0, 1, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(__pyx_t_28 == (Py_UCS4)-1)) __PYX_ERR(0, 373, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyUnicode_FromOrdinal(__pyx_t_28); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 373, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_str, __pyx_t_27) < (0)) __PYX_ERR(0, 370, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_read_str, __pyx_t_27) < (0)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
-        __pyx_t_27 = __Pyx_PyLong_From_long(__pyx_v_cigar); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 371, __pyx_L1_error)
+        __pyx_t_27 = __Pyx_PyLong_From_long(__pyx_v_cigar); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 373, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_27);
-        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_type, __pyx_t_27) < (0)) __PYX_ERR(0, 370, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_type, __pyx_t_27) < (0)) __PYX_ERR(0, 372, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":369
+        /* "PanPA/graph_smith_waterman.pyx":371
  *                     cigar = 3
  *                     alignment.n_mismatches += 1
  *                 alignment.info.append(             # <<<<<<<<<<<<<<
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": graph_character, "read_pos": i - 1,
  *                      "read_str": read[i - 1], "type": cigar})
 */
-        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->info, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 369, __pyx_L1_error)
+        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->info, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 371, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":372
+        /* "PanPA/graph_smith_waterman.pyx":374
  *                     {"node_id": j_node[j - 1], "node_pos": j_pos[j - 1], "node_str": graph_character, "read_pos": i - 1,
  *                      "read_str": read[i - 1], "type": cigar})
  *                 alignment.path.append(j_node[j - 1])             # <<<<<<<<<<<<<<
@@ -4607,14 +4676,14 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
         if (unlikely(__pyx_v_alignment->path == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 372, __pyx_L1_error)
+          __PYX_ERR(0, 374, __pyx_L1_error)
         }
-        __pyx_t_1 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyLong_From_int((__pyx_v_j_node[(__pyx_v_j - 1)])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->path, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 372, __pyx_L1_error)
+        __pyx_t_29 = __Pyx_PyList_Append(__pyx_v_alignment->path, __pyx_t_1); if (unlikely(__pyx_t_29 == ((int)-1))) __PYX_ERR(0, 374, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "PanPA/graph_smith_waterman.pyx":360
+        /* "PanPA/graph_smith_waterman.pyx":362
  *                 alignment.n_indels += 1
  * 
  *             elif back_i == i - 1:  # match or miss             # <<<<<<<<<<<<<<
@@ -4624,7 +4693,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
         goto __pyx_L40;
       }
 
-      /* "PanPA/graph_smith_waterman.pyx":375
+      /* "PanPA/graph_smith_waterman.pyx":377
  * 
  *             else:  # I came from 0 so I stop the traceback
  *                 break             # <<<<<<<<<<<<<<
@@ -4636,7 +4705,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
       }
       __pyx_L40:;
 
-      /* "PanPA/graph_smith_waterman.pyx":378
+      /* "PanPA/graph_smith_waterman.pyx":380
  *                 # alignment.add_alignment(j_node[j-1], all_seq_as_int[j-1], j_pos[j-1], read_as_int[i - 1], i - 1)
  * 
  *             i = back_i             # <<<<<<<<<<<<<<
@@ -4645,7 +4714,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_i = __pyx_v_back_i;
 
-      /* "PanPA/graph_smith_waterman.pyx":379
+      /* "PanPA/graph_smith_waterman.pyx":381
  * 
  *             i = back_i
  *             j = back_j             # <<<<<<<<<<<<<<
@@ -4654,7 +4723,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
       __pyx_v_j = __pyx_v_back_j;
 
-      /* "PanPA/graph_smith_waterman.pyx":380
+      /* "PanPA/graph_smith_waterman.pyx":382
  *             i = back_i
  *             j = back_j
  *             coord = back_coord             # <<<<<<<<<<<<<<
@@ -4665,53 +4734,164 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
     }
     __pyx_L36_break:;
 
-    /* "PanPA/graph_smith_waterman.pyx":382
+    /* "PanPA/graph_smith_waterman.pyx":384
  *             coord = back_coord
  * 
  *         alignment.prepare_aa_gaf(graph)             # <<<<<<<<<<<<<<
  *         # alignment_score = alignment.id_score
  *         # print(f"the alignment score is {alignment_score} and the min id is {min_id_score}")
 */
-    ((struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment *)__pyx_v_alignment->__pyx_vtab)->prepare_aa_gaf(__pyx_v_alignment, __pyx_v_graph); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 382, __pyx_L1_error)
+    ((struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment *)__pyx_v_alignment->__pyx_vtab)->prepare_aa_gaf(__pyx_v_alignment, __pyx_v_graph); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 384, __pyx_L1_error)
 
-    /* "PanPA/graph_smith_waterman.pyx":385
+    /* "PanPA/graph_smith_waterman.pyx":387
  *         # alignment_score = alignment.id_score
  *         # print(f"the alignment score is {alignment_score} and the min id is {min_id_score}")
  *         if alignment.id_score >= min_id_score:             # <<<<<<<<<<<<<<
  *             alignments.push_back(alignment.gaf.encode())
  * 
 */
-    __pyx_t_1 = PyFloat_FromDouble(__pyx_v_alignment->id_score); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 385, __pyx_L1_error)
+    __pyx_t_1 = PyFloat_FromDouble(__pyx_v_alignment->id_score); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 387, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_27 = PyObject_RichCompare(__pyx_t_1, __pyx_v_min_id_score, Py_GE); __Pyx_XGOTREF(__pyx_t_27); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 385, __pyx_L1_error)
+    __pyx_t_27 = PyObject_RichCompare(__pyx_t_1, __pyx_v_min_id_score, Py_GE); __Pyx_XGOTREF(__pyx_t_27); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 387, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_27); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 385, __pyx_L1_error)
+    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_27); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 387, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
     if (__pyx_t_16) {
 
-      /* "PanPA/graph_smith_waterman.pyx":386
+      /* "PanPA/graph_smith_waterman.pyx":388
  *         # print(f"the alignment score is {alignment_score} and the min id is {min_id_score}")
  *         if alignment.id_score >= min_id_score:
  *             alignments.push_back(alignment.gaf.encode())             # <<<<<<<<<<<<<<
  * 
- *     # need to free the memory, otherwise major memory leaks
+ *             # Generate VCF records if VCF mode is enabled
 */
       if (unlikely(__pyx_v_alignment->gaf == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
-        __PYX_ERR(0, 386, __pyx_L1_error)
+        __PYX_ERR(0, 388, __pyx_L1_error)
       }
-      __pyx_t_27 = PyUnicode_AsEncodedString(__pyx_v_alignment->gaf, NULL, NULL); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 386, __pyx_L1_error)
+      __pyx_t_27 = PyUnicode_AsEncodedString(__pyx_v_alignment->gaf, NULL, NULL); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 388, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_27);
-      __pyx_t_30 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_27); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 386, __pyx_L1_error)
+      __pyx_t_30 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_27); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 388, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
       try {
         __pyx_v_alignments.push_back(__pyx_t_30);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 386, __pyx_L1_error)
+        __PYX_ERR(0, 388, __pyx_L1_error)
       }
 
-      /* "PanPA/graph_smith_waterman.pyx":385
+      /* "PanPA/graph_smith_waterman.pyx":391
+ * 
+ *             # Generate VCF records if VCF mode is enabled
+ *             if vcf_mode and node_to_ref_start is not None and ref_node_set is not None:             # <<<<<<<<<<<<<<
+ *                 vcf_records = alignment.generate_vcf_records(
+ *                     graph, ref_seq, node_to_ref_start, ref_node_set, graph_name)
+*/
+      if (__pyx_v_vcf_mode) {
+      } else {
+        __pyx_t_16 = __pyx_v_vcf_mode;
+        goto __pyx_L44_bool_binop_done;
+      }
+      __pyx_t_20 = (__pyx_v_node_to_ref_start != ((PyObject*)Py_None));
+      if (__pyx_t_20) {
+      } else {
+        __pyx_t_16 = __pyx_t_20;
+        goto __pyx_L44_bool_binop_done;
+      }
+      __pyx_t_20 = (__pyx_v_ref_node_set != ((PyObject*)Py_None));
+      __pyx_t_16 = __pyx_t_20;
+      __pyx_L44_bool_binop_done:;
+      if (__pyx_t_16) {
+
+        /* "PanPA/graph_smith_waterman.pyx":392
+ *             # Generate VCF records if VCF mode is enabled
+ *             if vcf_mode and node_to_ref_start is not None and ref_node_set is not None:
+ *                 vcf_records = alignment.generate_vcf_records(             # <<<<<<<<<<<<<<
+ *                     graph, ref_seq, node_to_ref_start, ref_node_set, graph_name)
+ *                 for vcf_rec in vcf_records:
+*/
+        __pyx_t_27 = ((struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment *)__pyx_v_alignment->__pyx_vtab)->generate_vcf_records(__pyx_v_alignment, __pyx_v_graph, __pyx_v_ref_seq, __pyx_v_node_to_ref_start, __pyx_v_ref_node_set, __pyx_v_graph_name, 0); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 392, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_27);
+        __Pyx_XDECREF_SET(__pyx_v_vcf_records, ((PyObject*)__pyx_t_27));
+        __pyx_t_27 = 0;
+
+        /* "PanPA/graph_smith_waterman.pyx":394
+ *                 vcf_records = alignment.generate_vcf_records(
+ *                     graph, ref_seq, node_to_ref_start, ref_node_set, graph_name)
+ *                 for vcf_rec in vcf_records:             # <<<<<<<<<<<<<<
+ *                     alignments.push_back(("VCF\t" + vcf_rec).encode())
+ * 
+*/
+        if (unlikely(__pyx_v_vcf_records == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+          __PYX_ERR(0, 394, __pyx_L1_error)
+        }
+        __pyx_t_27 = __pyx_v_vcf_records; __Pyx_INCREF(__pyx_t_27);
+        __pyx_t_9 = 0;
+        for (;;) {
+          {
+            Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_27);
+            #if !CYTHON_ASSUME_SAFE_SIZE
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 394, __pyx_L1_error)
+            #endif
+            if (__pyx_t_9 >= __pyx_temp) break;
+          }
+          __pyx_t_1 = __Pyx_PyList_GetItemRefFast(__pyx_t_27, __pyx_t_9, __Pyx_ReferenceSharing_OwnStrongReference);
+          ++__pyx_t_9;
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 394, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_1);
+          __Pyx_XDECREF_SET(__pyx_v_vcf_rec, __pyx_t_1);
+          __pyx_t_1 = 0;
+
+          /* "PanPA/graph_smith_waterman.pyx":395
+ *                     graph, ref_seq, node_to_ref_start, ref_node_set, graph_name)
+ *                 for vcf_rec in vcf_records:
+ *                     alignments.push_back(("VCF\t" + vcf_rec).encode())             # <<<<<<<<<<<<<<
+ * 
+ *     # need to free the memory, otherwise major memory leaks
+*/
+          __pyx_t_24 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_VCF, __pyx_v_vcf_rec); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 395, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_24);
+          __pyx_t_26 = __pyx_t_24;
+          __Pyx_INCREF(__pyx_t_26);
+          __pyx_t_25 = 0;
+          {
+            PyObject *__pyx_callargs[2] = {__pyx_t_26, NULL};
+            __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_25, (1-__pyx_t_25) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+            __Pyx_XDECREF(__pyx_t_26); __pyx_t_26 = 0;
+            __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
+            if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 395, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_1);
+          }
+          __pyx_t_30 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 395, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+          try {
+            __pyx_v_alignments.push_back(__pyx_t_30);
+          } catch(...) {
+            __Pyx_CppExn2PyErr();
+            __PYX_ERR(0, 395, __pyx_L1_error)
+          }
+
+          /* "PanPA/graph_smith_waterman.pyx":394
+ *                 vcf_records = alignment.generate_vcf_records(
+ *                     graph, ref_seq, node_to_ref_start, ref_node_set, graph_name)
+ *                 for vcf_rec in vcf_records:             # <<<<<<<<<<<<<<
+ *                     alignments.push_back(("VCF\t" + vcf_rec).encode())
+ * 
+*/
+        }
+        __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
+
+        /* "PanPA/graph_smith_waterman.pyx":391
+ * 
+ *             # Generate VCF records if VCF mode is enabled
+ *             if vcf_mode and node_to_ref_start is not None and ref_node_set is not None:             # <<<<<<<<<<<<<<
+ *                 vcf_records = alignment.generate_vcf_records(
+ *                     graph, ref_seq, node_to_ref_start, ref_node_set, graph_name)
+*/
+      }
+
+      /* "PanPA/graph_smith_waterman.pyx":387
  *         # alignment_score = alignment.id_score
  *         # print(f"the alignment score is {alignment_score} and the min id is {min_id_score}")
  *         if alignment.id_score >= min_id_score:             # <<<<<<<<<<<<<<
@@ -4720,7 +4900,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
     }
 
-    /* "PanPA/graph_smith_waterman.pyx":324
+    /* "PanPA/graph_smith_waterman.pyx":326
  *     # print(j_node, j_pos)
  * 
  *     for coord in global_max_coord:             # <<<<<<<<<<<<<<
@@ -4729,7 +4909,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   }
 
-  /* "PanPA/graph_smith_waterman.pyx":389
+  /* "PanPA/graph_smith_waterman.pyx":398
  * 
  *     # need to free the memory, otherwise major memory leaks
  *     free(dp_table)             # <<<<<<<<<<<<<<
@@ -4738,7 +4918,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   free(__pyx_v_dp_table);
 
-  /* "PanPA/graph_smith_waterman.pyx":390
+  /* "PanPA/graph_smith_waterman.pyx":399
  *     # need to free the memory, otherwise major memory leaks
  *     free(dp_table)
  *     free(traceback_table)             # <<<<<<<<<<<<<<
@@ -4747,7 +4927,7 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
 */
   free(__pyx_v_traceback_table);
 
-  /* "PanPA/graph_smith_waterman.pyx":391
+  /* "PanPA/graph_smith_waterman.pyx":400
  *     free(dp_table)
  *     free(traceback_table)
  *     return alignments             # <<<<<<<<<<<<<<
@@ -4761,8 +4941,8 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
  * 
  * 
  * cdef vector[string] align_to_graph_sw(Graph graph, str read,str read_name, bint print_dp,             # <<<<<<<<<<<<<<
- *                              vector[int] sub_matrix, int gap_score, min_id_score) except *:
- * 
+ *                              vector[int] sub_matrix, int gap_score, min_id_score,
+ *                              bint vcf_mode=False, str ref_seq="", dict node_to_ref_start=None,
 */
 
   /* function exit code */
@@ -4778,6 +4958,8 @@ static std::vector<std::string>  __pyx_f_5PanPA_20graph_smith_waterman_align_to_
   __Pyx_XDECREF(__pyx_v_c);
   __Pyx_XDECREF((PyObject *)__pyx_v_alignment);
   __Pyx_XDECREF(__pyx_v_graph_character);
+  __Pyx_XDECREF(__pyx_v_vcf_records);
+  __Pyx_XDECREF(__pyx_v_vcf_rec);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
@@ -4835,7 +5017,7 @@ static int __Pyx_modinit_function_export_code(__pyx_mstatetype *__pyx_mstate) {
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (unlikely(!__pyx_export_signature)) __PYX_ERR(0, 1, __pyx_L1_error)
     #endif
-    const char * __pyx_export_name = __pyx_export_signature + 132;
+    const char * __pyx_export_name = __pyx_export_signature + 224;
     void (*const __pyx_export_pointers[])(void) = {(void (*)(void))&__pyx_f_5PanPA_20graph_smith_waterman_align_to_graph_sw, (void (*)(void)) NULL};
     void (*const *__pyx_export_pointer)(void) = __pyx_export_pointers;
     const char *__pyx_export_current_signature = __pyx_export_signature;
@@ -5257,34 +5439,34 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 8; } index[] = {{6},{21},{28},{2},{1},{1},{1},{1},{18},{8},{10},{8},{7},{8},{8},{5},{12},{14},{12},{8},{8},{10},{8},{4},{149}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (274 bytes) */
-const char* const cstring = "BZh91AY&SY\030&nt\000\000\007\337\200P\020@t\002\025\240\200\304\000\277\377\377\3400\000\372\251\tI\242\023F'\246\206\220\320\032h4\365\014h\321\240\0312\0321\032h\032`%\004S\3052\237\245\037\244\304@\032h\362\236\246\215\202:*\252\034?\252\372\372\250\376\010\322cQ~\177\034\204\374T$\303+^{&)\360\3573\362\2422OkRcD\341\226\221h\033-\321\2302\315\312\244\272\375qH\345\301\250\315s\334,f\234\216\304\315\2767\241\244\223]\246a\372\233&\n\013\004\342\245R\007\004l/n\245\303\013K\355`\361\346)!\325g\233\351\337\t\222s\360\255\262\n\266@\325`9\320,)\222\321\325\350\307E\257U{\330\2168\270yB\311\233\226%\326\360\221e/9\22370\215ar\245B\2234\317&\355\304\335s\016A\225fy\262RP\026\201U\300\311W\034+&\236)\331.\275?\213\271\"\234(H\014\0237:\000";
-    PyObject *data = __Pyx_DecompressString(cstring, 274, 2);
+    const struct { const unsigned int length: 8; } index[] = {{6},{21},{28},{4},{2},{1},{1},{0},{1},{1},{18},{6},{8},{10},{8},{7},{8},{8},{5},{12},{14},{12},{8},{8},{10},{8},{4},{241}};
+    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (322 bytes) */
+const char* const cstring = "BZh91AY&SY\221\364\0069\000\000\010_\200P0@tR\025\251\200\305\000\277\377\377\3400\0015m\265\204\245OS\324\306\241\243\312?Q2=@\320\320\321\241\240\224\020M(=\242\236!\032\000\323C\324\300\022\211G\223Sj\036I\246 h\003@\032\022\326\022\360_1P\237,\037\337\202B\027#\223c\200\246\233\334\205\031P\300\2333.:\003\242lK\313e\247\221g\027G\004\3660\322\221q s5]\265\240:\213\261#\363\024\273\221\321\272n\342H\264\2026\307C\265\335\207\242,^\304\326hXq\263u9\271\344E\350|q\316\371\311{K\321\312\013\006\2461H\243I\201\226Y\202\262\221J\250\026\n@\201R`7\264\345\261\206W\227\2519*\023'\341\215x\254d\212}d\3124X\206E\254jV\035_\262\216a\265\213\327x\333!\\\240SU\034/!\335\232V0\"g\037\322\"4\224F\004F\017>\224#b\361\260\223\003 LA\363\216\256\246w\211\316\014b\206!\225n\221\265\322\333\351Y\023r\321\332h/J\231\322\3422\0274,J3\241\374]\311\024\341BBG\320\030\344";
+    PyObject *data = __Pyx_DecompressString(cstring, 322, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (216 bytes) */
-const char* const cstring = "x\332]P\261n\003!\014\355\234\257\360\330VY\263DQ\242N\035{Cw\313\007\356\035)\007\004|i\357\357cH\324F\261\220\337\303~\317F\000\324\370\034]\001=22\330\004B\275\347\325}Q2\031\356\311|\337z\352Y\035\320x\027\030]\300\2776\342Dz\327\230\242\235=W\026hR\014\321\252\3246H\2614,\222SvA\020\323\362\213\206\222\253\372\312\317mM\275\235f\362\327\t\231\311VkC\265\026\026\313_4{\365\013\227\232\227\244h\267\3333\033\211y\327\270*]\030\366\000\317\312f#p\335\020\373#n:\n\335\033n\3363\245\021[\206\3275t\313G\177\324\t\217\\_\272\206\373\371Z\330\303\255\376/|y\"\357\006\375\224\210C\033\\~.\344\277\202\242";
-    PyObject *data = __Pyx_DecompressString(cstring, 216, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (259 bytes) */
+const char* const cstring = "x\332eP\301N\003!\020\365j\277b\216\332\364`LziL\2151\321\243{0^'\2630\356RY@`[\373\367\016tmV%\204\367\230yo\036\001\240\254\327\336$\220\235{\006\035 Sky1/\346H\212[R\037S\357\355\361\351R|\213{T\3268F\343\360,a\247\274f\304\201\244*k\360z\264\\\230\243A\320\225\256\321\025\202O\025S\216!\032\227\021\303\361\013\025\005S\364\205\357k`\271}\216dO\023\"\223.\326\212bM\2345\277\323h\305\2379\225\363\030\004\365f\263g\225}\274\253\\\224\306u[\200+a\243\312pJ\360\355\016\327\r\271\346\001\327\317\221B\217\365\204\345\n\232\343K\273\223\t\177\271\274t\005\363\371R\330\302T\237\013\177\007\205\214\024\273\364\223v{\323\325\2704\230\334\343\2012\307\201\034\2225\235|\247\307\251{\200\345\331o\274#[\207\\_\374\323}\0031\356\251\337";
+    PyObject *data = __Pyx_DecompressString(cstring, 259, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (358 bytes) */
-const char* const bytes = "      This is the dp table\nThis is the traceback table\n   \n?_cline_in_traceback__main____module____name__node_idnode_posnode_strprint__pyx_capi____pyx_vtable____qualname__read_posread_strsetdefault__test__typestd::vector<std::string>  (struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, PyObject *, int, std::vector<int> , int, PyObject *)\000align_to_graph_sw";
+    #else /* compression: none (460 bytes) */
+const char* const bytes = "      This is the dp table\nThis is the traceback table\nVCF\t   \n?_cline_in_tracebackencode__main____module____name__node_idnode_posnode_strprint__pyx_capi____pyx_vtable____qualname__read_posread_strsetdefault__test__typestd::vector<std::string>  (struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, PyObject *, int, std::vector<int> , int, PyObject *, struct __pyx_opt_args_5PanPA_20graph_smith_waterman_align_to_graph_sw *__pyx_optional_args)\000align_to_graph_sw";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < 27; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
-      if (likely(string) && i >= 7) PyUnicode_InternInPlace(&string);
+      if (likely(string) && i >= 9) PyUnicode_InternInPlace(&string);
       if (unlikely(!string)) {
         Py_XDECREF(data);
         __PYX_ERR(0, 1, __pyx_L1_error)
@@ -5292,7 +5474,7 @@ const char* const bytes = "      This is the dp table\nThis is the traceback tab
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 24; i < 25; i++) {
+    for (int i = 27; i < 28; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -5303,14 +5485,14 @@ const char* const bytes = "      This is the dp table\nThis is the traceback tab
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 25; i++) {
+    for (Py_ssize_t i = 0; i < 28; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 24;
+      PyObject **table = stringtab + 27;
       for (Py_ssize_t i=0; i<1; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         #if PY_VERSION_HEX < 0x030E0000
@@ -6032,6 +6214,19 @@ return_ne:
     return (equals == Py_NE);
 #endif
 }
+
+/* PyObjectFastCallMethod */
+#if !CYTHON_VECTORCALL || PY_VERSION_HEX < 0x03090000
+static PyObject *__Pyx_PyObject_FastCallMethod(PyObject *name, PyObject *const *args, size_t nargsf) {
+    PyObject *result;
+    PyObject *attr = PyObject_GetAttr(args[0], name);
+    if (unlikely(!attr))
+        return NULL;
+    result = __Pyx_PyObject_FastCall(attr, args+1, nargsf - 1);
+    Py_DECREF(attr);
+    return result;
+}
+#endif
 
 /* FunctionExport */
 static int __Pyx_ExportFunction(PyObject *api_dict, const char *name, void (*f)(void), const char *sig) {
@@ -7008,7 +7203,7 @@ __Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
         result = name;
         name = NULL;
     } else {
-        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__6);
+        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__7);
     }
     goto done;
 }

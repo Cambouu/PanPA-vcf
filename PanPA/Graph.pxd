@@ -31,6 +31,7 @@ cdef class Graph:
     cdef void read_gfa(self, str gfa_path, paths=*) except *
     cdef void write_gfa(self, str gfa_path) except *
     cdef str path_seq(self, list path)
+    cpdef tuple compute_reference_path(self)
     # should probably add a remove node function
     # that removes a node safely (i.e. removes all the associated edges properly)
     # using remove parent and remove child functions from the node object

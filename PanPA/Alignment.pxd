@@ -24,3 +24,7 @@ cdef class Alignment:
     cdef void prepare_aa_gaf(self, Graph graph) except *
 
     cdef void prepare_dna_gaf(self, Graph graph) except *
+
+    cpdef list generate_vcf_records(self, Graph graph, str ref_seq,
+                                    dict node_to_ref_start, set ref_node_set,
+                                    str graph_name)

@@ -273,9 +273,10 @@ def load_graph(graph_file, graph_n, graphs, lock):
         lock.release()
 
 
-def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_score, min_id_score, queue):
+def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_score, min_id_score, queue,
+                       vcf_mode=False, ref_seq="", node_to_ref_start=None, ref_node_set=None, graph_name=""):
     cdef Graph graph
-    cdef bint print_dp = False
+    cdef bint print_dp = True
     cdef vector[string] alignments
     cdef bytes a_py
     cdef int gap_s = gap_score
@@ -316,7 +317,8 @@ def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_sco
                                                    neucleotide_to_int)
                 # print(f"Alignments we got were {alignments}")
             else:
-                alignments = align_to_graph_sw(graph, seq, seq_name, print_dp, sub_matrix, gap_score, min_id_score)
+                alignments = align_to_graph_sw(graph, seq, seq_name, print_dp, sub_matrix, gap_score, min_id_score,
+                                               vcf_mode, ref_seq, node_to_ref_start, ref_node_set, graph_name)
 
             for a in alignments:
                 if not is_dna:  # it's a protein sequence
@@ -339,7 +341,7 @@ def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_sco
 
 
 def align_single_graph(in_graph, in_seqs, is_dna, n_cores, sub_matrix, out_gaf,
-                       gap_score, fs_score, min_id_score):
+                       gap_score, fs_score, min_id_score, vcf_mode=False):
     """
     This function aligns directly the sequences in FASTA to a graph file given
     without the need to look at an index, but only aligns to one single target GFA
@@ -348,12 +350,23 @@ def align_single_graph(in_graph, in_seqs, is_dna, n_cores, sub_matrix, out_gaf,
     cdef Graph graph
     cdef vector[string] alignments
     batch_size = 1000
-    graph = Graph(in_graph)
+    graph = Graph(in_graph, paths=vcf_mode)
+
+    # Compute reference path for VCF mode
+    ref_seq = ""
+    node_to_ref_start = None
+    ref_node_set = None
+    graph_name = graph.name
+    vcf_records = []
+    if vcf_mode:
+        ref_path_nodes, ref_seq, node_to_ref_start, ref_node_set = graph.compute_reference_path()
+        logging.info(f"VCF mode: reference path has {len(ref_path_nodes)} nodes, sequence length {len(ref_seq)}")
 
 
     processes = []
     seq_counter = 0
     queue = mp.Queue()
+    vcf_path = out_gaf.rsplit('.', 1)[0] + ".vcf" if '.' in out_gaf else out_gaf + ".vcf"
     out_gaf = open(out_gaf, "w")
     seqs_dicts = [dict()]
     for seq_name, seq in read_fasta_gen(in_seqs):
@@ -372,7 +385,9 @@ def align_single_graph(in_graph, in_seqs, is_dna, n_cores, sub_matrix, out_gaf,
                     # def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_score, min_id_score, queue):
 
                     p = mp.Process(target=call_align_single, args=(graph, seqs, is_dna, sub_matrix, gap_score,
-                                                                   fs_score, min_id_score, queue, ))
+                                                                   fs_score, min_id_score, queue,
+                                                                   vcf_mode, ref_seq, node_to_ref_start,
+                                                                   ref_node_set, graph_name, ))
                     processes.append(p)
 
                 for p in processes:
@@ -384,7 +399,11 @@ def align_single_graph(in_graph, in_seqs, is_dna, n_cores, sub_matrix, out_gaf,
                     if a == b'0':
                         n_sentinals += 1
                     else:
-                        out_gaf.write(a.decode() + "\n")
+                        a_decoded = a.decode()
+                        if a_decoded.startswith("VCF\t"):
+                            vcf_records.append(a_decoded[4:])  # strip "VCF\t" prefix
+                        else:
+                            out_gaf.write(a_decoded + "\n")
 
                 for p in processes:
                     p.join()
@@ -398,7 +417,9 @@ def align_single_graph(in_graph, in_seqs, is_dna, n_cores, sub_matrix, out_gaf,
     for seqs in seqs_dicts:  # leftovers
 
         processes.append(mp.Process(target=call_align_single, args=(graph, seqs, is_dna, sub_matrix, gap_score,
-                                                                    fs_score, min_id_score, queue,)))
+                                                                    fs_score, min_id_score, queue,
+                                                                    vcf_mode, ref_seq, node_to_ref_start,
+                                                                    ref_node_set, graph_name,)))
 
     new_sent_len = len(processes)
     for p in processes:
@@ -409,12 +430,78 @@ def align_single_graph(in_graph, in_seqs, is_dna, n_cores, sub_matrix, out_gaf,
         if a == b'0':
             n_sentinals += 1
         else:
-            out_gaf.write(a.decode() + "\n")
+            a_decoded = a.decode()
+            if a_decoded.startswith("VCF\t"):
+                vcf_records.append(a_decoded[4:])
+            else:
+                out_gaf.write(a_decoded + "\n")
 
     for p in processes:
         p.join()
 
     out_gaf.close()
+
+    # Write VCF file if VCF mode is enabled
+    if vcf_mode and vcf_records:
+        # Parse raw VCF records: each is "POS\tREF\tALT\tSAMPLE\tVARTYPE"
+        # Group by (POS, REF, ALT) to merge samples into multi-sample columns
+        from collections import OrderedDict
+
+        # Collect all sample names (preserving order of appearance)
+        all_samples = []
+        sample_set = set()
+        # variant_key -> {sample_name: "1", ...}  (GT=1 means alt allele)
+        variant_samples = OrderedDict()
+
+        for rec in vcf_records:
+            parts = rec.split('\t')
+            if len(parts) < 5:
+                continue
+            pos_str, ref_f, alt_f, sample_name, var_type = parts[0], parts[1], parts[2], parts[3], parts[4]
+            if sample_name not in sample_set:
+                all_samples.append(sample_name)
+                sample_set.add(sample_name)
+            vkey = (int(pos_str), ref_f, alt_f, var_type)
+            if vkey not in variant_samples:
+                variant_samples[vkey] = set()
+            variant_samples[vkey].add(sample_name)
+
+        # Sort variants by position
+        sorted_variants = sorted(variant_samples.keys(), key=lambda x: x[0])
+
+        with open(vcf_path, "w") as vcf_file:
+            # VCF header adapted for amino acid space per VCF 4.5
+            vcf_file.write("##fileformat=VCFv4.5\n")
+            vcf_file.write(f"##source=PanPA\n")
+            vcf_file.write(f"##reference={graph_name}\n")
+            vcf_file.write(f"##contig=<ID={graph_name},length={len(ref_seq)}>\n")
+            vcf_file.write("##ALT=<ID=SNV,Description=\"Amino acid substitution\">\n")
+            vcf_file.write("##ALT=<ID=INS,Description=\"Amino acid insertion\">\n")
+            vcf_file.write("##ALT=<ID=DEL,Description=\"Amino acid deletion\">\n")
+            vcf_file.write("##INFO=<ID=VC,Number=1,Type=String,Description=\"Type (class) of variant\">\n")
+            vcf_file.write("##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n")
+            # Header line with sample columns
+            header_cols = ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"]
+            header_cols.extend(all_samples)
+            vcf_file.write("\t".join(header_cols) + "\n")
+
+            # Data lines
+            for vkey in sorted_variants:
+                pos_val, ref_f, alt_f, var_type = vkey
+                samples_with_var = variant_samples[vkey]
+                info_field = f"VC={var_type}"
+                gt_cols = []
+                for s in all_samples:
+                    if s in samples_with_var:
+                        gt_cols.append("1")
+                    else:
+                        gt_cols.append("0")
+                fields = [graph_name, str(pos_val), ".", ref_f, alt_f, ".", ".", info_field, "GT"]
+                fields.extend(gt_cols)
+                vcf_file.write("\t".join(fields) + "\n")
+
+        logging.info(f"VCF file written to {vcf_path}")
+
     logging.info("Done!")
 
 
@@ -802,8 +889,9 @@ def _main(sys_argv, args, msa_name=None):
         check_output_file(args.out_gaf)
 
         # takes all the args
+        vcf_mode = getattr(args, 'vcf_mode', False)
         align_single_graph(args.in_graph, args.in_seqs, args.is_dna, args.n_cores, sub_matrix, args.out_gaf,
-                           args.gap_score, args.fs_score, args.min_id_score)
+                           args.gap_score, args.fs_score, args.min_id_score, vcf_mode)
 
 
     # TODO: I should add a stdout option to output alignments to stdout

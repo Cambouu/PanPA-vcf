@@ -37,7 +37,9 @@ cdef void print_dp_table(int all_seq_len, int read_len, int *dp_table, vector[in
 
 
 cdef vector[string] align_to_graph_sw(Graph graph, str read,str read_name, bint print_dp,
-                             vector[int] sub_matrix, int gap_score, min_id_score) except *:
+                             vector[int] sub_matrix, int gap_score, min_id_score,
+                             bint vcf_mode=False, str ref_seq="", dict node_to_ref_start=None,
+                             set ref_node_set=None, str graph_name="") except *:
 
     """
     This function applies a Smith-Waterman algorithm but for graphs (Partial Order Alignment)
@@ -384,6 +386,13 @@ cdef vector[string] align_to_graph_sw(Graph graph, str read,str read_name, bint 
         # print(f"the alignment score is {alignment_score} and the min id is {min_id_score}")
         if alignment.id_score >= min_id_score:
             alignments.push_back(alignment.gaf.encode())
+
+            # Generate VCF records if VCF mode is enabled
+            if vcf_mode and node_to_ref_start is not None and ref_node_set is not None:
+                vcf_records = alignment.generate_vcf_records(
+                    graph, ref_seq, node_to_ref_start, ref_node_set, graph_name)
+                for vcf_rec in vcf_records:
+                    alignments.push_back(("VCF\t" + vcf_rec).encode())
 
     # need to free the memory, otherwise major memory leaks
     free(dp_table)

@@ -567,3 +567,78 @@ cdef class Graph:
             path_seq += current_node.seq
 
         return path_seq
+
+    cpdef tuple compute_reference_path(self):
+        """
+        Compute the reference path through the graph by following the most-traversed
+        nodes at each fork. Traversal counts are derived from the P lines (self.paths).
+
+        Returns a tuple:
+            (ref_path_nodes, ref_seq, node_to_ref_start, ref_node_set)
+        where:
+            ref_path_nodes: list of int node IDs in order
+            ref_seq: concatenated amino acid sequence of the reference path
+            node_to_ref_start: dict mapping node_id -> 0-based start position in ref_seq
+            ref_node_set: set of node IDs on the reference path
+        """
+        cdef Node node
+        cdef int n, child_id, best_child, best_count, count
+
+        # Count how many named paths traverse each node
+        node_counts = dict()
+        for path_name, path_nodes in self.paths.items():
+            for n_str in path_nodes:
+                n = int(n_str)
+                if n in node_counts:
+                    node_counts[n] += 1
+                else:
+                    node_counts[n] = 1
+
+        # Find source nodes (no parents)
+        source_nodes = []
+        for n in self.sorted:
+            node = self.nodes[n]
+            if node.in_nodes.size() == 0:
+                source_nodes.append(n)
+
+        if not source_nodes:
+            return ([], "", dict(), set())
+
+        # Pick source with highest traversal count (ties: lower node ID)
+        best_start = source_nodes[0]
+        best_count = node_counts.get(best_start, 0)
+        for n in source_nodes[1:]:
+            count = node_counts.get(n, 0)
+            if count > best_count or (count == best_count and n < best_start):
+                best_start = n
+                best_count = count
+
+        # Walk the graph greedily following highest-count children
+        ref_path_nodes = []
+        ref_seq = ""
+        node_to_ref_start = dict()
+        current = best_start
+
+        while True:
+            ref_path_nodes.append(current)
+            node = self.nodes[current]
+            node_to_ref_start[current] = len(ref_seq)
+            ref_seq += node.seq
+
+            # No children -> end of path
+            if node.out_nodes.size() == 0:
+                break
+
+            # Pick child with highest count, ties broken by lower node ID
+            best_child = -1
+            best_count = -1
+            for child_id in node.out_nodes:
+                count = node_counts.get(child_id, 0)
+                if count > best_count or (count == best_count and (best_child == -1 or child_id < best_child)):
+                    best_child = child_id
+                    best_count = count
+
+            current = best_child
+
+        ref_node_set = set(ref_path_nodes)
+        return (ref_path_nodes, ref_seq, node_to_ref_start, ref_node_set)

@@ -179,6 +179,9 @@ def main():
     align_single.add_argument("--fs_score", dest="fs_score", default=-3, type=int,
                               help="The frameshift penalty when aligning DNA to amino acids, default: -3")
 
+    align_single.add_argument("--vcf", dest="vcf_mode", default=False, action="store_true",
+                              help="When given, generate a VCF file with amino acid variants alongside the GAF output")
+
     args = parser.parse_args()
 
     if len(sys.argv) == 1:

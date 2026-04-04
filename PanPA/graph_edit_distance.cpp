@@ -1615,6 +1615,7 @@ struct __pyx_vtabstruct_5PanPA_5Graph_Graph {
   void (*read_gfa)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, struct __pyx_opt_args_5PanPA_5Graph_5Graph_read_gfa *__pyx_optional_args);
   void (*write_gfa)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *);
   PyObject *(*path_seq)(struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *);
+  PyObject *(*compute_reference_path)(struct __pyx_obj_5PanPA_5Graph_Graph *, int __pyx_skip_dispatch);
 };
 static struct __pyx_vtabstruct_5PanPA_5Graph_Graph *__pyx_vtabptr_5PanPA_5Graph_Graph;
 
@@ -1630,6 +1631,7 @@ static struct __pyx_vtabstruct_5PanPA_5Graph_Graph *__pyx_vtabptr_5PanPA_5Graph_
 struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment {
   void (*prepare_aa_gaf)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *);
   void (*prepare_dna_gaf)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *);
+  PyObject *(*generate_vcf_records)(struct __pyx_obj_5PanPA_9Alignment_Alignment *, struct __pyx_obj_5PanPA_5Graph_Graph *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch);
 };
 static struct __pyx_vtabstruct_5PanPA_9Alignment_Alignment *__pyx_vtabptr_5PanPA_9Alignment_Alignment;
 /* #### Code section: utility_code_proto ### */
