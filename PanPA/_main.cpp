@@ -9343,7 +9343,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
  * def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_score, min_id_score, queue,
  *                        vcf_mode=False, ref_seq="", node_to_ref_start=None, ref_node_set=None, graph_name=""):             # <<<<<<<<<<<<<<
  *     cdef Graph graph
- *     cdef bint print_dp = True
+ *     cdef bint print_dp = False
 */
       if (!values[8]) values[8] = __Pyx_NewRef(((PyObject *)((PyObject*)Py_False)));
       if (!values[9]) values[9] = __Pyx_NewRef(((PyObject *)((PyObject*)__pyx_mstate_global->__pyx_kp_u__4)));
@@ -9501,11 +9501,11 @@ static PyObject *__pyx_pf_5PanPA_5_main_12call_align_single(CYTHON_UNUSED PyObje
   /* "PanPA/_main.pyx":279
  *                        vcf_mode=False, ref_seq="", node_to_ref_start=None, ref_node_set=None, graph_name=""):
  *     cdef Graph graph
- *     cdef bint print_dp = True             # <<<<<<<<<<<<<<
+ *     cdef bint print_dp = False             # <<<<<<<<<<<<<<
  *     cdef vector[string] alignments
  *     cdef bytes a_py
 */
-  __pyx_v_print_dp = 1;
+  __pyx_v_print_dp = 0;
 
   /* "PanPA/_main.pyx":282
  *     cdef vector[string] alignments

@@ -276,7 +276,7 @@ def load_graph(graph_file, graph_n, graphs, lock):
 def call_align_single(in_graph, seqs_dict, is_dna, sub_matrix, gap_score, fs_score, min_id_score, queue,
                        vcf_mode=False, ref_seq="", node_to_ref_start=None, ref_node_set=None, graph_name=""):
     cdef Graph graph
-    cdef bint print_dp = True
+    cdef bint print_dp = False
     cdef vector[string] alignments
     cdef bytes a_py
     cdef int gap_s = gap_score

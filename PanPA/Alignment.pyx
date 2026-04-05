@@ -408,6 +408,8 @@ cdef class Alignment:
         (BFS) to find the nearest ancestor that IS on the reference path.
         Returns (ancestor_node_id, ancestor_last_ref_pos_0based).
         """
+        cdef Node ancestor_node
+        cdef Node cur_node
         if nid in fork_cache:
             return fork_cache[nid]
         visited = set()
