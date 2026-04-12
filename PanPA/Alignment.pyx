@@ -234,12 +234,20 @@ cdef class Alignment:
         cdef str ref_field, alt_field, rec, vartype
         cdef int ancestor_id, ancestor_last_pos, anchor_pos
         cdef str anchor_char, ref_char
+        cdef int ref_nid, i, msa_col, mapped_ref
 
         if not self.info:
             return records
 
         # Cache for fork ancestor lookups
         fork_cache = dict()
+
+        # Build MSA-column → reference-position mapping from ref path nodes
+        msa_to_ref = dict()
+        for ref_nid in ref_node_set:
+            node = graph.nodes[ref_nid]
+            for i in range(len(node.seq)):
+                msa_to_ref[node.seq_pos + i] = node_to_ref_start[ref_nid] + i
 
         last_ref_anchor_pos = -1
         last_ref_anchor_char = ""
@@ -278,6 +286,13 @@ cdef class Alignment:
                 if on_ref:
                     last_ref_anchor_pos = node_to_ref_start[node_id] + node_pos
                     last_ref_anchor_char = node_str
+                else:
+                    node = graph.nodes[node_id]
+                    msa_col = node.seq_pos + node_pos
+                    mapped_ref = msa_to_ref.get(msa_col, -1)
+                    if mapped_ref >= 0:
+                        last_ref_anchor_pos = mapped_ref
+                        last_ref_anchor_char = ref_seq[mapped_ref]
                 continue
 
             if op_type == 3:  # mismatch (SNV)
@@ -308,13 +323,25 @@ cdef class Alignment:
                     last_ref_anchor_pos = ref_pos_0
                     last_ref_anchor_char = ref_char
                 else:
-                    ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
-                        node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
-                    anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."
-                    pending_type = 3
-                    pending_ref_pos = ancestor_last_pos
-                    pending_ref_chars = anchor_char + node_str
-                    pending_alt_chars = anchor_char + read_str
+                    node = graph.nodes[node_id]
+                    msa_col = node.seq_pos + node_pos
+                    mapped_ref = msa_to_ref.get(msa_col, -1)
+                    if mapped_ref >= 0:
+                        ref_char = ref_seq[mapped_ref]
+                        pending_type = 3
+                        pending_ref_pos = mapped_ref
+                        pending_ref_chars = ref_char
+                        pending_alt_chars = read_str
+                        last_ref_anchor_pos = mapped_ref
+                        last_ref_anchor_char = ref_char
+                    else:
+                        ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+                            node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+                        anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."
+                        pending_type = 3
+                        pending_ref_pos = ancestor_last_pos
+                        pending_ref_chars = anchor_char + node_str
+                        pending_alt_chars = anchor_char + read_str
 
             elif op_type == 0:  # insertion
                 if pending_type == 0:
@@ -342,10 +369,17 @@ cdef class Alignment:
                         anchor_pos = last_ref_anchor_pos
                         anchor_char = last_ref_anchor_char
                     else:
-                        ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
-                            node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
-                        anchor_pos = ancestor_last_pos
-                        anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+                        node = graph.nodes[node_id]
+                        msa_col = node.seq_pos + node_pos
+                        mapped_ref = msa_to_ref.get(msa_col, -1)
+                        if mapped_ref >= 0:
+                            anchor_pos = mapped_ref
+                            anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
+                        else:
+                            ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+                                node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+                            anchor_pos = ancestor_last_pos
+                            anchor_char = ref_seq[anchor_pos] if anchor_pos < len(ref_seq) else ""
 
                     pending_type = 0
                     pending_ref_pos = anchor_pos
