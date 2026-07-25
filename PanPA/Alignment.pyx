@@ -256,6 +256,7 @@ cdef class Alignment:
         pending_ref_pos = -1
         pending_ref_chars = ""
         pending_alt_chars = ""
+        pending_deletion_mapped = False
 
         for item in self.info:
             node_id = item["node_id"]
@@ -389,35 +390,87 @@ cdef class Alignment:
             elif op_type == 1:  # deletion
                 if on_ref:
                     ref_pos_0 = node_to_ref_start[node_id] + node_pos
-                    if pending_type == 1 and pending_ref_pos >= 0:
-                        pending_ref_chars += ref_seq[ref_pos_0]
+                    ref_char = ref_seq[ref_pos_0]
+                else:
+                    # Project an off-reference graph node onto the VCF
+                    # reference through its MSA column. Previously this case
+                    # had no else branch, so the deletion was silently lost.
+                    node = graph.nodes[node_id]
+                    msa_col = node.seq_pos + node_pos
+                    mapped_ref = msa_to_ref.get(msa_col, -1)
+                    if mapped_ref >= 0:
+                        ref_pos_0 = mapped_ref
+                        ref_char = ref_seq[ref_pos_0]
                     else:
-                        if pending_type != -1:
-                            vcf_pos = pending_ref_pos + 1
-                            ref_field = pending_ref_chars if pending_ref_chars else "."
-                            alt_field = pending_alt_chars if pending_alt_chars else "."
-                            if pending_type == 0:
-                                vartype = "INS"
-                            else:
-                                vartype = "SNV"
-                            rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
-                            records.append(rec)
-                            pending_type = -1
-                            pending_ref_pos = -1
-                            pending_ref_chars = ""
-                            pending_alt_chars = ""
+                        # Preserve a deletion in an alternate-only MSA column
+                        # by anchoring it at the nearest reference ancestor.
+                        ancestor_id, ancestor_last_pos = self._find_fork_ancestor(
+                            node_id, graph, ref_node_set, node_to_ref_start, fork_cache)
+                        anchor_char = ref_seq[ancestor_last_pos] if ancestor_last_pos < len(ref_seq) else "."
 
-                        if last_ref_anchor_pos >= 0:
-                            anchor_pos = last_ref_anchor_pos
-                            anchor_char = last_ref_anchor_char
+                        if (pending_type == 1 and not pending_deletion_mapped and
+                                pending_ref_pos == ancestor_last_pos):
+                            pending_ref_chars += node_str
                         else:
-                            anchor_pos = ref_pos_0 - 1 if ref_pos_0 > 0 else 0
-                            anchor_char = ref_seq[anchor_pos]
+                            if pending_type != -1:
+                                vcf_pos = pending_ref_pos + 1
+                                ref_field = pending_ref_chars if pending_ref_chars else "."
+                                alt_field = pending_alt_chars if pending_alt_chars else "."
+                                if pending_type == 0:
+                                    vartype = "INS"
+                                elif pending_type == 1:
+                                    vartype = "DEL"
+                                else:
+                                    vartype = "SNV"
+                                rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+                                records.append(rec)
 
-                        pending_type = 1
-                        pending_ref_pos = anchor_pos
-                        pending_ref_chars = anchor_char + ref_seq[ref_pos_0]
-                        pending_alt_chars = anchor_char
+                            pending_type = 1
+                            pending_ref_pos = ancestor_last_pos
+                            pending_ref_chars = anchor_char + node_str
+                            pending_alt_chars = anchor_char
+                            pending_deletion_mapped = False
+                        continue
+
+                # Merge only deletions that are contiguous on the selected
+                # reference path. Alternate paths can jump over reference
+                # positions, requiring a new padded VCF allele.
+                if (pending_type == 1 and pending_deletion_mapped and
+                        pending_ref_pos >= 0 and
+                        ref_pos_0 == pending_ref_pos + len(pending_ref_chars)):
+                    pending_ref_chars += ref_char
+                else:
+                    if pending_type != -1:
+                        vcf_pos = pending_ref_pos + 1
+                        ref_field = pending_ref_chars if pending_ref_chars else "."
+                        alt_field = pending_alt_chars if pending_alt_chars else "."
+                        if pending_type == 0:
+                            vartype = "INS"
+                        elif pending_type == 1:
+                            vartype = "DEL"
+                        else:
+                            vartype = "SNV"
+                        rec = f"{vcf_pos}\t{ref_field}\t{alt_field}\t{self.read_name}\t{vartype}"
+                        records.append(rec)
+                        pending_type = -1
+                        pending_ref_pos = -1
+                        pending_ref_chars = ""
+                        pending_alt_chars = ""
+
+                    # Pad with the immediately preceding reference residue.
+                    # The last aligned anchor may be farther away after a
+                    # traversal through an alternate branch.
+                    if ref_pos_0 > 0:
+                        anchor_pos = ref_pos_0 - 1
+                    else:
+                        anchor_pos = 0
+                    anchor_char = ref_seq[anchor_pos]
+
+                    pending_type = 1
+                    pending_ref_pos = anchor_pos
+                    pending_ref_chars = anchor_char + ref_char
+                    pending_alt_chars = anchor_char
+                    pending_deletion_mapped = True
 
         # Final flush
         if pending_type != -1:
